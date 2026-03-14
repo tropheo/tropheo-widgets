@@ -11,6 +11,8 @@ interface StandingsTableProps {
   isAdmin?: boolean;
   refreshTrigger?: number;
   className?: string;
+  eventUrl?: string;
+  baseUrl?: string;
 }
 
 interface StageStandingsData {
@@ -66,6 +68,8 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
   isAdmin: _isAdmin = false, // For future use
   refreshTrigger,
   className = '',
+  eventUrl,
+  baseUrl = 'https://app.tropheo.mx',
 }) => {
   const [standings, setStandings] = useState<StandingRow[]>([]);
   const [stageStandings, setStageStandings] = useState<Record<string, StageStandingsData>>({});
@@ -283,6 +287,8 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
     return null;
   }
 
+  const finalEventUrl = eventUrl || `${baseUrl}/events/${eventId}`;
+
   return (
     <div
       className={className}
@@ -360,6 +366,71 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
         ) : (
           <p style={{ textAlign: 'center', color: '#6b7280' }}>No standings available yet.</p>
         )}
+      </div>
+
+      {/* Footer */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '12px 24px',
+          borderTop: '1px solid #e5e7eb',
+          backgroundColor: '#f9fafb',
+        }}
+      >
+        {/* Powered by Tropheo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ fontSize: '11px', color: '#6b7280' }}>
+            Powered by <span style={{ fontWeight: 600, color: '#374151' }}>Tropheo</span>
+          </span>
+        </div>
+
+        {/* Ver en Tropheo button */}
+        <a
+          href={finalEventUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px',
+            padding: '6px 12px',
+            fontSize: '12px',
+            fontWeight: 500,
+            color: '#ffffff',
+            backgroundColor: '#3b82f6',
+            border: 'none',
+            borderRadius: '6px',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#2563eb';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#3b82f6';
+          }}
+        >
+          Ver en Tropheo
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ flexShrink: 0 }}
+          >
+            <path
+              d="M7 17L17 7M17 7H7M17 7V17"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </a>
       </div>
     </div>
   );

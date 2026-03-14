@@ -80,6 +80,16 @@ export interface StandingsWidgetConfig {
    * Container element or selector to render into
    */
   container?: HTMLElement | string;
+
+  /**
+   * Custom event URL for "Ver en Tropheo" button
+   */
+  eventUrl?: string;
+
+  /**
+   * Base URL for constructing event link (default: https://app.tropheo.mx)
+   */
+  baseUrl?: string;
 }
 
 /**

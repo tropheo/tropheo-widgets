@@ -1,0 +1,40 @@
+2026-03-14T01:03:58.820717Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/1.cookie"), AnchoredSystemPathBuf(".turbo/cookies/.turbo-cookie")}
+2026-03-14T01:03:58.820727Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-14T01:03:58.921765Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/2.cookie")}
+2026-03-14T01:03:58.921773Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-14T01:03:59.720973Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/3.cookie"), AnchoredSystemPathBuf(".turbo/cookies/4.cookie")}
+2026-03-14T01:03:59.720982Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-14T01:04:00.421494Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/5.cookie"), AnchoredSystemPathBuf(".turbo/cookies/6.cookie"), AnchoredSystemPathBuf(".turbo/cookies/7.cookie")}
+2026-03-14T01:04:00.421503Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-14T01:04:01.321428Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/8.cookie")}
+2026-03-14T01:04:01.321439Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-14T01:04:01.422086Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/9.cookie")}
+2026-03-14T01:04:01.422093Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-14T01:25:03.483343Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts"), AnchoredSystemPathBuf("packages/react/src/StandingsTable.tsx")}
+2026-03-14T01:25:03.483629Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }, WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-14T01:25:13.278181Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/10.cookie")}
+2026-03-14T01:25:13.278218Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-14T01:25:13.377022Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/15.cookie"), AnchoredSystemPathBuf(".turbo/cookies/16.cookie"), AnchoredSystemPathBuf(".turbo/cookies/12.cookie"), AnchoredSystemPathBuf(".turbo/cookies/14.cookie"), AnchoredSystemPathBuf("packages/core/.turbo"), AnchoredSystemPathBuf("packages/core/dist"), AnchoredSystemPathBuf(".turbo/cookies/11.cookie"), AnchoredSystemPathBuf("packages/types/dist"), AnchoredSystemPathBuf(".turbo/cookies/13.cookie"), AnchoredSystemPathBuf("packages/types/.turbo")}
+2026-03-14T01:25:13.377033Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }, WorkspacePackage { name: Other("@tropheo/types"), path: AnchoredSystemPathBuf("packages/types") }, WorkspacePackage { name: Other("@tropheo/core"), path: AnchoredSystemPathBuf("packages/core") }}))
+2026-03-14T01:25:14.477981Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/17.cookie")}
+2026-03-14T01:25:14.477996Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-14T01:25:14.577900Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/18.cookie")}
+2026-03-14T01:25:14.577917Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-14T01:25:29.876805Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/react/src/StandingsTable.tsx"), AnchoredSystemPathBuf("packages/embed/src/index.ts")}
+2026-03-14T01:25:29.876819Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }, WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-14T01:25:29.886393Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-03-14T01:25:29.886405Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-03-14T01:28:32.471634Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts"), AnchoredSystemPathBuf("packages/react/src/StandingsTable.tsx")}
+2026-03-14T01:28:32.471657Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }, WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }}))
+2026-03-14T01:29:08.470201Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/19.cookie")}
+2026-03-14T01:29:08.470227Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-14T01:29:08.569159Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/22.cookie"), AnchoredSystemPathBuf(".turbo/cookies/21.cookie"), AnchoredSystemPathBuf(".turbo/cookies/20.cookie"), AnchoredSystemPathBuf(".turbo/cookies/23.cookie")}
+2026-03-14T01:29:08.569170Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-14T01:29:09.570011Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/24.cookie")}
+2026-03-14T01:29:09.570020Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-14T01:29:09.669805Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/25.cookie")}
+2026-03-14T01:29:09.669813Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-14T01:31:00.766751Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts"), AnchoredSystemPathBuf("packages/react/src/StandingsTable.tsx")}
+2026-03-14T01:31:00.766767Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }, WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }}))
+2026-03-14T01:31:00.779895Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-03-14T01:31:00.779906Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun

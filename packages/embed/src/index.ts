@@ -155,6 +155,29 @@ export class TropheoEmbed {
             </tbody>
           </table>
         </div>
+        
+        <!-- Footer -->
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-top: 1px solid #e5e7eb; background-color: #f9fafb;">
+          <!-- Powered by Tropheo -->
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 11px; color: #6b7280;">
+              Powered by <span style="font-weight: 600; color: #374151;">Tropheo</span>
+            </span>
+          </div>
+          
+          <!-- Ver en Tropheo button -->
+          <a href="${config.eventUrl || config.baseUrl || 'https://app.tropheo.mx'}/events/${config.eventId}" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; font-size: 12px; font-weight: 500; color: #ffffff; background-color: #3b82f6; border: none; border-radius: 6px; text-decoration: none; cursor: pointer; transition: background-color 0.2s;"
+             onmouseover="this.style.backgroundColor='#2563eb'"
+             onmouseout="this.style.backgroundColor='#3b82f6'">
+            Ver en Tropheo
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;">
+              <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
       </div>
     `;
 
