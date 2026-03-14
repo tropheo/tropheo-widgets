@@ -1,0 +1,353 @@
+# Tropheo Widgets API Reference
+
+## Packages
+
+- [@tropheo/types](#tropheotypes) - TypeScript type definitions
+- [@tropheo/core](#tropheocore) - Core API client
+- [@tropheo/react](#tropheoreact) - React components
+- [@tropheo/embed](#tropheoembed) - Vanilla JavaScript loader
+
+---
+
+## @tropheo/types
+
+Type definitions shared across all packages.
+
+### TropheoWidgetsConfig
+
+Configuration object for initializing Tropheo Widgets.
+
+```typescript
+interface TropheoWidgetsConfig {
+  apiKey: string;
+  baseUrl: string;
+}
+```
+
+**Properties:**
+
+- `apiKey` (string, required): Your Tropheo API key
+- `baseUrl` (string, required): Base URL of your Tropheo instance
+
+### EventRole
+
+Scope for standings queries.
+
+```typescript
+type EventRole = 'POOL' | 'DIVISION' | 'BRACKET';
+```
+
+### StandingRow
+
+Individual team standing data.
+
+```typescript
+interface StandingRow {
+  rank: number;
+  teamName: string;
+  wins: number;
+  losses: number;
+  ties: number;
+  points: number;
+  pointsFor: number;
+  pointsAgainst: number;
+  pointsDifferential: number;
+  tieBreaker?: string;
+  logoUrl?: string;
+}
+```
+
+### ApiResponse
+
+Generic API response wrapper.
+
+```typescript
+interface ApiResponse<T> {
+  data?: T;
+  error?: string;
+  status: number;
+}
+```
+
+---
+
+## @tropheo/core
+
+Core API client for making authenticated requests.
+
+### TropheoWidgets
+
+Main class for interacting with the Tropheo API.
+
+```typescript
+class TropheoWidgets {
+  constructor(config: TropheoWidgetsConfig);
+  getClient(): ApiClient;
+}
+```
+
+#### Constructor
+
+```typescript
+const widgets = new TropheoWidgets({
+  apiKey: 'your-api-key',
+  baseUrl: 'https://your-instance.com',
+});
+```
+
+#### Methods
+
+##### `getClient(): ApiClient`
+
+Returns the underlying `ApiClient` instance for making direct API calls.
+
+```typescript
+const client = widgets.getClient();
+```
+
+### ApiClient
+
+Low-level API client for making authenticated requests.
+
+```typescript
+class ApiClient {
+  constructor(config: TropheoWidgetsConfig);
+  getStandings(eventId: string, eventRole?: EventRole): Promise<ApiResponse<StandingsData>>;
+  getSubEvents(parentEventId: string): Promise<ApiResponse<SubEvent[]>>;
+  recomputeStandings(eventId: string, config?: RecomputeConfig): Promise<ApiResponse<any>>;
+}
+```
+
+#### Methods
+
+##### `getStandings(eventId, eventRole?)`
+
+Fetch standings for an event.
+
+```typescript
+const response = await client.getStandings('event-123', 'DIVISION');
+
+if (response.data) {
+  console.log(response.data.standings);
+}
+```
+
+**Parameters:**
+
+- `eventId` (string, required): Event ID
+- `eventRole` (EventRole, optional): Scope for standings (POOL, DIVISION, BRACKET)
+
+**Returns:** `Promise<ApiResponse<StandingsData>>`
+
+##### `getSubEvents(parentEventId)`
+
+Fetch sub-events for a parent event.
+
+```typescript
+const response = await client.getSubEvents('parent-event-123');
+
+if (response.data) {
+  console.log(response.data); // Array of sub-events
+}
+```
+
+**Parameters:**
+
+- `parentEventId` (string, required): Parent event ID
+
+**Returns:** `Promise<ApiResponse<SubEvent[]>>`
+
+##### `recomputeStandings(eventId, config?)`
+
+Recompute standings for an event (admin operation).
+
+```typescript
+const response = await client.recomputeStandings('event-123', {
+  tieBreakerOrder: ['WIN_PCT', 'HEAD_TO_HEAD', 'POINT_DIFF'],
+  pointsSystem: {
+    win: 3,
+    tie: 1,
+    loss: 0,
+  },
+});
+```
+
+**Parameters:**
+
+- `eventId` (string, required): Event ID
+- `config` (RecomputeConfig, optional): Recompute configuration
+
+**Returns:** `Promise<ApiResponse<any>>`
+
+---
+
+## @tropheo/react
+
+React components for embedding Tropheo widgets.
+
+### StandingsTable
+
+React component for displaying tournament standings.
+
+```typescript
+interface StandingsTableProps {
+  client: ApiClient;
+  eventId: string;
+  eventRole?: EventRole;
+  title?: string;
+  showEmptyState?: boolean;
+  isAdmin?: boolean;
+  refreshTrigger?: number;
+  className?: string;
+}
+```
+
+#### Usage
+
+```tsx
+import { TropheoWidgets, StandingsTable } from '@tropheo/react';
+
+const widgets = new TropheoWidgets({
+  apiKey: 'your-api-key',
+  baseUrl: 'https://your-instance.com',
+});
+
+function App() {
+  return (
+    <StandingsTable
+      client={widgets.getClient()}
+      eventId="event-123"
+      eventRole="DIVISION"
+      title="Tournament Standings"
+      showEmptyState={true}
+    />
+  );
+}
+```
+
+#### Props
+
+- `client` (ApiClient, required): API client instance from `TropheoWidgets`
+- `eventId` (string, required): Event ID to display standings for
+- `eventRole` (EventRole, optional): Scope for standings (POOL, DIVISION, BRACKET)
+- `title` (string, optional): Custom title for the standings table
+- `showEmptyState` (boolean, optional): Show message when no standings data is available
+- `isAdmin` (boolean, optional): Enable admin features (recompute button)
+- `refreshTrigger` (number, optional): Change this value to force refresh
+- `className` (string, optional): Additional CSS class names
+
+---
+
+## @tropheo/embed
+
+Vanilla JavaScript loader for non-React environments.
+
+### TropheoEmbed
+
+Class for embedding widgets without React.
+
+```typescript
+class TropheoEmbed {
+  constructor(config: TropheoWidgetsConfig);
+  renderStandings(config: StandingsWidgetConfig): Promise<void>;
+}
+```
+
+#### Usage
+
+```html
+<div id="standings"></div>
+
+<script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
+<script>
+  const embed = new window.TropheoEmbed({
+    apiKey: 'your-api-key',
+    baseUrl: 'https://your-instance.com',
+  });
+
+  embed.renderStandings({
+    eventId: 'event-123',
+    eventRole: 'DIVISION',
+    title: 'Tournament Standings',
+    container: '#standings',
+  });
+</script>
+```
+
+#### Constructor
+
+```typescript
+const embed = new TropheoEmbed({
+  apiKey: 'your-api-key',
+  baseUrl: 'https://your-instance.com',
+});
+```
+
+#### Methods
+
+##### `renderStandings(config)`
+
+Render a standings table into a DOM element.
+
+```typescript
+await embed.renderStandings({
+  eventId: 'event-123',
+  eventRole: 'DIVISION',
+  title: 'Tournament Standings',
+  showEmptyState: true,
+  container: '#standings',
+});
+```
+
+**Parameters:**
+
+```typescript
+interface StandingsWidgetConfig {
+  eventId: string;
+  eventRole?: EventRole;
+  title?: string;
+  showEmptyState?: boolean;
+  container: string | HTMLElement;
+}
+```
+
+- `eventId` (string, required): Event ID
+- `eventRole` (EventRole, optional): Scope for standings
+- `title` (string, optional): Custom title
+- `showEmptyState` (boolean, optional): Show message when no data
+- `container` (string | HTMLElement, required): CSS selector or DOM element
+
+**Returns:** `Promise<void>`
+
+---
+
+## Error Handling
+
+All API methods return an `ApiResponse` object with the following structure:
+
+```typescript
+interface ApiResponse<T> {
+  data?: T;
+  error?: string;
+  status: number;
+}
+```
+
+Check the `error` property to handle failures:
+
+```typescript
+const response = await client.getStandings('event-123');
+
+if (response.error) {
+  console.error('Failed to fetch standings:', response.error);
+} else {
+  console.log('Standings:', response.data);
+}
+```
+
+Common HTTP status codes:
+
+- `200`: Success
+- `401`: Unauthorized (invalid API key)
+- `404`: Event not found
+- `500`: Server error

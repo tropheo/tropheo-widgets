@@ -1,0 +1,33 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  margin-bottom: 40px;
+}
+
+.header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.header .description {
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.main {
+  margin-bottom: 40px;
+}
+
+.footer {
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  padding: 20px 0;
+  border-top: 1px solid #e5e7eb;
+}

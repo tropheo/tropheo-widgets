@@ -1,0 +1,29 @@
+{
+    "name": "tropheo-widgets",
+    "version": "1.0.0",
+    "description": "Embeddable widgets for Tropheo stats and standings",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "build": "turbo run build",
+        "build:embed": "node build-embed.js",
+        "dev": "turbo run dev",
+        "lint": "turbo run lint",
+        "test": "turbo run test",
+        "clean": "turbo run clean",
+        "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.0",
+        "esbuild": "^0.27.4",
+        "prettier": "^3.1.0",
+        "turbo": "^1.11.0",
+        "typescript": "^5.3.3"
+    },
+    "engines": {
+        "node": ">=18.0.0",
+        "npm": ">=9.0.0"
+    }
+}

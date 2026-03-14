@@ -1,0 +1,25 @@
+{
+    "name": "@tropheo/embed",
+    "version": "1.0.0",
+    "description": "Vanilla JS loader for Tropheo Widgets",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        }
+    },
+    "scripts": {
+        "build": "tsc",
+        "dev": "tsc --watch",
+        "clean": "rm -rf dist"
+    },
+    "dependencies": {
+        "@tropheo/core": "*",
+        "@tropheo/types": "*"
+    },
+    "devDependencies": {
+        "typescript": "^5.3.3"
+    }
+}

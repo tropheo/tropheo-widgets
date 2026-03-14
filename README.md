@@ -1,0 +1,189 @@
+# Tropheo Widgets
+
+A library for embedding Tropheo tournament widgets into your website or application.
+
+## Features
+
+- 📊 Display tournament standings and stats
+- ⚛️ React components for React/Next.js apps
+- 🌐 Vanilla JavaScript support for any website
+- 🔒 Secure API key authentication
+- 📱 Responsive design
+- 🎨 Customizable styling
+- 🚀 Zero dependencies (embed package)
+
+## Quick Start
+
+### React
+
+```tsx
+import { TropheoWidgets, StandingsTable } from '@tropheo/react';
+
+const widgets = new TropheoWidgets({
+  apiKey: 'your-api-key',
+  baseUrl: 'https://your-tropheo-instance.com',
+});
+
+function App() {
+  return (
+    <StandingsTable client={widgets.getClient()} eventId="event-123" title="Tournament Standings" />
+  );
+}
+```
+
+### Vanilla JavaScript
+
+```html
+<div id="standings"></div>
+
+<script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
+<script>
+  const embed = new window.TropheoEmbed({
+    apiKey: 'your-api-key',
+    baseUrl: 'https://your-tropheo-instance.com',
+  });
+
+  embed.renderStandings({
+    eventId: 'event-123',
+    container: '#standings',
+  });
+</script>
+```
+
+## Installation
+
+### For React/Next.js Projects
+
+```bash
+npm install @tropheo/react @tropheo/core @tropheo/types
+```
+
+### For Vanilla JavaScript Projects
+
+```bash
+npm install @tropheo/embed
+```
+
+Or use a CDN:
+
+```html
+<script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
+```
+
+## Documentation
+
+- [Getting Started](./docs/getting-started.md) - Installation and basic usage
+- [API Reference](./docs/api-reference.md) - Complete API documentation
+- [Authentication](./docs/authentication.md) - API key setup and security
+- [Deployment Guide](./docs/deployment.md) - Server and client deployment instructions
+
+## Examples
+
+Check out the [examples](./examples) directory for complete implementations:
+
+- [HTML Example](./examples/html) - Vanilla JavaScript with CDN
+- [React Example](./examples/react) - React with Vite
+- [Next.js Example](./examples/nextjs) - Next.js 14 with App Router
+
+## Development
+
+### Setup
+
+```bash
+# Install dependencies
+npm install
+
+# Build all packages
+npm run build
+
+# Development mode (watch)
+npm run dev
+```
+
+### Project Structure
+
+```
+tropheo_widgets/
+├── packages/
+│   ├── types/       # TypeScript type definitions
+│   ├── core/        # Core API client
+│   ├── react/       # React components
+│   └── embed/       # Vanilla JS loader
+├── examples/
+│   ├── html/        # HTML example
+│   ├── react/       # React example
+│   └── nextjs/      # Next.js example
+└── docs/            # Documentation
+```
+
+## Packages
+
+- **@tropheo/types** - Shared TypeScript type definitions
+- **@tropheo/core** - Core API client with authentication
+- **@tropheo/react** - React components (StandingsTable)
+- **@tropheo/embed** - Vanilla JavaScript loader for non-React environments
+
+## Features by Package
+
+### @tropheo/core
+
+- API key authentication via Authorization header
+- Type-safe API client
+- Methods for standings, events, and recomputation
+
+### @tropheo/react
+
+- `<StandingsTable>` component with loading/error states
+- Collapsible stage sections
+- Responsive design
+- Admin features (recompute button)
+
+### @tropheo/embed
+
+- Zero dependencies
+- Vanilla JavaScript API
+- Auto-initialization on script load
+- DOM manipulation with inline styles
+
+## Authentication
+
+Set up API keys on your Tropheo server:
+
+```bash
+# Environment variable
+WIDGET_API_KEYS=key1,key2,key3
+```
+
+Use API keys in your client:
+
+```typescript
+const widgets = new TropheoWidgets({
+  apiKey: 'your-api-key',
+  baseUrl: 'https://your-instance.com',
+});
+```
+
+See [Authentication Guide](./docs/authentication.md) for more details.
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests and build
+5. Submit a pull request
+
+## License
+
+MIT
+
+## Support
+
+For questions or issues, contact your Tropheo administrator.
