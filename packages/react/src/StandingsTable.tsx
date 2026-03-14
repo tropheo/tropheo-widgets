@@ -147,7 +147,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
     }
   }, [eventId, refreshTrigger, loadStandings]);
 
-  const renderTable = (rows: StandingRow[]) => {
+  const renderTable = (rows: StandingRow[], startRank: number = 1) => {
     const gbMap = computeGamesBehind(rows);
 
     return (
@@ -194,7 +194,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
                 }}
               >
                 <td style={{ padding: '12px 12px 12px 0', color: '#6b7280', fontWeight: 500 }}>
-                  {idx + 1}
+                  {startRank + idx}
                 </td>
                 <td style={{ padding: '12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -262,6 +262,54 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
           })}
         </tbody>
       </table>
+    );
+  };
+
+  const renderGroupedTables = (rows: StandingRow[]) => {
+    // Group standings by groupLabel
+    const byGroup = new Map<string, StandingRow[]>();
+
+    for (const row of rows) {
+      const label = ((row as any).groupLabel || '').trim() || '\0';
+      if (!byGroup.has(label)) {
+        byGroup.set(label, []);
+      }
+      byGroup.get(label)!.push(row);
+    }
+
+    const groups = Array.from(byGroup.entries()).map(([label, groupRows]) => ({
+      groupLabel: label === '\0' ? null : label,
+      rows: groupRows,
+    }));
+
+    // Calculate starting rank for each group
+    let cumulativeRank = 1;
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        {groups.map(({ groupLabel, rows: groupRows }, groupIdx) => {
+          const startRank = cumulativeRank;
+          cumulativeRank += groupRows.length;
+
+          return (
+            <div key={groupLabel ?? `group-${groupIdx}`}>
+              {groupLabel && (
+                <h4
+                  style={{
+                    fontWeight: 600,
+                    marginBottom: '12px',
+                    fontSize: '14px',
+                    color: '#6b7280',
+                  }}
+                >
+                  {groupLabel}
+                </h4>
+              )}
+              <div style={{ overflowX: 'auto' }}>{renderTable(groupRows, startRank)}</div>
+            </div>
+          );
+        })}
+      </div>
     );
   };
 
@@ -347,7 +395,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
                         <span>{isExpanded ? '▲' : '▼'}</span>
                       </button>
                       {isExpanded && (
-                        <div style={{ overflowX: 'auto' }}>{renderTable(entry.rows)}</div>
+                        <div style={{ overflowX: 'auto' }}>{renderGroupedTables(entry.rows)}</div>
                       )}
                     </div>
                   );
@@ -355,12 +403,12 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
                 {standings.length > 0 && (
                   <div>
                     <h4 style={{ fontWeight: 600, marginBottom: '12px' }}>Division Standings</h4>
-                    {renderTable(standings)}
+                    {renderGroupedTables(standings)}
                   </div>
                 )}
               </div>
             ) : (
-              renderTable(standings)
+              renderGroupedTables(standings)
             )}
           </div>
         ) : (

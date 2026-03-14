@@ -52,9 +52,9 @@
     <script>
       (function () {
         // Configuration
-        const API_KEY = 'your-api-key-here';
-        const BASE_URL = 'https://your-tropheo-instance.com';
-        const EVENT_ID = 'your-event-id-here';
+        const API_KEY = 'your-api-key-here'; // Get this from your Tropheo admin
+        const BASE_URL = 'https://your-tropheo-instance.com'; // Your Tropheo site URL
+        const EVENT_ID = 'your-event-id-here'; // Get this from the event URL
 
         try {
           // Initialize Tropheo Embed
@@ -64,9 +64,10 @@
           });
 
           // Render standings widget
-          // Note: eventRole is no longer required - it's automatically detected from the event
+          // The widget automatically detects event type and shows appropriate grouping
           embed.renderStandings({
             eventId: EVENT_ID,
+            title: 'Tournament Standings',
             showEmptyState: true,
             container: '#standings-container',
           });

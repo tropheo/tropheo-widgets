@@ -90,22 +90,27 @@ You have three options depending on your stack:
     <script>
       // Initialize with your credentials
       const embed = new window.TropheoEmbed({
-        apiKey: 'your-api-key-here',
-        baseUrl: 'https://your-tropheo-instance.com',
+        apiKey: 'your-api-key-here', // Get this from your Tropheo admin
+        baseUrl: 'https://your-tropheo-instance.com', // Your Tropheo URL
       });
 
       // Render standings
       embed.renderStandings({
-        eventId: 'your-event-id',
-        showEmptyState: true,
-      });
-        title: 'Tournament Standings',
-        container: '#standings',
+        eventId: 'your-event-id', // Get this from the event URL
+        title: 'Tournament Standings', // Custom title (optional)
+        container: '#standings', // Where to show the widget
+        showEmptyState: true, // Show message if no data (optional)
       });
     </script>
   </body>
 </html>
 ```
+
+**How to get your values:**
+
+- **apiKey**: Contact your Tropheo administrator
+- **baseUrl**: The main URL where your Tropheo site is hosted (e.g., `https://app.tropheo.mx`)
+- **eventId**: Found in the event URL: `https://your-site.com/events/EVENT_ID_HERE`
 
 **That's it!** Open the HTML file in your browser.
 
@@ -144,8 +149,8 @@ function App() {
       <h1>Tournament Standings</h1>
       <StandingsTable
         client={widgets.getClient()}
-        eventId="your-event-id"
-        title="Tournament Standings"
+        eventId="your-event-id" // Replace with your event ID
+        title="Tournament Standings" // Optional custom title
       />
     </div>
   );
@@ -153,6 +158,8 @@ function App() {
 
 export default App;
 ```
+
+**Note:** The widget automatically detects the event type (division, pool, bracket) and displays standings with appropriate grouping.
 
 ### Option 3: Next.js Application
 
@@ -191,8 +198,8 @@ export default function Page() {
       <h1>Tournament Standings</h1>
       <StandingsTable
         client={widgets.getClient()}
-        eventId="your-event-id"
-        title="Tournament Standings"
+        eventId="your-event-id" // Replace with your event ID
+        title="Tournament Standings" // Optional custom title
       />
     </div>
   );

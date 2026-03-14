@@ -2,6 +2,18 @@
 
 A library for embedding Tropheo tournament widgets into your website or application.
 
+## 🚀 New to Tropheo Widgets?
+
+**Start here:**
+
+- 🇪🇸 [Guía Simple en Español](./SIMPLE_GUIDE.md) - Paso a paso para principiantes
+- 🇺🇸 [Simple Guide in English](./SIMPLE_GUIDE_EN.md) - Step-by-step for beginners
+
+**For developers:**
+
+- [Quick Start Guide](./QUICK_START.md) - Get started in 5 minutes
+- [Full Documentation](./docs/getting-started.md) - Complete integration guide
+
 ## Features
 
 - 📊 Display tournament standings and stats
@@ -64,7 +76,15 @@ npm install @tropheo/react @tropheo/core @tropheo/types
 npm install @tropheo/embed
 ```
 
-Or use a CDN:
+Or use a CDN (no installation needed):
+
+```html
+<script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
+```
+
+### No Framework (just plain HTML)
+
+No installation needed! Just add the CDN script to your HTML:
 
 ```html
 <script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>

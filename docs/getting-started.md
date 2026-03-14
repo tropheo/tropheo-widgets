@@ -39,12 +39,7 @@ function App() {
   });
 
   return (
-    <StandingsTable
-      client={widgets.getClient()}
-      eventId="event-123"
-      eventRole="DIVISION"
-      title="Tournament Standings"
-    />
+    <StandingsTable client={widgets.getClient()} eventId="event-123" title="Tournament Standings" />
   );
 }
 ```
@@ -66,12 +61,7 @@ export default function Page() {
   });
 
   return (
-    <StandingsTable
-      client={widgets.getClient()}
-      eventId="event-123"
-      eventRole="DIVISION"
-      title="Tournament Standings"
-    />
+    <StandingsTable client={widgets.getClient()} eventId="event-123" title="Tournament Standings" />
   );
 }
 ```
@@ -96,7 +86,6 @@ export default function Page() {
 
       embed.renderStandings({
         eventId: 'event-123',
-        eventRole: 'DIVISION',
         title: 'Tournament Standings',
         container: '#standings',
       });
@@ -109,16 +98,38 @@ export default function Page() {
 
 All packages require the following configuration:
 
-- **apiKey** (required): Your Tropheo API key for authentication
-- **baseUrl** (required): The base URL of your Tropheo instance (e.g., `https://your-instance.com`)
+- **apiKey** (required): Your Tropheo API key for authentication (get this from your Tropheo admin)
+- **baseUrl** (required): The base URL of your Tropheo instance (e.g., `https://app.tropheo.mx`)
+- **eventId** (required): The ID of the event to display (found in the event URL)
 
-## Event Roles
+## How to Get Your Configuration Values
 
-When displaying standings, you can specify the scope using the `eventRole` parameter:
+### API Key
 
-- `POOL`: Show standings grouped by pool
-- `DIVISION`: Show standings grouped by division
-- `BRACKET`: Show standings grouped by bracket
+Contact your Tropheo administrator to obtain an API key. Keep this secure!
+
+### Base URL
+
+This is the main URL where your Tropheo platform is hosted, for example:
+
+- `https://app.tropheo.mx`
+- `https://your-organization.tropheo.com`
+
+### Event ID
+
+The event ID is found in the URL when viewing an event:
+
+- URL: `https://app.tropheo.mx/events/65abc123def456789`
+- Event ID: `65abc123def456789`
+
+## Automatic Features
+
+The widget automatically:
+
+- Detects the event type (division, pool, bracket, tournament)
+- Shows standings grouped appropriately (by pool, division, etc.)
+- Displays team logos and stats
+- Supports responsive design for mobile and desktop
 
 ## Next Steps
 

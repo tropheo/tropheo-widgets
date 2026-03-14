@@ -20,16 +20,15 @@ This example demonstrates how to integrate Tropheo Widgets into a plain HTML pag
 
 ```javascript
 const embed = new window.TropheoEmbed({
-  apiKey: 'your-api-key-here',
-  baseUrl: 'https://your-tropheo-instance.com',
+  apiKey: 'your-api-key-here', // Get from your Tropheo admin
+  baseUrl: 'https://your-tropheo-instance.com', // Your Tropheo URL
 });
 
 embed.renderStandings({
-  eventId: 'event-123',
-  eventRole: 'DIVISION',
-  title: 'Tournament Standings',
-  showEmptyState: true,
-  container: '#standings-container',
+  eventId: 'event-123', // Get from event URL
+  title: 'Tournament Standings', // Optional custom title
+  showEmptyState: true, // Show message when no data
+  container: '#standings-container', // CSS selector for container
 });
 ```
 
