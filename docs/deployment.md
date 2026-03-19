@@ -7,12 +7,16 @@ This guide explains how to deploy and configure the Tropheo Widgets system, incl
 ### Prerequisites
 
 - Next.js application running (athloom-web)
-- Access to environment variables configuration
-- Ability to deploy code changes
+- Organization dashboard with API key management feature deployed
+- Database configured for storing API keys
 
-### Step 1: Deploy Widget API Routes
+### Overview
 
-The widget API routes are located in the `athloom-web` project:
+With the new self-service API key management system, organizations can generate and manage their own widget API keys through the dashboard. **No manual environment variable configuration is needed** for individual API keys.
+
+### Step 1: Verify Widget API Routes Are Deployed
+
+The widget API routes should be deployed in the `athloom-web` project:
 
 ```
 app/
@@ -30,82 +34,49 @@ app/
         └── widgetAuth.ts
 ```
 
-Deploy these files to your production environment.
+Ensure these files are deployed to your production environment.
 
-### Step 2: Configure API Keys
+### Step 2: Verify Organization Dashboard
 
-Set up the `WIDGET_API_KEYS` environment variable with comma-separated API keys:
+Confirm that the organization dashboard includes the API key management interface:
 
-**Development (.env.local):**
+#### Dashboard Access
 
-```bash
-WIDGET_API_KEYS=dev-key-1,dev-key-2
-```
+- **Navigation:** Organization profile → **Manage Organization** → **API Keys**
+- **Requirement:** Must be logged in as organization admin
+- Features:
+  - Create new API keys
+  - View active/inactive keys
+  - Activate/deactivate toggle
+  - View last used timestamp
+  - Delete keys
 
-**Production:**
+### Step 3: Database Schema
 
-The method depends on your hosting platform:
+Ensure your database has the appropriate schema for storing API keys:
 
-**Vercel:**
+- API key storage (hashed/encrypted)
+- Organization association
+- Key metadata (name, created date, last used)
+- Active/inactive status
 
-```bash
-vercel env add WIDGET_API_KEYS
-# Enter: prod-key-1,prod-key-2,prod-key-3
-```
+### Step 4: Test the System
 
-**Google Cloud App Engine (app.yaml):**
+Test the complete flow:
 
-```yaml
-env_variables:
-  WIDGET_API_KEYS: 'prod-key-1,prod-key-2,prod-key-3'
-```
+1. **Generate a test API key:**
+   - Log in to an organization dashboard
+   - Go to your organization profile
+   - Click "Manage Organization" (admin only)
+   - Navigate to "API Keys" section
+   - Create a new key
+   - Copy the generated key
 
-**Docker / Kubernetes:**
-
-```yaml
-env:
-  - name: WIDGET_API_KEYS
-    value: 'prod-key-1,prod-key-2,prod-key-3'
-```
-
-**AWS Elastic Beanstalk:**
-
-```bash
-aws elasticbeanstalk create-configuration-template \
-  --environment-id e-xyz \
-  --option-settings \
-    Namespace=aws:elasticbeanstalk:application:environment,\
-    OptionName=WIDGET_API_KEYS,Value=prod-key-1,prod-key-2,prod-key-3
-```
-
-### Step 3: Generate Secure API Keys
-
-Generate strong, random API keys for production:
-
-```bash
-# Using Node.js
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-
-# Using OpenSSL
-openssl rand -hex 32
-
-# Using Python
-python3 -c "import secrets; print(secrets.token_hex(32))"
-```
-
-Example output:
-
-```
-a5f8b3c7d9e2f1a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2
-```
-
-### Step 4: Test API Endpoints
-
-After deployment, test that the endpoints are working:
+2. **Test the API endpoints:**
 
 ```bash
 # Replace with your actual values
-API_KEY="your-api-key"
+API_KEY="generated-key-from-dashboard"
 BASE_URL="https://your-tropheo-instance.com"
 PARENT_EVENT_ID="your-parent-event-id"
 
@@ -127,6 +98,16 @@ Expected response (200 OK):
   "status": "success"
 }
 ```
+
+3. **Verify key deactivation:**
+   - Deactivate the key in the dashboard
+   - Retry the API request
+   - Should receive `401 Unauthorized`
+
+4. **Verify usage tracking:**
+   - Make an API request with the key
+   - Check the "Last Used" timestamp in the dashboard
+   - Should update to the current time
 
 ### Step 5: Monitor and Log
 
@@ -224,11 +205,21 @@ For the embed package, distribute via CDN:
 
 ### Distributing API Keys
 
-Provide API keys to clients securely:
+With the new self-service system, organizations generate their own API keys:
 
-1. **Direct Communication:** Email or secure messaging
-2. **Customer Portal:** Dashboard where users can generate/view keys
-3. **Provisioning Script:** Automated key generation on signup
+1. **Self-Service (Recommended):** Organizations generate keys from their organization profile → Manage Organization → API Keys
+2. **Admin Assistance:** If needed, help organizations navigate to the API key management page
+3. **Documentation:** Provide links to guides on generating and using API keys
+
+### Onboarding Organizations
+
+When onboarding new organizations:
+
+1. Grant them access to the organization dashboard
+2. Show them how to navigate to their organization profile → Manage Organization → API Keys
+3. Demonstrate creating their first API key
+4. Explain key management features (activate/deactivate, monitoring)
+5. Provide integration documentation
 
 ### Client Setup Guide
 
@@ -276,16 +267,17 @@ EOF
 
 Before deploying to production:
 
-- [ ] Strong API keys generated (32+ characters)
-- [ ] API keys stored in environment variables (not in code)
-- [ ] Different keys for dev/staging/production
+- [ ] Organization dashboard with API key management deployed
+- [ ] Database schema for API keys configured
+- [ ] API key validation middleware working correctly
 - [ ] HTTPS enabled on all endpoints
 - [ ] CORS configured correctly
 - [ ] Rate limiting enabled (if applicable)
 - [ ] Logging configured for security events
-- [ ] API key rotation plan established
-- [ ] Keys shared securely with clients
-- [ ] Client documentation distributed
+- [ ] Usage tracking ("Last Used" timestamp) working
+- [ ] Key activation/deactivation feature tested
+- [ ] Client documentation updated and distributed
+- [ ] Organizations trained on key management
 
 ## Updating Widgets
 
@@ -307,16 +299,40 @@ Before deploying to production:
 
 ### API Returns 401 Unauthorized
 
-**Cause:** API key not configured or invalid
+**Cause:** API key not found, invalid, or deactivated
 
 **Resolution:**
 
-```bash
-# Check environment variable is set
-echo $WIDGET_API_KEYS
+1. Verify the API key exists in the organization's dashboard
+2. Check that the key is set to **Active** (not Inactive)
+3. Ensure the key belongs to the correct organization
+4. Test with a newly generated key
+5. Check application logs for authentication errors
 
-# Restart application after setting environment variable
-```
+### API Key Not Working After Creation
+
+**Cause:** Database issues or middleware not deployed
+
+**Resolution:**
+
+1. Verify API key was saved to database
+2. Check that widgetAuth middleware is deployed
+3. Test with curl:
+   ```bash
+   curl -H "Authorization: test-key" \
+     https://your-instance.com/api/widgets/events?parentEventId=xyz
+   ```
+4. Check server logs for errors
+
+### "Last Used" Timestamp Not Updating
+
+**Cause:** Usage tracking not implemented or failing
+
+**Resolution:**
+
+1. Verify middleware updates timestamp on successful requests
+2. Check database write permissions
+3. Review server logs for update errors
 
 ### CORS Errors in Browser
 

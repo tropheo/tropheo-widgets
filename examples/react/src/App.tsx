@@ -32,6 +32,7 @@ function App() {
           eventRole="DIVISION"
           title="Tournament Standings"
           showEmptyState={true}
+          lang="en"
         />
       </main>
 

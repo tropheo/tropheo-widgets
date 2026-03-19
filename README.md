@@ -17,6 +17,7 @@ A library for embedding Tropheo tournament widgets into your website or applicat
 ## Features
 
 - 📊 Display tournament standings and stats
+- 🏆 Show player and team leaderboards
 - ⚛️ React components for React/Next.js apps
 - 🌐 Vanilla JavaScript support for any website
 - 🔒 Secure API key authentication
@@ -29,7 +30,7 @@ A library for embedding Tropheo tournament widgets into your website or applicat
 ### React
 
 ```tsx
-import { TropheoWidgets, StandingsTable } from '@tropheo/react';
+import { TropheoWidgets, StandingsTable, LeaderboardTable } from '@tropheo/react';
 
 const widgets = new TropheoWidgets({
   apiKey: 'your-api-key',
@@ -38,7 +39,23 @@ const widgets = new TropheoWidgets({
 
 function App() {
   return (
-    <StandingsTable client={widgets.getClient()} eventId="event-123" title="Tournament Standings" />
+    <>
+      <StandingsTable
+        client={widgets.getClient()}
+        eventId="event-123"
+        title="Tournament Standings"
+      />
+
+      <LeaderboardTable
+        client={widgets.getClient()}
+        eventId="event-123"
+        scopeType="TOURNAMENT"
+        sport="basketball"
+        facet="basketball"
+        mode="athletes"
+        title="Top Scorers"
+      />
+    </>
   );
 }
 ```
@@ -47,6 +64,7 @@ function App() {
 
 ```html
 <div id="standings"></div>
+<div id="leaderboard"></div>
 
 <script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
 <script>
@@ -55,9 +73,21 @@ function App() {
     baseUrl: 'https://your-tropheo-instance.com',
   });
 
+  // Render standings
   embed.renderStandings({
     eventId: 'event-123',
     container: '#standings',
+  });
+
+  // Render leaderboard
+  embed.renderLeaderboard({
+    eventId: 'event-123',
+    scopeType: 'TOURNAMENT',
+    sport: 'basketball',
+    facet: 'basketball',
+    mode: 'athletes',
+    title: 'Top Scorers',
+    container: '#leaderboard',
   });
 </script>
 ```
@@ -120,21 +150,23 @@ npm run build
 npm run dev
 ```
 
-### Project Structure
+### Project Structureleaderboards, events, and recomputation
 
-```
-tropheo_widgets/
-├── packages/
-│   ├── types/       # TypeScript type definitions
-│   ├── core/        # Core API client
-│   ├── react/       # React components
-│   └── embed/       # Vanilla JS loader
-├── examples/
-│   ├── html/        # HTML example
-│   ├── react/       # React example
-│   └── nextjs/      # Next.js example
-└── docs/            # Documentation
-```
+### @tropheo/react
+
+- `<StandingsTable>` component with loading/error states
+- `<LeaderboardTable>` component for player/team stat
+  │ ├── types/ # TypeScript type definitions
+  │ ├── core/ # Core API client
+  │ ├── react/ # React components
+  │ └── embed/ # Vanilla JS loader
+  ├── examples/
+  │ ├── html/ # HTML example
+  │ ├── react/ # React example
+  │ └── nextjs/ # Next.js example
+  └── docs/ # Documentation
+
+````
 
 ## Packages
 
@@ -172,7 +204,7 @@ Set up API keys on your Tropheo server:
 ```bash
 # Environment variable
 WIDGET_API_KEYS=key1,key2,key3
-```
+````
 
 Use API keys in your client:
 

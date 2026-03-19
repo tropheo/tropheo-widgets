@@ -4,11 +4,30 @@ This guide explains step-by-step how to display Tropheo standings tables on any 
 
 ## 🎯 What You Need
 
-Before starting, you need to get 3 things from your Tropheo administrator:
+Before starting, you need to get 3 things:
 
-1. **API Key** - An access key (example: `abc123def456...`)
+1. **API Key** - An access key that you can generate from your organization dashboard
 2. **Base URL** - Your Tropheo site address (example: `https://app.tropheo.mx`)
 3. **Event ID** - The ID of the event you want to display (example: `65abc123def456789`)
+
+### How to Get Your API Key?
+
+1. Log in to your Tropheo dashboard
+2. Go to your **organization profile**
+3. If you are an administrator of the organization, you will see the **"Manage Organization"** option
+4. Inside **"Manage Organization"**, you will find different sections, including **"API Keys"**
+5. Click the **"Create New API Key"** button
+6. Give your key a descriptive name (example: "Website Widget")
+7. Copy the generated API key and save it securely
+
+**Important!** Save your API key immediately after creating it - you won't be able to see it again!
+
+From the API Keys dashboard you can:
+
+- View all your active and inactive keys
+- Activate/Deactivate keys without deleting them
+- See when each key was last used
+- Delete keys you no longer need
 
 ### How to Find the Event ID?
 
@@ -70,6 +89,7 @@ Create a new file called `standings.html` and copy this code:
         title: 'Tournament Standings', // Custom title (optional)
         container: '#standings', // Where to show the table
         showEmptyState: true, // Show message if no data
+        lang: 'en', // Language: 'en' (English) or 'es' (Spanish)
       });
     </script>
   </body>
@@ -116,6 +136,7 @@ If you already have a webpage and want to add standings:
     eventId: 'YOUR-EVENT-ID-HERE',
     title: 'Standings',
     container: '#standings', // ID of the div where you want the table
+    lang: 'en', // Language: 'en' or 'es'
   });
 </script>
 ```
@@ -139,6 +160,18 @@ The widget does all of this automatically:
 
 ## 🎨 Basic Customization
 
+### Change the Language
+
+The widget supports English and Spanish:
+
+```javascript
+embed.renderStandings({
+  eventId: 'YOUR-EVENT-ID-HERE',
+  container: '#standings',
+  lang: 'en', // 'en' for English, 'es' for Spanish
+});
+```
+
 ### Change the Title
 
 ```javascript
@@ -146,6 +179,7 @@ embed.renderStandings({
   eventId: 'YOUR-EVENT-ID-HERE',
   title: 'Season 2026 Standings', // ← Change this
   container: '#standings',
+  lang: 'en',
 });
 ```
 
@@ -190,7 +224,7 @@ You can have multiple widgets on the same page:
 
 ### Shows "Error: Authentication failed"
 
-- Your API Key is incorrect. Contact your Tropheo administrator.
+- Your API Key is incorrect or deactivated. Go to your organization profile → **Manage Organization** → **API Keys** to verify that your key is active.
 
 ### Shows "Error: Event not found"
 
@@ -202,11 +236,17 @@ You can have multiple widgets on the same page:
 
 ## 📞 Need Help?
 
-Contact your Tropheo administrator to:
+If you have problems:
 
-- Get or renew your API Key
-- Resolve access issues
-- Report bugs
+1. **API Keys:** Go to your organization profile → **Manage Organization** → **API Keys** to:
+   - Generate new API keys
+   - See which keys are active
+   - Activate or deactivate keys
+   - Check when a key was last used
+
+2. **Technical errors:** Open browser console (F12) to see detailed error messages
+
+3. **Report issues:** Contact Tropheo support to report bugs or request new features
 
 ## 🚀 Next Steps
 

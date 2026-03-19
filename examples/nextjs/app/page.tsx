@@ -34,6 +34,7 @@ export default function Home() {
           eventRole="DIVISION"
           title="Tournament Standings"
           showEmptyState={true}
+          lang="en"
         />
       </main>
 

@@ -88,6 +88,7 @@ export default function Page() {
         eventId: 'event-123',
         title: 'Tournament Standings',
         container: '#standings',
+        lang: 'en', // Language: 'en' or 'es'
       });
     </script>
   </body>
@@ -98,7 +99,7 @@ export default function Page() {
 
 All packages require the following configuration:
 
-- **apiKey** (required): Your Tropheo API key for authentication (get this from your Tropheo admin)
+- **apiKey** (required): Your Tropheo API key for authentication (generate from your organization's dashboard)
 - **baseUrl** (required): The base URL of your Tropheo instance (e.g., `https://app.tropheo.mx`)
 - **eventId** (required): The ID of the event to display (found in the event URL)
 
@@ -106,7 +107,17 @@ All packages require the following configuration:
 
 ### API Key
 
-Contact your Tropheo administrator to obtain an API key. Keep this secure!
+Generate your own API key from your organization dashboard:
+
+1. Log in to Tropheo
+2. Go to your **organization profile**
+3. Click **"Manage Organization"** (admin only)
+4. Navigate to **"API Keys"** section
+5. Click **"Create New API Key"**
+6. Give it a descriptive name
+7. Copy and securely store the generated key
+
+**Important:** The key is only shown once at creation time. If you're a developer without dashboard access, ask your organization administrator to generate a key and share it with you securely.
 
 ### Base URL
 
@@ -139,4 +150,6 @@ The widget automatically:
 
 ## Support
 
-For questions or issues, please contact your Tropheo administrator.
+- **API Key Issues:** Check your organization profile → Manage Organization → API Keys
+- **Technical Questions:** Refer to the documentation in the `docs/` folder
+- **Feature Requests:** Contact Tropheo support

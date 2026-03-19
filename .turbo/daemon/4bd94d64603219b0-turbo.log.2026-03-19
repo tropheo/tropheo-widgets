@@ -1,0 +1,157 @@
+2026-03-19T15:03:12.658693Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/1.cookie"), AnchoredSystemPathBuf(".turbo/cookies/.turbo-cookie"), AnchoredSystemPathBuf(".turbo/cookies/2.cookie")}
+2026-03-19T15:03:12.658702Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T15:03:13.457815Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/3.cookie"), AnchoredSystemPathBuf(".turbo/cookies/4.cookie")}
+2026-03-19T15:03:13.457823Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T15:03:14.158928Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/6.cookie"), AnchoredSystemPathBuf(".turbo/cookies/5.cookie"), AnchoredSystemPathBuf(".turbo/cookies/7.cookie")}
+2026-03-19T15:03:14.158945Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T15:04:28.854911Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/react/src/LeaderboardTable.tsx")}
+2026-03-19T15:04:28.854937Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }}))
+2026-03-19T15:04:40.853370Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/types/.turbo"), AnchoredSystemPathBuf("packages/types/dist"), AnchoredSystemPathBuf("packages/core/.turbo")}
+2026-03-19T15:04:40.853380Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/core"), path: AnchoredSystemPathBuf("packages/core") }, WorkspacePackage { name: Other("@tropheo/types"), path: AnchoredSystemPathBuf("packages/types") }}))
+2026-03-19T15:04:40.955144Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/core/dist")}
+2026-03-19T15:04:40.955154Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/core"), path: AnchoredSystemPathBuf("packages/core") }}))
+2026-03-19T15:04:40.955170Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-03-19T15:05:22.152564Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts")}
+2026-03-19T15:05:22.152583Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-19T15:06:55.748472Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts")}
+2026-03-19T15:06:55.748490Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-19T15:07:22.947442Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/8.cookie")}
+2026-03-19T15:07:22.947451Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T15:07:23.046926Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/13.cookie"), AnchoredSystemPathBuf(".turbo/cookies/11.cookie"), AnchoredSystemPathBuf("packages/core/.turbo"), AnchoredSystemPathBuf("packages/types/dist"), AnchoredSystemPathBuf(".turbo/cookies/12.cookie"), AnchoredSystemPathBuf("packages/core/dist"), AnchoredSystemPathBuf(".turbo/cookies/10.cookie"), AnchoredSystemPathBuf("packages/types/.turbo"), AnchoredSystemPathBuf(".turbo/cookies/14.cookie"), AnchoredSystemPathBuf(".turbo/cookies/9.cookie")}
+2026-03-19T15:07:23.046936Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }, WorkspacePackage { name: Other("@tropheo/core"), path: AnchoredSystemPathBuf("packages/core") }, WorkspacePackage { name: Other("@tropheo/types"), path: AnchoredSystemPathBuf("packages/types") }}))
+2026-03-19T15:07:23.053763Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-03-19T15:07:23.053775Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-03-19T15:07:24.147430Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/15.cookie")}
+2026-03-19T15:07:24.147453Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T15:07:24.246892Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/16.cookie")}
+2026-03-19T15:07:24.246900Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T15:25:42.743440Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("SIMPLE_GUIDE.md")}
+2026-03-19T15:25:42.747534Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T15:25:42.827998Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("README.md")}
+2026-03-19T15:25:42.828008Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T15:25:42.927932Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/react/src/index.ts"), AnchoredSystemPathBuf("packages/core/src/index.ts"), AnchoredSystemPathBuf("packages/embed/src/index.ts"), AnchoredSystemPathBuf("packages/react/src/LeaderboardTable.tsx"), AnchoredSystemPathBuf("packages/types/src/index.ts")}
+2026-03-19T15:25:42.928250Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/types"), path: AnchoredSystemPathBuf("packages/types") }, WorkspacePackage { name: Other("@tropheo/core"), path: AnchoredSystemPathBuf("packages/core") }, WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }, WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-19T16:43:56.112880Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/types/src/index.ts")}
+2026-03-19T16:43:56.113734Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/types"), path: AnchoredSystemPathBuf("packages/types") }}))
+2026-03-19T16:44:04.507268Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/types/src/index.ts")}
+2026-03-19T16:44:04.507276Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/types"), path: AnchoredSystemPathBuf("packages/types") }}))
+2026-03-19T16:44:52.005573Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts")}
+2026-03-19T16:44:52.005580Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-19T16:45:11.505910Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts")}
+2026-03-19T16:45:11.505934Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-19T16:45:38.804830Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts")}
+2026-03-19T16:45:38.804839Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-19T16:45:49.604598Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts")}
+2026-03-19T16:45:49.604606Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-19T16:46:09.104204Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts")}
+2026-03-19T16:46:09.104214Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-19T16:46:21.602780Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts")}
+2026-03-19T16:46:21.602857Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-19T16:46:35.503836Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts")}
+2026-03-19T16:46:35.503845Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-19T16:46:48.109466Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/react/src/LeaderboardTable.tsx")}
+2026-03-19T16:46:48.109487Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }}))
+2026-03-19T16:46:48.202449Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/react/src/LeaderboardTable.tsx")}
+2026-03-19T16:46:48.202457Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }}))
+2026-03-19T16:46:48.202468Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-03-19T16:46:58.102511Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/react/src/LeaderboardTable.tsx")}
+2026-03-19T16:46:58.102520Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }}))
+2026-03-19T16:47:13.401797Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/react/src/LeaderboardTable.tsx")}
+2026-03-19T16:47:13.401814Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }}))
+2026-03-19T16:47:28.601377Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/react/src/LeaderboardTable.tsx")}
+2026-03-19T16:47:28.601386Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }}))
+2026-03-19T16:47:40.900929Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/react/src/StandingsTable.tsx")}
+2026-03-19T16:47:40.900938Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }}))
+2026-03-19T16:47:51.600146Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/react/src/StandingsTable.tsx")}
+2026-03-19T16:47:51.600163Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }}))
+2026-03-19T16:48:13.500024Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/react/src/StandingsTable.tsx")}
+2026-03-19T16:48:13.500044Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }}))
+2026-03-19T16:48:22.000005Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/react/src/StandingsTable.tsx")}
+2026-03-19T16:48:22.000016Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }}))
+2026-03-19T16:48:42.699338Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/react/src/StandingsTable.tsx")}
+2026-03-19T16:48:42.699346Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }}))
+2026-03-19T16:49:51.597985Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/17.cookie")}
+2026-03-19T16:49:51.598000Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T16:49:51.697189Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/18.cookie")}
+2026-03-19T16:49:51.697197Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T16:49:52.398141Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/19.cookie"), AnchoredSystemPathBuf(".turbo/cookies/20.cookie")}
+2026-03-19T16:49:52.398150Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T16:49:53.099145Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/22.cookie"), AnchoredSystemPathBuf(".turbo/cookies/21.cookie"), AnchoredSystemPathBuf(".turbo/cookies/23.cookie")}
+2026-03-19T16:49:53.099154Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T16:50:10.296811Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts")}
+2026-03-19T16:50:10.296822Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-19T16:50:34.796990Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/24.cookie")}
+2026-03-19T16:50:34.797003Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T16:50:34.896179Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/core/.turbo"), AnchoredSystemPathBuf(".turbo/cookies/26.cookie"), AnchoredSystemPathBuf(".turbo/cookies/29.cookie"), AnchoredSystemPathBuf("packages/core/dist"), AnchoredSystemPathBuf("packages/types/.turbo"), AnchoredSystemPathBuf(".turbo/cookies/28.cookie"), AnchoredSystemPathBuf(".turbo/cookies/27.cookie"), AnchoredSystemPathBuf("packages/types/dist"), AnchoredSystemPathBuf(".turbo/cookies/25.cookie"), AnchoredSystemPathBuf(".turbo/cookies/30.cookie")}
+2026-03-19T16:50:34.896188Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/core"), path: AnchoredSystemPathBuf("packages/core") }, WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }, WorkspacePackage { name: Other("@tropheo/types"), path: AnchoredSystemPathBuf("packages/types") }}))
+2026-03-19T16:50:34.898016Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-03-19T16:50:34.898024Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-03-19T16:50:59.796188Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/embed/src/index.ts")}
+2026-03-19T16:50:59.796205Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }}))
+2026-03-19T16:51:22.494792Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/31.cookie"), AnchoredSystemPathBuf(".turbo/cookies/32.cookie"), AnchoredSystemPathBuf(".turbo/cookies/34.cookie"), AnchoredSystemPathBuf(".turbo/cookies/35.cookie"), AnchoredSystemPathBuf(".turbo/cookies/33.cookie")}
+2026-03-19T16:51:22.494806Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T16:51:23.595347Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/36.cookie")}
+2026-03-19T16:51:23.595356Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T16:51:23.694712Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/37.cookie")}
+2026-03-19T16:51:23.694720Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T16:52:36.794608Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/types/src/index.ts"), AnchoredSystemPathBuf("packages/react/src/StandingsTable.tsx"), AnchoredSystemPathBuf("packages/react/src/LeaderboardTable.tsx"), AnchoredSystemPathBuf("packages/embed/src/index.ts")}
+2026-03-19T16:52:36.794636Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("@tropheo/react"), path: AnchoredSystemPathBuf("packages/react") }, WorkspacePackage { name: Other("@tropheo/embed"), path: AnchoredSystemPathBuf("packages/embed") }, WorkspacePackage { name: Other("@tropheo/types"), path: AnchoredSystemPathBuf("packages/types") }}))
+2026-03-19T16:52:36.830419Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
+2026-03-19T17:00:20.079033Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("SIMPLE_GUIDE.md"), AnchoredSystemPathBuf("SIMPLE_GUIDE_EN.md"), AnchoredSystemPathBuf("examples/html/index.html")}
+2026-03-19T17:00:20.079053Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T17:00:40.879169Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/api-reference.md")}
+2026-03-19T17:00:40.879183Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T17:01:10.476925Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("QUICK_START.md"), AnchoredSystemPathBuf("docs/getting-started.md")}
+2026-03-19T17:01:10.476950Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T17:01:24.977873Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/api-reference.md")}
+2026-03-19T17:01:24.977882Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T17:01:41.877414Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/api-reference.md")}
+2026-03-19T17:01:41.877430Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T17:01:53.675965Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("examples/react/src/App.tsx")}
+2026-03-19T17:01:53.675977Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T17:01:58.475551Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("examples/nextjs/app/page.tsx")}
+2026-03-19T17:01:58.475567Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T17:06:52.267405Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/api-reference.md"), AnchoredSystemPathBuf("examples/html/index.html"), AnchoredSystemPathBuf("QUICK_START.md"), AnchoredSystemPathBuf("examples/nextjs/app/page.tsx"), AnchoredSystemPathBuf("SIMPLE_GUIDE.md"), AnchoredSystemPathBuf("SIMPLE_GUIDE_EN.md"), AnchoredSystemPathBuf("examples/react/src/App.tsx"), AnchoredSystemPathBuf("docs/getting-started.md")}
+2026-03-19T17:06:52.267437Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:25:26.754124Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("QUICK_START.md")}
+2026-03-19T18:25:26.755767Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:25:56.345229Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("SIMPLE_GUIDE.md")}
+2026-03-19T18:25:56.345237Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:26:14.943877Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("SIMPLE_GUIDE_EN.md")}
+2026-03-19T18:26:14.943887Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:27:00.643263Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("PROJECT_SUMMARY.md")}
+2026-03-19T18:27:00.643334Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:27:21.842534Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("PROJECT_SUMMARY.md")}
+2026-03-19T18:27:21.842543Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:28:21.141025Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/authentication.md")}
+2026-03-19T18:28:21.141049Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:28:45.940148Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/getting-started.md")}
+2026-03-19T18:28:45.940158Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:29:24.139128Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/deployment.md")}
+2026-03-19T18:29:24.139156Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:29:53.738843Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/deployment.md")}
+2026-03-19T18:29:53.738851Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:30:07.438202Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/authentication.md")}
+2026-03-19T18:30:07.438302Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:30:25.437876Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/authentication.md")}
+2026-03-19T18:30:25.437884Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:35:05.351663Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("PROJECT_SUMMARY.md"), AnchoredSystemPathBuf("SIMPLE_GUIDE.md"), AnchoredSystemPathBuf("QUICK_START.md"), AnchoredSystemPathBuf("SIMPLE_GUIDE_EN.md")}
+2026-03-19T18:35:05.361445Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:35:05.431830Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/deployment.md"), AnchoredSystemPathBuf("docs/authentication.md"), AnchoredSystemPathBuf("docs/getting-started.md")}
+2026-03-19T18:35:05.431840Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:42:08.121600Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("SIMPLE_GUIDE.md"), AnchoredSystemPathBuf("QUICK_START.md"), AnchoredSystemPathBuf("SIMPLE_GUIDE_EN.md"), AnchoredSystemPathBuf("docs/authentication.md"), AnchoredSystemPathBuf("PROJECT_SUMMARY.md")}
+2026-03-19T18:42:08.121620Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:42:29.321399Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/getting-started.md"), AnchoredSystemPathBuf("docs/deployment.md"), AnchoredSystemPathBuf("docs/authentication.md")}
+2026-03-19T18:42:29.321408Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:42:56.020250Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/deployment.md"), AnchoredSystemPathBuf("PROJECT_SUMMARY.md"), AnchoredSystemPathBuf("docs/authentication.md")}
+2026-03-19T18:42:56.020266Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:43:09.319829Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("PROJECT_SUMMARY.md")}
+2026-03-19T18:43:09.319838Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:43:23.419975Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/deployment.md")}
+2026-03-19T18:43:23.419985Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:43:33.909639Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/authentication.md")}
+2026-03-19T18:43:33.909660Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:45:04.382519Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("PROJECT_SUMMARY.md"), AnchoredSystemPathBuf("SIMPLE_GUIDE_EN.md"), AnchoredSystemPathBuf("QUICK_START.md"), AnchoredSystemPathBuf("SIMPLE_GUIDE.md")}
+2026-03-19T18:45:04.382538Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-03-19T18:45:04.485486Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/deployment.md"), AnchoredSystemPathBuf("docs/authentication.md"), AnchoredSystemPathBuf("docs/getting-started.md")}
+2026-03-19T18:45:04.485497Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))

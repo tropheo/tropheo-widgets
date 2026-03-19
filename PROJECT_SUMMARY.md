@@ -64,6 +64,68 @@ Tropheo Widgets is a complete library system for embedding tournament standings 
 
 ---
 
+## API Key Management System
+
+Organizations have full control over their widget API keys through a self-service dashboard:
+
+### Dashboard Location
+
+Go to your **organization profile** → **Manage Organization** → **API Keys**
+
+(Note: You must be an administrator of the organization to access this section)
+
+### Key Features
+
+#### 1. Create API Keys
+
+- Click **"Create New API Key"** button
+- Assign a descriptive name (e.g., "Website Widget", "Mobile App")
+- Key is generated and displayed once (must be saved immediately)
+- Automatic timestamp tracking
+
+#### 2. Manage Keys
+
+- **View All Keys**: See complete list of active and inactive keys
+- **Activate/Deactivate**: Toggle keys on/off without deleting
+- **Monitor Usage**: View "Last Used" timestamp for each key
+- **Delete Keys**: Permanently remove keys no longer needed
+
+#### 3. Security Features
+
+- Keys are stored securely in database
+- Keys are hashed/encrypted for security
+- Only shown once at creation time
+- Cannot be recovered if lost (must create new key)
+- Each organization can only access their own keys
+
+### Key Information Displayed
+
+| Field     | Description                              |
+| --------- | ---------------------------------------- |
+| Name      | Custom name assigned by user             |
+| Created   | Date and time key was created            |
+| Last Used | Most recent API request using this key   |
+| Status    | Active (green toggle) or Inactive (gray) |
+| Actions   | Delete button                            |
+
+### Workflow
+
+```
+1. Organization Admin logs into dashboard
+2. Goes to organization profile
+3. Clicks "Manage Organization" (admin only)
+4. Navigates to "API Keys" section
+5. Clicks "Create New API Key"
+6. Enters descriptive name
+7. Copies generated key (shown only once!)
+8. Shares key securely with developers
+9. Developers use key in widget implementation
+10. Admin monitors usage via dashboard
+11. Can deactivate/delete key if compromised
+```
+
+---
+
 ## File Structure
 
 ### Tropheo Widgets Library (/Users/victormanuel/workspace/tropheo_widgets/)
@@ -212,10 +274,21 @@ athloom-web/
 
 ### 3. Authentication
 
-- API key via `Authorization` header
-- Environment variable configuration: `WIDGET_API_KEYS`
-- Comma-separated key list support
-- Secure key validation
+- **Organization-managed API keys** - Each organization generates and manages their own API keys
+- API key authentication via `Authorization` header
+- Self-service key management through organization dashboard
+- Key activation/deactivation without deletion
+- Usage tracking (last used timestamp)
+- Secure key validation on server
+
+**Organization Dashboard Features:**
+
+- Create new API keys with custom names
+- View all active and inactive keys
+- Toggle keys on/off (activate/deactivate)
+- Monitor when each key was last used
+- Delete keys permanently
+- Copy keys securely after creation
 
 ### 4. CORS Support
 
@@ -300,14 +373,17 @@ const widgets = new TropheoWidgets({
 ### Server (athloom-web)
 
 ```bash
-# Required for authentication
-WIDGET_API_KEYS=key1,key2,key3
+# API keys are now managed through organization dashboards
+# Organizations create and manage their own keys via the UI
+# No manual environment variable configuration needed for individual keys
 
 # Existing variables (already configured)
 MONGODB_URI=...
 GOOGLE_CLOUD_STORAGE_BUCKET=...
 # etc.
 ```
+
+**Note:** API keys are no longer manually configured via environment variables. Organizations generate and manage their own keys through their organization profile → Manage Organization → API Keys (admin only).
 
 ### Client (Next.js)
 
@@ -534,10 +610,22 @@ Add unit tests for:
 ### For Server Administrators
 
 1. ✅ Review widget API implementation
-2. ⚠️ Set up `WIDGET_API_KEYS` environment variable
-3. ⚠️ Deploy to staging/production
-4. ⚠️ Generate and distribute API keys to clients
-5. ⚠️ Monitor widget API usage
+2. ✅ Deploy organization dashboard with API key management
+3. ✅ Set up widget API routes in production
+4. ⚠️ Train organizations on self-service API key generation
+5. ⚠️ Monitor widget API usage and performance
+6. ⚠️ Set up rate limiting and security measures
+
+### For Organizations (API Key Holders)
+
+1. ⚠️ Log in to organization dashboard
+2. ⚠️ Go to your organization profile
+3. ⚠️ Click "Manage Organization" (admin only)
+4. ⚠️ Navigate to "API Keys" section
+5. ⚠️ Generate new API key with descriptive name
+6. ⚠️ Copy and securely store the API key
+7. ⚠️ Share key with website developers
+8. ⚠️ Monitor key usage and deactivate if compromised
 
 ### For Widget Library Maintainers
 
@@ -549,11 +637,12 @@ Add unit tests for:
 
 ### For External Developers (Clients)
 
-1. ⚠️ Obtain API key from administrator
-2. ⚠️ Choose integration method (React or Vanilla JS)
-3. ⚠️ Install packages or include CDN script
-4. ⚠️ Configure with API key and base URL
-5. ⚠️ Implement widgets on website
+1. ⚠️ Request access to organization dashboard or obtain API key from organization admin
+2. ⚠️ Generate API key from organization profile → Manage Organization → API Keys (if you have dashboard access and are admin)
+3. ⚠️ Choose integration method (React or Vanilla JS)
+4. ⚠️ Install packages or include CDN script
+5. ⚠️ Configure with API key and base URL
+6. ⚠️ Implement widgets on website
 
 ---
 
@@ -569,13 +658,15 @@ Add unit tests for:
 
 ### Common Issues
 
-| Issue                | Solution                               |
-| -------------------- | -------------------------------------- |
-| 401 Unauthorized     | Check API key configuration            |
-| CORS errors          | Verify CORS headers in response        |
-| Empty standings      | Verify event ID and database content   |
-| Widget not rendering | Check browser console for errors       |
-| Type errors          | Ensure latest @tropheo/types installed |
+| Issue                | Solution                                                                        |
+| -------------------- | ------------------------------------------------------------------------------- |
+| 401 Unauthorized     | Check API key is correct and active in organization dashboard                   |
+| CORS errors          | Verify CORS headers in response                                                 |
+| Empty standings      | Verify event ID and database content                                            |
+| Widget not rendering | Check browser console for errors                                                |
+| Type errors          | Ensure latest @tropheo/types installed                                          |
+| Key not working      | Verify key is activated (organization profile → Manage Organization → API Keys) |
+| Lost API key         | Generate new key from dashboard (old keys cannot be recovered)                  |
 
 ### Contact
 

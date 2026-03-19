@@ -2,46 +2,37 @@
 
 This guide will help you get started with Tropheo Widgets in 5 minutes.
 
-## For Server Administrators
+## For Organization Administrators
 
-### Step 1: Set Up API Keys
+### Step 1: Generate Your API Key
 
-Generate a secure API key:
+1. Log in to your Tropheo organization dashboard
+2. Go to your **organization profile**
+3. If you are an administrator of the organization, you will see the **"Manage Organization"** option
+4. Inside **"Manage Organization"**, you will find different sections, including **"API Keys"**
+5. Click the **"Create New API Key"** button
+6. Give your key a descriptive name (e.g., "Website Widget", "External Portal")
+7. Copy the generated API key and store it securely
 
-```bash
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-```
+**Important:** Save your API key immediately after creation - you won't be able to see it again!
 
-Output example:
+### Step 2: Manage Your Keys
 
-```
-a5f8b3c7d9e2f1a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2
-```
+From the API Keys dashboard, you can:
 
-### Step 2: Configure Environment Variable
+- **View active and inactive keys** - See all your API keys in one place
+- **Activate/Deactivate** - Toggle keys on/off without deleting them
+- **Monitor usage** - Check when each key was last used
+- **Delete keys** - Remove keys you no longer need
 
-Add to your environment configuration:
+**Security Best Practices:**
 
-```bash
-# For local development (.env.local)
-WIDGET_API_KEYS=a5f8b3c7d9e2f1a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2
+- Create separate keys for different integrations
+- Deactivate unused keys instead of leaving them active
+- Regularly review the "Last Used" column to identify inactive keys
+- Delete compromised keys immediately and create new ones
 
-# For production (depends on your hosting)
-# See docs/deployment.md for platform-specific instructions
-```
-
-### Step 3: Deploy Widget API
-
-The widget API files are already created in `athloom-web`:
-
-- `app/lib/middleware/widgetAuth.ts`
-- `app/api/widgets/events/route.ts`
-- `app/api/widgets/standings/[eventId]/route.ts`
-- `app/api/widgets/standings/[eventId]/recompute/route.ts`
-
-Deploy these to your production environment and restart the application.
-
-### Step 4: Test the API
+### Step 3: Test Your API Key
 
 ```bash
 # Replace with your actual values
@@ -56,13 +47,15 @@ curl -H "Authorization: $API_KEY" \
 # Should return JSON with sub-events or an empty array
 ```
 
-### Step 5: Share with Clients
+### Step 4: Share with Your Website Developers
 
-Provide clients with:
+Provide your developers with:
 
-1. API key (keep it secure!)
-2. Base URL of your Tropheo instance
-3. Link to integration documentation
+1. API key (keep it secure - don't share via email or chat!)
+2. Base URL of your Tropheo instance (e.g., `https://app.tropheo.mx`)
+3. Link to integration documentation (this repository)
+
+**Important:** Treat API keys like passwords. Anyone with your key can access your organization's public event data.
 
 ---
 
@@ -100,6 +93,7 @@ You have three options depending on your stack:
         title: 'Tournament Standings', // Custom title (optional)
         container: '#standings', // Where to show the widget
         showEmptyState: true, // Show message if no data (optional)
+        lang: 'en', // Language: 'en' or 'es' (optional, default: 'en')
       });
     </script>
   </body>
@@ -108,7 +102,7 @@ You have three options depending on your stack:
 
 **How to get your values:**
 
-- **apiKey**: Contact your Tropheo administrator
+- **apiKey**: Generate one from your organization profile → **Manage Organization** → **API Keys**
 - **baseUrl**: The main URL where your Tropheo site is hosted (e.g., `https://app.tropheo.mx`)
 - **eventId**: Found in the event URL: `https://your-site.com/events/EVENT_ID_HERE`
 
@@ -360,8 +354,9 @@ Use the `id` field as your `eventId`.
 **Solution:**
 
 1. Verify you're using the correct API key
-2. Check that the API key is set in environment variables
-3. Ensure no extra spaces in the key
+2. Check that the API key is still active in your organization's dashboard
+3. Make sure the API key is set correctly in your environment variables
+4. Ensure no extra spaces in the key
 
 ```javascript
 // ❌ Wrong

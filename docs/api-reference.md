@@ -199,6 +199,9 @@ interface StandingsTableProps {
   isAdmin?: boolean;
   refreshTrigger?: number;
   className?: string;
+  eventUrl?: string;
+  baseUrl?: string;
+  lang?: 'en' | 'es';
 }
 ```
 
@@ -220,6 +223,7 @@ function App() {
       eventRole="DIVISION"
       title="Tournament Standings"
       showEmptyState={true}
+      lang="en"
     />
   );
 }
@@ -235,6 +239,9 @@ function App() {
 - `isAdmin` (boolean, optional): Enable admin features (recompute button)
 - `refreshTrigger` (number, optional): Change this value to force refresh
 - `className` (string, optional): Additional CSS class names
+- `eventUrl` (string, optional): Custom event URL for the "View on Tropheo" button
+- `baseUrl` (string, optional): Base URL for constructing event links (default: 'https://app.tropheo.mx')
+- `lang` ('en' | 'es', optional): Language for UI text (default: 'en')
 
 ---
 
@@ -270,6 +277,7 @@ class TropheoEmbed {
     eventRole: 'DIVISION',
     title: 'Tournament Standings',
     container: '#standings',
+    lang: 'en', // 'en' or 'es'
   });
 </script>
 ```
@@ -296,6 +304,7 @@ await embed.renderStandings({
   title: 'Tournament Standings',
   showEmptyState: true,
   container: '#standings',
+  lang: 'en', // Language: 'en' or 'es'
 });
 ```
 
@@ -308,6 +317,9 @@ interface StandingsWidgetConfig {
   title?: string;
   showEmptyState?: boolean;
   container: string | HTMLElement;
+  eventUrl?: string;
+  baseUrl?: string;
+  lang?: 'en' | 'es';
 }
 ```
 
@@ -316,6 +328,9 @@ interface StandingsWidgetConfig {
 - `title` (string, optional): Custom title
 - `showEmptyState` (boolean, optional): Show message when no data
 - `container` (string | HTMLElement, required): CSS selector or DOM element
+- `eventUrl` (string, optional): Custom event URL for the "View on Tropheo" button
+- `baseUrl` (string, optional): Base URL for constructing event links (default: 'https://app.tropheo.mx')
+- `lang` ('en' | 'es', optional): Language for UI text (default: 'en')
 
 **Returns:** `Promise<void>`
 
@@ -351,3 +366,102 @@ Common HTTP status codes:
 - `401`: Unauthorized (invalid API key)
 - `404`: Event not found
 - `500`: Server error
+
+---
+
+## Language Support
+
+Tropheo Widgets support multiple languages for UI text. The following components and methods support the `lang` parameter:
+
+### Supported Languages
+
+- `'en'` - English (default)
+- `'es'` - Spanish (Español)
+
+### Examples
+
+#### Vanilla JavaScript (Embed)
+
+```javascript
+const embed = new window.TropheoEmbed({
+  apiKey: 'your-api-key',
+  baseUrl: 'https://your-instance.com',
+});
+
+// English (default)
+embed.renderStandings({
+  eventId: 'event-123',
+  container: '#standings',
+  lang: 'en',
+});
+
+// Spanish
+embed.renderStandings({
+  eventId: 'event-123',
+  container: '#standings-es',
+  lang: 'es',
+});
+```
+
+#### React Components
+
+```tsx
+import { StandingsTable } from '@tropheo/react';
+
+function App() {
+  return (
+    <>
+      {/* English */}
+      <StandingsTable client={client} eventId="event-123" lang="en" />
+
+      {/* Spanish */}
+      <StandingsTable client={client} eventId="event-123" lang="es" />
+    </>
+  );
+}
+```
+
+### Translated UI Elements
+
+The following UI elements are translated based on the `lang` parameter:
+
+- Loading messages ("Loading standings..." / "Cargando posiciones...")
+- Error messages
+- Empty state messages ("No standings available yet." / "No hay posiciones disponibles aún.")
+- Table headers (Team/Equipo, GP/PJ, W/G, L/P, T/E, GB/JD, PTS, WIN%/% VIC, PF, PA/PC, DIFF/DIF)
+- Footer text ("Powered by" / "Desarrollado por")
+- Call-to-action buttons ("View on Tropheo" / "Ver en Tropheo")
+
+### LeaderboardTable Language Support
+
+The `LeaderboardTable` component also supports the `lang` parameter:
+
+```tsx
+import { LeaderboardTable } from '@tropheo/react';
+
+function LeaderboardPage() {
+  return (
+    <LeaderboardTable
+      client={client}
+      eventId="event-123"
+      scopeType="TOURNAMENT"
+      sport="basketball"
+      facet="basketball"
+      lang="es"
+    />
+  );
+}
+```
+
+For the embed version:
+
+```javascript
+embed.renderLeaderboard({
+  eventId: 'event-123',
+  scopeType: 'TOURNAMENT',
+  sport: 'basketball',
+  facet: 'basketball',
+  container: '#leaderboard',
+  lang: 'es',
+});
+```

@@ -4,6 +4,12 @@ import type {
   StandingsResponse,
   HttpMethod,
   ApiResponse,
+  LeaderboardResponse,
+  LeaderboardMode,
+  ScopeType,
+  Sport,
+  Facet,
+  SortKey,
 } from '@tropheo/types';
 
 /**
@@ -102,6 +108,77 @@ export class ApiClient {
       'POST',
       config
     );
+  }
+
+  /**
+   * Fetch athlete leaderboard for an event
+   */
+  async getAthleteLeaderboard(
+    scopeEventId: string,
+    scopeType: ScopeType,
+    sport: Sport,
+    facet: Facet,
+    sort: SortKey,
+    limit: number = 50
+  ): Promise<ApiResponse<LeaderboardResponse>> {
+    const params = new URLSearchParams({
+      scopeEventId,
+      scopeType,
+      sport,
+      facet,
+      sort,
+      limit: String(limit),
+      minGames: '1',
+    });
+
+    if (facet === 'batting') {
+      params.set('minAb', '1');
+    }
+    if (facet === 'pitching') {
+      params.set('minOuts', '1');
+    }
+
+    return this.request<LeaderboardResponse>(`/api/widgets/leaderboard/athletes?${params}`);
+  }
+
+  /**
+   * Fetch team leaderboard for an event
+   */
+  async getTeamLeaderboard(
+    scopeEventId: string,
+    scopeType: ScopeType,
+    sport: Sport,
+    facet: Facet,
+    sort: SortKey,
+    limit: number = 50
+  ): Promise<ApiResponse<LeaderboardResponse>> {
+    const params = new URLSearchParams({
+      scopeEventId,
+      scopeType,
+      sport,
+      facet,
+      sort,
+      limit: String(limit),
+    });
+
+    return this.request<LeaderboardResponse>(`/api/widgets/leaderboard/teams?${params}`);
+  }
+
+  /**
+   * Fetch leaderboard (athletes or teams) for an event
+   */
+  async getLeaderboard(
+    scopeEventId: string,
+    scopeType: ScopeType,
+    sport: Sport,
+    facet: Facet,
+    mode: LeaderboardMode = 'athletes',
+    sort: SortKey,
+    limit: number = 50
+  ): Promise<ApiResponse<LeaderboardResponse>> {
+    return mode === 'athletes'
+      ? this.getAthleteLeaderboard(scopeEventId, scopeType, sport, facet, sort, limit)
+      : this.getTeamLeaderboard(scopeEventId, scopeType, sport, facet, sort, limit);
   }
 }
 

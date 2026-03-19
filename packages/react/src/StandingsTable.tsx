@@ -2,6 +2,50 @@ import React, { useEffect, useState, useCallback } from 'react';
 import type { ApiClient } from '@tropheo/core';
 import type { StandingRow, EventRole } from '@tropheo/types';
 
+/**
+ * Translations for standings table
+ */
+const translations = {
+  en: {
+    loadingStandings: 'Loading standings...',
+    error: 'Error',
+    noStandings: 'No standings available yet.',
+    poweredBy: 'Powered by',
+    viewOn: 'View on Tropheo',
+    team: 'Team',
+    gp: 'GP',
+    w: 'W',
+    l: 'L',
+    t: 'T',
+    gb: 'GB',
+    pts: 'PTS',
+    winPct: 'WIN%',
+    pf: 'PF',
+    pa: 'PA',
+    diff: 'DIFF',
+  },
+  es: {
+    loadingStandings: 'Cargando posiciones...',
+    error: 'Error',
+    noStandings: 'No hay posiciones disponibles aún.',
+    poweredBy: 'Desarrollado por',
+    viewOn: 'Ver en Tropheo',
+    team: 'Equipo',
+    gp: 'PJ',
+    w: 'G',
+    l: 'P',
+    t: 'E',
+    gb: 'JD',
+    pts: 'PTS',
+    winPct: '% VIC',
+    pf: 'PF',
+    pa: 'PC',
+    diff: 'DIF',
+  },
+};
+
+type Language = 'en' | 'es';
+
 interface StandingsTableProps {
   client: ApiClient;
   eventId: string;
@@ -13,6 +57,7 @@ interface StandingsTableProps {
   className?: string;
   eventUrl?: string;
   baseUrl?: string;
+  lang?: 'en' | 'es';
 }
 
 interface StageStandingsData {
@@ -70,6 +115,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
   className = '',
   eventUrl,
   baseUrl = 'https://app.tropheo.mx',
+  lang = 'en',
 }) => {
   const [standings, setStandings] = useState<StandingRow[]>([]);
   const [stageStandings, setStageStandings] = useState<Record<string, StageStandingsData>>({});
@@ -78,6 +124,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [expandedStages, setExpandedStages] = useState<Set<string>>(new Set());
 
+  const t = translations[lang as Language];
   const isMobileMode = isDivisionOrRoot(eventRole);
 
   const loadStandings = useCallback(async () => {
@@ -156,19 +203,19 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
           <tr style={{ borderBottom: '1px solid #e5e7eb' }}>
             <th style={{ textAlign: 'left', padding: '12px 12px 12px 0', fontWeight: 600 }}>#</th>
             <th style={{ textAlign: 'left', padding: '12px', fontWeight: 600, minWidth: '160px' }}>
-              Team
+              {t.team}
             </th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>GP</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>W</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>L</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>T</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>GB</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>PTS</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>WIN%</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>PF</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>PA</th>
+            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.gp}</th>
+            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.w}</th>
+            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.l}</th>
+            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.t}</th>
+            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.gb}</th>
+            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.pts}</th>
+            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.winPct}</th>
+            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.pf}</th>
+            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.pa}</th>
             <th style={{ textAlign: 'right', padding: '12px 0 12px 12px', fontWeight: 600 }}>
-              DIFF
+              {t.diff}
             </th>
           </tr>
         </thead>
@@ -316,7 +363,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
   if (loading) {
     return (
       <div className={className} style={{ padding: '20px', textAlign: 'center' }}>
-        <p>Loading standings...</p>
+        <p>{t.loadingStandings}</p>
       </div>
     );
   }
@@ -324,7 +371,9 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
   if (error) {
     return (
       <div className={className} style={{ padding: '20px', textAlign: 'center', color: '#ef4444' }}>
-        <p>Error: {error}</p>
+        <p>
+          {t.error}: {error}
+        </p>
       </div>
     );
   }
@@ -412,7 +461,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
             )}
           </div>
         ) : (
-          <p style={{ textAlign: 'center', color: '#6b7280' }}>No standings available yet.</p>
+          <p style={{ textAlign: 'center', color: '#6b7280' }}>{t.noStandings}</p>
         )}
       </div>
 
@@ -430,7 +479,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
         {/* Powered by Tropheo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <span style={{ fontSize: '11px', color: '#6b7280' }}>
-            Powered by <span style={{ fontWeight: 600, color: '#374151' }}>Tropheo</span>
+            {t.poweredBy} <span style={{ fontWeight: 600, color: '#374151' }}>Tropheo</span>
           </span>
         </div>
 
@@ -461,7 +510,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
             e.currentTarget.style.backgroundColor = '#3b82f6';
           }}
         >
-          Ver en Tropheo
+          {t.viewOn}
           <svg
             width="12"
             height="12"

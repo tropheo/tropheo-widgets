@@ -4,7 +4,57 @@ Tropheo Widgets uses API key authentication to secure access to your tournament 
 
 ## Getting an API Key
 
-Contact your Tropheo administrator to obtain an API key for your application.
+### For Organization Administrators
+
+Organizations can now generate their own API keys through the self-service dashboard:
+
+1. **Log in** to your Tropheo organization dashboard
+2. **Go to** your **organization profile**
+3. **Click** **"Manage Organization"** (admin only)
+4. **Navigate to** the **"API Keys"** section
+5. **Click** the **"Create New API Key"** button
+6. **Enter** a descriptive name for your key (e.g., "Website Widget", "Mobile App", "Partner Integration")
+7. **Copy** the generated API key immediately (it will only be shown once!)
+8. **Store** the key securely
+
+### For Developers
+
+If you're implementing widgets for an organization:
+
+1. Request access to the organization's dashboard, OR
+2. Ask the organization administrator to generate an API key and share it with you securely
+
+**Important:** API keys are sensitive credentials. Treat them like passwords and never share them in public repositories or unsecured channels.
+
+## Managing Your API Keys
+
+### Dashboard Features
+
+From the API Keys section (organization profile → Manage Organization → API Keys), you can:
+
+- **View all keys**: See both active and inactive API keys
+- **Activate/Deactivate**: Toggle keys on/off without deleting them
+- **Monitor usage**: Check when each key was last used
+- **Delete keys**: Permanently remove keys you no longer need
+
+### Key Information
+
+For each API key, you can see:
+
+| Field     | Description                              |
+| --------- | ---------------------------------------- |
+| Name      | The descriptive name you assigned        |
+| Created   | When the key was generated               |
+| Last Used | Timestamp of the most recent API request |
+| Status    | Active (usable) or Inactive (disabled)   |
+| Actions   | Delete button to remove the key          |
+
+### Deactivating vs. Deleting
+
+- **Deactivate**: Temporarily disable a key without losing its history. You can reactivate it later.
+- **Delete**: Permanently remove the key. This action cannot be undone.
+
+**Best Practice**: Deactivate unused keys instead of deleting them to maintain usage history.
 
 ## Using API Keys
 
@@ -53,38 +103,6 @@ const widgets = new TropheoWidgets({
 });
 ```
 
-## Server Configuration
-
-### Setting Up API Keys
-
-On the Tropheo server, configure the `WIDGET_API_KEYS` environment variable with a comma-separated list of valid API keys:
-
-```bash
-WIDGET_API_KEYS=key1,key2,key3
-```
-
-Or in your deployment configuration:
-
-```yaml
-# env-vars.yaml
-env_variables:
-  WIDGET_API_KEYS: 'key1,key2,key3'
-```
-
-### Creating Secure API Keys
-
-Generate strong, random API keys:
-
-```bash
-# Using Node.js
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-
-# Using OpenSSL
-openssl rand -hex 32
-```
-
-Example output: `a5f8b3c7d9e2f1a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2`
-
 ## How Authentication Works
 
 1. Client includes API key in `Authorization` header:
@@ -93,49 +111,63 @@ Example output: `a5f8b3c7d9e2f1a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a
    Authorization: your-api-key-here
    ```
 
-2. Server validates the key against `WIDGET_API_KEYS` environment variable
+2. Server validates the key against the organization's API keys in the database
 
-3. If valid, request is processed. If invalid, returns `401 Unauthorized`
+3. Server checks that the key is active (not deactivated)
+
+4. If valid and active, request is processed. If invalid or inactive, returns `401 Unauthorized`
+
+5. Server updates the "Last Used" timestamp for the key
 
 ## Security Best Practices
 
 ### DO:
 
 ✅ Store API keys in environment variables  
-✅ Use different keys for different environments (dev, staging, production)  
-✅ Generate long, random API keys (32+ characters)  
-✅ Rotate keys periodically  
-✅ Use HTTPS for all API requests
+✅ Use different keys for different integrations (website, mobile app, etc.)  
+✅ Give keys descriptive names to identify their purpose  
+✅ Regularly review the "Last Used" column to identify unused keys  
+✅ Deactivate keys immediately if you suspect they're compromised  
+✅ Use HTTPS for all API requests  
+✅ Delete or deactivate keys when they're no longer needed
 
 ### DON'T:
 
 ❌ Commit API keys to version control  
-❌ Share keys publicly or in client-side code without environment variables  
-❌ Use simple or guessable keys  
-❌ Reuse the same key across multiple applications
+❌ Share keys via email, chat, or other unsecured channels  
+❌ Reuse the same key across multiple unrelated applications  
+❌ Leave inactive keys activated  
+❌ Share keys publicly or embed them directly in client-side code without environment variables
 
 ## API Key Rotation
 
 To rotate an API key:
 
-1. Generate a new key
-2. Add new key to `WIDGET_API_KEYS` (keep old key temporarily)
-3. Update clients to use new key
-4. After all clients are updated, remove old key from `WIDGET_API_KEYS`
+1. **Create** a new key in the dashboard with a descriptive name (e.g., "Website Widget v2")
+2. **Update** your applications to use the new key
+3. **Test** that the new key works in all environments
+4. **Deactivate** the old key (recommended) or delete it
+5. **Monitor** the old key's "Last Used" timestamp to ensure no systems are still using it
 
-Example during rotation:
+### Gradual Migration
 
-```bash
-# Old key: abc123
-# New key: xyz789
-WIDGET_API_KEYS=abc123,xyz789
-```
+You can keep both keys active during migration:
 
-After migration:
+1. Generate new key (both keys now active)
+2. Update applications one by one
+3. Monitor "Last Used" for both keys
+4. Once old key hasn't been used for several days, deactivate or delete it
 
-```bash
-WIDGET_API_KEYS=xyz789
-```
+### Emergency Key Deactivation
+
+If a key is compromised:
+
+1. Go to your organization profile → Manage Organization → API Keys immediately
+2. Find the compromised key
+3. Toggle it to **Inactive** (instant effect)
+4. Generate a new key
+5. Update your applications with the new key
+6. Delete the old key once you're sure it's not being used
 
 ## CORS Configuration
 
@@ -163,14 +195,41 @@ if (origin && allowedOrigins.includes(origin)) {
 
 ### 401 Unauthorized
 
-**Cause:** Invalid or missing API key
+**Cause:** Invalid, missing, or deactivated API key
 
 **Solutions:**
 
-- Verify API key is correct
-- Check environment variables are loaded
-- Ensure `WIDGET_API_KEYS` is set on the server
-- Verify no extra whitespace in keys
+- Verify API key is correct (check for typos)
+- Go to your organization profile → Manage Organization → API Keys and verify the key is **Active** (not Inactive)
+- Check environment variables are loaded correctly
+- Ensure no extra whitespace in the key
+- If key was recently deactivated, reactivate it or generate a new one
+
+### "API Key Not Found"
+
+**Cause:** Key was deleted or never existed
+
+**Solutions:**
+
+- Generate a new API key from the dashboard
+- Verify you're using the correct organization's key
+- Check that you copied the complete key when it was generated
+
+### Key Not Working After Creation
+
+**Cause:** Various configuration issues
+
+**Solutions:**
+
+- Verify the key is set to **Active** in the dashboard
+- Check that you're making requests to the correct base URL
+- Ensure the key is included in the `Authorization` header
+- Test the key with a simple curl request:
+
+```bash
+curl -H "Authorization: your-api-key" \
+  https://your-instance.com/api/widgets/events?parentEventId=xyz
+```
 
 ### CORS Errors
 
@@ -182,39 +241,27 @@ if (origin && allowedOrigins.includes(origin)) {
 - Check browser console for specific error
 - Ensure `OPTIONS` preflight requests are handled
 
-### API Key Not Working
-
-**Cause:** Key mismatch or configuration issue
-
-**Solutions:**
-
-```bash
-# Check server configuration
-echo $WIDGET_API_KEYS
-
-# Test API key
-curl -H "Authorization: your-api-key" \
-  https://your-instance.com/api/widgets/events?parentEventId=xyz
-```
-
 ## Example Implementation
 
-Full authentication setup:
+Complete authentication setup example:
 
-**Server (.env):**
+**1. Generate API Key (Organization Dashboard):**
+
+- Go to your organization profile
+- Click "Manage Organization" (admin only)
+- Navigate to "API Keys" section
+- Click "Create New API Key"
+- Name it: "Production Website Widget"
+- Copy the generated key
+
+**2. Configure Client (.env.local for Next.js):**
 
 ```bash
-WIDGET_API_KEYS=a5f8b3c7d9e2f1a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2
-```
-
-**Client (.env.local):**
-
-```bash
-NEXT_PUBLIC_TROPHEO_API_KEY=a5f8b3c7d9e2f1a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2
+NEXT_PUBLIC_TROPHEO_API_KEY=your-generated-key-here
 NEXT_PUBLIC_TROPHEO_BASE_URL=https://your-tropheo-instance.com
 ```
 
-**Client Code:**
+**3. Client Code:**
 
 ```tsx
 const widgets = new TropheoWidgets({
@@ -225,3 +272,9 @@ const widgets = new TropheoWidgets({
 // API client automatically adds Authorization header to all requests
 const response = await widgets.getClient().getStandings('event-123');
 ```
+
+**4. Monitor Usage:**
+
+- Return to your organization profile → Manage Organization → API Keys
+- Check "Last Used" timestamp
+- Deactivate if suspicious activity detected
