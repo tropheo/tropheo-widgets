@@ -6,17 +6,18 @@ This directory contains complete example implementations of Tropheo Widgets in d
 
 ### [HTML Example](./html)
 
-Demonstrates vanilla JavaScript integration using CDN script tag. Perfect for:
+Demonstrates vanilla JavaScript integration using a local bundle. Perfect for:
 
 - Static websites
 - Content management systems (WordPress, Drupal, etc.)
 - Simple HTML pages
-- No build tools required
+- No build tools or npm required on the consuming side
 
 **Key Features:**
 
 - Zero dependencies
-- Simple script tag inclusion
+- Local bundle file (no CDN required)
+- Standings + stats leaderboard
 - Works anywhere JavaScript is supported
 
 [View HTML Example →](./html)
@@ -30,14 +31,12 @@ Shows integration with React using Vite for development. Ideal for:
 - React single-page applications
 - Component-based architectures
 - TypeScript projects
-- Modern JavaScript development
 
 **Key Features:**
 
 - TypeScript support
-- Hot module replacement
-- Component reusability
-- Vite build system
+- Hot module replacement (Vite)
+- `StandingsTable` + `LeaderboardTable` components
 
 [View React Example →](./react)
 
@@ -49,15 +48,14 @@ Demonstrates Next.js 14 with App Router integration. Best for:
 
 - Server-side rendered applications
 - Next.js projects
-- Full-stack React applications
 - SEO-optimized sites
 
 **Key Features:**
 
 - Next.js App Router
-- Client-side components
+- Client components (`'use client'`)
+- `StandingsTable` + `LeaderboardTable`
 - Environment variable configuration
-- Production-ready setup
 
 [View Next.js Example →](./nextjs)
 
@@ -65,39 +63,43 @@ Demonstrates Next.js 14 with App Router integration. Best for:
 
 ## Quick Start
 
-Each example includes:
+### 1. Build the embed bundle (HTML example)
 
-- Complete source code
-- Configuration instructions
-- README with setup steps
-- Dependencies list
+```bash
+# From the repo root
+cd ..
+npm install
+npm run build:embed
+# → dist/tropheo-embed.bundle.js is created
+```
 
-### Run an Example
+Copy the bundle next to `html/index.html`, then open `index.html` directly in your browser.
 
-1. **Choose your example:**
+### 2. Run a React or Next.js example
 
-   ```bash
-   cd html    # or react, or nextjs
-   ```
+```bash
+cd react   # or nextjs
+npm install
+npm run dev
+```
 
-2. **Follow the README:**
-   Each example has its own README with specific instructions
+Then open `http://localhost:5173` (React) or `http://localhost:3000` (Next.js).
 
-3. **Configure API credentials:**
-   Update the API key and base URL in the example code
+### 3. Configure API credentials
+
+Update the API key, base URL, and event ID in the example code (or `.env` file).
 
 ## Configuration
 
 All examples require:
 
-- **API Key**: Obtained from your Tropheo administrator
-- **Base URL**: Your Tropheo instance URL (e.g., `https://your-instance.com`)
-- **Event ID**: The event you want to display
-
-### Example Configuration
+| Parameter | Description | Where to find |
+|---|---|---|
+| `apiKey` | API key from your Tropheo organization | Organization Profile → Manage Organization → API Keys |
+| `baseUrl` | Your Tropheo instance URL | e.g. `https://app.tropheo.mx` |
+| `eventId` | Event to display | From the event URL |
 
 **HTML:**
-
 ```javascript
 const API_KEY = 'your-api-key';
 const BASE_URL = 'https://your-instance.com';
@@ -105,19 +107,23 @@ const EVENT_ID = 'event-123';
 ```
 
 **React/Next.js:**
-
 ```bash
 # .env or .env.local
-NEXT_PUBLIC_TROPHEO_API_KEY=your-api-key
+VITE_TROPHEO_API_KEY=your-api-key        # React (Vite)
+NEXT_PUBLIC_TROPHEO_API_KEY=your-api-key # Next.js
+VITE_TROPHEO_BASE_URL=https://your-instance.com
 NEXT_PUBLIC_TROPHEO_BASE_URL=https://your-instance.com
-NEXT_PUBLIC_EVENT_ID=event-123
 ```
 
 ## Common Use Cases
 
-### Embed Standings on a Website
+### Show Standings on a Static Website
 
-Use the **HTML Example** to quickly add standings to any webpage.
+Use the **HTML Example** — copy `tropheo-embed.bundle.js` to your project and reference it locally.
+
+### Show Stats / Leaderboards
+
+Both HTML and React examples demonstrate `renderStats` / `LeaderboardTable` usage.
 
 ### Build a Tournament Dashboard
 
@@ -134,12 +140,3 @@ For questions about the examples:
 1. Check the individual example README
 2. Review the [main documentation](../docs)
 3. Contact your Tropheo administrator
-
-## Contributing
-
-To add a new example:
-
-1. Create a new directory under `examples/`
-2. Include complete working code
-3. Add a detailed README
-4. Update this file with a link to your example

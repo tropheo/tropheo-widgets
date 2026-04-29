@@ -10,14 +10,43 @@
             "default": "./dist/index.js"
         }
     },
+    "files": [
+        "dist",
+        "README.md"
+    ],
     "scripts": {
         "build": "tsc",
         "dev": "tsc --watch",
         "clean": "rm -rf dist"
     },
+    "keywords": [
+        "tropheo",
+        "widgets",
+        "vanilla-js",
+        "embed",
+        "standings",
+        "leaderboard",
+        "tournament",
+        "sports",
+        "cdn"
+    ],
+    "author": "Tropheo",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/your-username/tropheo_widgets.git",
+        "directory": "packages/embed"
+    },
+    "homepage": "https://github.com/your-username/tropheo_widgets#readme",
+    "bugs": {
+        "url": "https://github.com/your-username/tropheo_widgets/issues"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
     "dependencies": {
-        "@tropheo/core": "*",
-        "@tropheo/types": "*"
+        "@tropheo/core": "^1.0.0",
+        "@tropheo/types": "^1.0.0"
     },
     "devDependencies": {
         "typescript": "^5.3.3"

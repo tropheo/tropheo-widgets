@@ -41,7 +41,63 @@ https://app.tropheo.mx/events/65abc123def456789
 
 ## 📝 Option 1: For Simple Websites (HTML)
 
-This is the easiest way. No installation required.
+This is the easiest way. You have two sub-options:
+
+### 1a. Local repo install (no CDN, no npm — recommended for testing)
+
+Build the bundle once from the repository and use it as a local file. This is how the included `test-library` demo page works.
+
+```bash
+# 1. Clone or download the repository
+git clone <repo-url> tropheo_widgets
+cd tropheo_widgets
+
+# 2. Install dependencies
+npm install
+
+# 3. Build the embed bundle
+npm run build:embed
+# → Creates dist/tropheo-embed.bundle.js
+# → Also auto-copies to ../test-library/tropheo-embed.bundle.js
+```
+
+Copy `dist/tropheo-embed.bundle.js` next to your HTML file and load it with a `<script>` tag:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tournament Standings</title>
+  </head>
+  <body>
+    <h1>🏆 Tournament Standings</h1>
+    <div id="standings"></div>
+
+    <!-- Local bundle (same folder as this HTML file) -->
+    <script src="tropheo-embed.bundle.js"></script>
+    <script>
+      const embed = new window.TropheoEmbed({
+        apiKey: 'YOUR-API-KEY-HERE',
+        baseUrl: 'https://app.tropheo.mx',
+      });
+
+      embed.renderStandings({
+        eventId: 'YOUR-EVENT-ID-HERE',
+        title: 'Tournament Standings',
+        container: '#standings',
+        showEmptyState: true,
+        lang: 'en',
+      });
+    </script>
+  </body>
+</html>
+```
+
+Open the HTML file directly in your browser — no server needed. Rebuild the bundle any time by running `npm run build:embed` inside the `tropheo_widgets/` folder.
+
+### 1b. CDN (no installation)
 
 ### Step 1: Create an HTML File
 
@@ -151,7 +207,8 @@ If you already have a webpage and want to add standings:
 
 The widget does all of this automatically:
 
-✅ Detects if the event is a tournament, division, pool, or bracket  
+✅ Detects if the event is a tournament, division, pool, bracket, season, or league  
+✅ Loads divisions and pools in parallel (hierarchical)  
 ✅ Groups teams correctly (by division, pool, etc.)  
 ✅ Shows team logos  
 ✅ Shows all statistics (wins, losses, points, etc.)  
@@ -233,6 +290,162 @@ You can have multiple widgets on the same page:
 ### Standings are Empty
 
 - This is normal if the event doesn't have games or results recorded yet.
+
+## 🏀 Option 3: Stats Leaderboards
+
+Stats leaderboards show player or team statistics for an event. Column headers are **clickable** to sort by any stat.
+
+### Basic Example — Basketball
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tournament Stats</title>
+  </head>
+  <body>
+    <h1>🏀 Top Scorers</h1>
+    <div id="leaderboard"></div>
+
+    <script src="tropheo-embed.bundle.js"></script>
+    <!-- or CDN -->
+    <script>
+      const embed = new window.TropheoEmbed({
+        apiKey: 'YOUR-API-KEY-HERE',
+        baseUrl: 'https://app.tropheo.mx',
+      });
+
+      // renderStats is an alias for renderLeaderboard — use either
+      embed.renderStats({
+        eventId: 'YOUR-EVENT-ID-HERE',
+        scopeType: 'TOURNAMENT', // or 'DIVISION', 'STAGE', 'GAMEDAY'
+        sport: 'basketball',
+        facet: 'basketball',
+        mode: 'athletes', // 'athletes' or 'teams'
+        title: 'Top Scorers',
+        container: '#leaderboard',
+        lang: 'en',
+      });
+    </script>
+  </body>
+</html>
+```
+
+### Baseball Batting
+
+```javascript
+embed.renderStats({
+  eventId: 'YOUR-EVENT-ID-HERE',
+  scopeType: 'TOURNAMENT',
+  sport: 'baseball',
+  facet: 'batting',
+  mode: 'athletes',
+  title: 'Best Batters',
+  container: '#leaderboard',
+  lang: 'en',
+});
+```
+
+### Baseball Pitching
+
+```javascript
+embed.renderStats({
+  eventId: 'YOUR-EVENT-ID-HERE',
+  scopeType: 'TOURNAMENT',
+  sport: 'baseball',
+  facet: 'pitching',
+  mode: 'athletes',
+  title: 'Best Pitchers',
+  container: '#leaderboard',
+  lang: 'en',
+});
+```
+
+### Soccer
+
+```javascript
+embed.renderStats({
+  eventId: 'YOUR-EVENT-ID-HERE',
+  scopeType: 'TOURNAMENT',
+  sport: 'soccer',
+  facet: 'soccer',
+  mode: 'athletes',
+  title: 'Top Scorers',
+  container: '#leaderboard',
+  lang: 'en',
+});
+```
+
+### Stats columns by sport/facet
+
+| Sport / Facet | Columns shown                   |
+| ------------- | ------------------------------- |
+| `basketball`  | PTS, REB, AST, STL, BLK, 3P, TO |
+| `batting`     | AVG, H, HR, RBI, BB, SO, OPS    |
+| `pitching`    | ERA, IP, SO, BB, WHIP, W, L     |
+| `fielding`    | TC, PO, A, E, FPCT, DP          |
+| `soccer`      | G, A, SH, SOT, SH%, YC, RC      |
+| `goalkeeping` | SV, GA, SV%, MIN                |
+
+### Filtering by Team (Organization)
+
+Pass `filterByOrganizationId` to show only athletes from a specific organization. The Teams tab is hidden automatically when this is set:
+
+```javascript
+embed.renderStats({
+  eventId: 'YOUR-EVENT-ID-HERE',
+  title: 'My Team Stats',
+  container: '#leaderboard',
+  lang: 'en',
+  filterByOrganizationId: 'YOUR-ORG-ID-HERE', // show only this team's athletes
+});
+```
+
+The filtering happens client-side — the full leaderboard is fetched and then filtered in the browser, so it works reliably even across multi-gameday events and tournaments that include multiple events.
+
+### Custom Colors (Theming)
+
+You can override any part of the widget's color scheme by passing a `theme` object. All keys are optional — anything you omit keeps its default value.
+
+```javascript
+embed.renderStats({
+  eventId: 'YOUR-EVENT-ID-HERE',
+  container: '#leaderboard',
+  lang: 'en',
+  theme: {
+    headerBackground: '#1e293b', // solid dark header instead of gradient
+    headerTextColor: '#ffffff',
+    activeTabColor: '#f59e0b', // amber tabs
+    tableBackground: '#ffffff',
+    columnHeaderColor: '#374151',
+    rowTextColor: '#374151',
+    borderColor: '#e5e7eb',
+    footerBackground: '#f9fafb',
+    buttonBackground: '#f59e0b', // amber button
+    buttonTextColor: '#1e293b',
+  },
+});
+```
+
+| Property            | Default         | Controls                                               |
+| ------------------- | --------------- | ------------------------------------------------------ |
+| `headerBackground`  | purple gradient | Header background (accepts any CSS `background` value) |
+| `headerTextColor`   | `#ffffff`       | Header title & subtitle color                          |
+| `activeTabColor`    | `#3b82f6`       | Active tab text & bottom border                        |
+| `inactiveTabColor`  | `#6b7280`       | Inactive tab text                                      |
+| `tableBackground`   | `#ffffff`       | Card / table background                                |
+| `columnHeaderColor` | `#374151`       | Column header text                                     |
+| `rowTextColor`      | `#374151`       | Row cell text                                          |
+| `rowBorderColor`    | `#f3f4f6`       | Row divider line color                                 |
+| `borderColor`       | `#e5e7eb`       | Outer card border                                      |
+| `footerBackground`  | `#f9fafb`       | Footer strip background                                |
+| `buttonBackground`  | `#3b82f6`       | "View on Tropheo" button background                    |
+| `buttonTextColor`   | `#ffffff`       | Button text color                                      |
+| `avatarBackground`  | `#e5e7eb`       | Avatar placeholder circle background                   |
+
+> **Note:** If stats are not enabled for an event, the widget will automatically show a localized informational message.
 
 ## 📞 Need Help?
 

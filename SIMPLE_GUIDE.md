@@ -41,7 +41,63 @@ https://app.tropheo.mx/events/65abc123def456789
 
 ## 📝 Opción 1: Para Sitios Web Simples (HTML)
 
-Esta es la forma más fácil. No necesitas instalar nada.
+Esta es la forma más fácil. Tienes dos sub-opciones:
+
+### 1a. Instalación desde el repo (sin CDN, sin npm — recomendado para pruebas)
+
+Construye el bundle una vez desde el repositorio y úsalo como archivo local. Así funciona la página de prueba `test-library` incluida en el repo.
+
+```bash
+# 1. Clona o descarga el repositorio
+git clone <repo-url> tropheo_widgets
+cd tropheo_widgets
+
+# 2. Instala las dependencias
+npm install
+
+# 3. Construye el bundle
+npm run build:embed
+# → Genera dist/tropheo-embed.bundle.js
+# → También se copia automáticamente a ../test-library/tropheo-embed.bundle.js
+```
+
+Copia `dist/tropheo-embed.bundle.js` junto a tu archivo HTML y cárgalo con un `<script>`:
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Standings del Torneo</title>
+  </head>
+  <body>
+    <h1>🏆 Standings del Torneo</h1>
+    <div id="standings"></div>
+
+    <!-- Bundle local (misma carpeta que este HTML) -->
+    <script src="tropheo-embed.bundle.js"></script>
+    <script>
+      const embed = new window.TropheoEmbed({
+        apiKey: 'TU-API-KEY-AQUI',
+        baseUrl: 'https://app.tropheo.mx',
+      });
+
+      embed.renderStandings({
+        eventId: 'TU-EVENT-ID-AQUI',
+        title: 'Standings del Torneo',
+        container: '#standings',
+        showEmptyState: true,
+        lang: 'es',
+      });
+    </script>
+  </body>
+</html>
+```
+
+Abre el archivo HTML directamente en tu navegador — no necesitas ningún servidor. Reconstruye el bundle en cualquier momento con `npm run build:embed`.
+
+### 1b. Usando CDN (sin instalación)
 
 ### Paso 1: Crea un archivo HTML
 
@@ -151,7 +207,8 @@ Si ya tienes una página web y quieres agregar los standings:
 
 El widget hace todo esto automáticamente:
 
-✅ Detecta si el evento es un torneo, división, pool o bracket  
+✅ Detecta si el evento es un torneo, división, pool, bracket, temporada o liga  
+✅ Carga jerárquicamente divisiones y pools en paralelo  
 ✅ Agrupa los equipos correctamente (por división, pool, etc.)  
 ✅ Muestra logos de equipos  
 ✅ Muestra todas las estadísticas (victorias, derrotas, puntos, etc.)  
@@ -234,9 +291,9 @@ Puedes tener varios widgets en la misma página:
 
 - Es normal si el evento aún no tiene juegos o resultados registrados.
 
-## 🏀 Opción 3: Mostrar Leaderboards (Estadísticas)
+## 🏀 Opción 3: Mostrar Stats (Leaderboards)
 
-Los leaderboards muestran las estadísticas de jugadores o equipos en un evento.
+Los leaderboards muestran las estadísticas de jugadores o equipos en un evento. Las columnas son **clicables** para ordenar por cualquier estadística.
 
 ### Ejemplo Básico - Basketball
 
@@ -246,27 +303,30 @@ Los leaderboards muestran las estadísticas de jugadores o equipos en un evento.
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leaderboard del Torneo</title>
+    <title>Stats del Torneo</title>
   </head>
   <body>
     <h1>🏀 Mejores Anotadores</h1>
     <div id="leaderboard"></div>
 
-    <script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
+    <script src="tropheo-embed.bundle.js"></script>
+    <!-- o CDN -->
     <script>
       const embed = new window.TropheoEmbed({
         apiKey: 'TU-API-KEY-AQUI',
         baseUrl: 'https://app.tropheo.mx',
       });
 
-      embed.renderLeaderboard({
+      // renderStats es un alias de renderLeaderboard — usa cualquiera
+      embed.renderStats({
         eventId: 'TU-EVENT-ID-AQUI',
         scopeType: 'TOURNAMENT', // o 'DIVISION', 'STAGE', 'GAMEDAY'
-        sport: 'basketball', // o 'baseball', 'softball', 'soccer'
-        facet: 'basketball', // tipo de estadísticas
+        sport: 'basketball',
+        facet: 'basketball',
         mode: 'athletes', // 'athletes' o 'teams'
         title: 'Mejores Anotadores',
         container: '#leaderboard',
+        lang: 'es',
       });
     </script>
   </body>
@@ -276,35 +336,37 @@ Los leaderboards muestran las estadísticas de jugadores o equipos en un evento.
 ### Ejemplo - Baseball Batting
 
 ```javascript
-embed.renderLeaderboard({
+embed.renderStats({
   eventId: 'TU-EVENT-ID-AQUI',
   scopeType: 'TOURNAMENT',
   sport: 'baseball',
-  facet: 'batting', // estadísticas de bateo
+  facet: 'batting',
   mode: 'athletes',
   title: 'Mejores Bateadores',
   container: '#leaderboard',
+  lang: 'es',
 });
 ```
 
 ### Ejemplo - Baseball Pitching
 
 ```javascript
-embed.renderLeaderboard({
+embed.renderStats({
   eventId: 'TU-EVENT-ID-AQUI',
   scopeType: 'TOURNAMENT',
   sport: 'baseball',
-  facet: 'pitching', // estadísticas de pitcheo
+  facet: 'pitching',
   mode: 'athletes',
   title: 'Mejores Lanzadores',
   container: '#leaderboard',
+  lang: 'es',
 });
 ```
 
 ### Ejemplo - Soccer (Futbol)
 
 ```javascript
-embed.renderLeaderboard({
+embed.renderStats({
   eventId: 'TU-EVENT-ID-AQUI',
   scopeType: 'TOURNAMENT',
   sport: 'soccer',
@@ -312,43 +374,93 @@ embed.renderLeaderboard({
   mode: 'athletes',
   title: 'Goleadores',
   container: '#leaderboard',
+  lang: 'es',
 });
 ```
 
 ### Ejemplo - Estadísticas de Equipos
 
 ```javascript
-embed.renderLeaderboard({
+embed.renderStats({
   eventId: 'TU-EVENT-ID-AQUI',
   scopeType: 'TOURNAMENT',
   sport: 'basketball',
   facet: 'basketball',
-  mode: 'teams', // cambiar a 'teams' para equipos
+  mode: 'teams',
   title: 'Mejores Equipos Ofensivos',
   container: '#leaderboard',
+  lang: 'es',
 });
 ```
 
-### Parámetros del Leaderboard
+### Columnas por deporte/facet
 
-- **eventId**: ID del evento (obligatorio)
-- **scopeType**: Alcance de las estadísticas
-  - `'TOURNAMENT'` - Todo el torneo
-  - `'DIVISION'` - Una división
-  - `'STAGE'` - Una etapa específica
-  - `'GAMEDAY'` - Un día de juego
-- **sport**: Deporte
-  - `'basketball'` - Baloncesto
-  - `'baseball'` - Beisbol
-  - `'softball'` - Softbol
-  - `'soccer'` - Futbol
-- **facet**: Tipo de estadísticas
-  - Basketball: `'basketball'`
-  - Baseball/Softball: `'batting'`, `'pitching'`, `'fielding'`
-  - Soccer: `'soccer'`, `'goalkeeping'`
-- **mode**: `'athletes'` (jugadores) o `'teams'` (equipos)
-- **title**: Título personalizado (opcional)
-- **limit**: Número máximo de entradas (opcional, default: 50)
+| Deporte / Facet | Columnas mostradas              |
+| --------------- | ------------------------------- |
+| `basketball`    | PTS, REB, AST, STL, BLK, 3P, TO |
+| `batting`       | AVG, H, HR, RBI, BB, SO, OPS    |
+| `pitching`      | ERA, IP, SO, BB, WHIP, W, L     |
+| `fielding`      | TC, PO, A, E, FPCT, DP          |
+| `soccer`        | G, A, SH, SOT, SH%, YC, RC      |
+| `goalkeeping`   | SV, GA, SV%, MIN                |
+
+### Filtrar por equipo (organización)
+
+Pasa `filterByOrganizationId` para mostrar solo los atletas de una organización específica. La pestaña de Equipos se oculta automáticamente:
+
+```javascript
+embed.renderStats({
+  eventId: 'TU-EVENT-ID-AQUI',
+  title: 'Stats de Mi Equipo',
+  container: '#leaderboard',
+  lang: 'es',
+  filterByOrganizationId: 'TU-ORG-ID-AQUI', // solo muestra atletas de este equipo
+});
+```
+
+El filtrado ocurre en el navegador (client-side) — se descarga el leaderboard completo y luego se filtra localmente, por lo que funciona correctamente incluso en torneos con múltiples jornadas y eventos.
+
+### Personalizar los colores (Theming)
+
+Puedes cambiar los colores de cualquier parte del widget pasando un objeto `theme`. Todos los campos son opcionales — los que no incluyas mantendrán su valor por defecto.
+
+```javascript
+embed.renderStats({
+  eventId: 'TU-EVENT-ID-AQUI',
+  container: '#leaderboard',
+  lang: 'es',
+  theme: {
+    headerBackground: '#1e293b', // encabezado oscuro sólido
+    headerTextColor: '#ffffff',
+    activeTabColor: '#f59e0b', // pestañas en ámbar
+    tableBackground: '#ffffff',
+    columnHeaderColor: '#374151',
+    rowTextColor: '#374151',
+    borderColor: '#e5e7eb',
+    footerBackground: '#f9fafb',
+    buttonBackground: '#f59e0b', // botón en ámbar
+    buttonTextColor: '#1e293b',
+  },
+});
+```
+
+| Propiedad           | Por defecto      | ¿Qué controla?                                 |
+| ------------------- | ---------------- | ---------------------------------------------- |
+| `headerBackground`  | gradiente morado | Fondo del encabezado (acepta gradientes CSS)   |
+| `headerTextColor`   | `#ffffff`        | Color del texto en el encabezado               |
+| `activeTabColor`    | `#3b82f6`        | Color de la pestaña activa                     |
+| `inactiveTabColor`  | `#6b7280`        | Color del texto de pestañas inactivas          |
+| `tableBackground`   | `#ffffff`        | Fondo de la tabla                              |
+| `columnHeaderColor` | `#374151`        | Color del texto de los encabezados de columna  |
+| `rowTextColor`      | `#374151`        | Color del texto de las filas                   |
+| `rowBorderColor`    | `#f3f4f6`        | Color de la línea divisoria entre filas        |
+| `borderColor`       | `#e5e7eb`        | Color del borde exterior del widget            |
+| `footerBackground`  | `#f9fafb`        | Fondo del pie de página                        |
+| `buttonBackground`  | `#3b82f6`        | Fondo del botón "Ver en Tropheo"               |
+| `buttonTextColor`   | `#ffffff`        | Texto del botón                                |
+| `avatarBackground`  | `#e5e7eb`        | Fondo del círculo de avatar cuando no hay foto |
+
+> **Nota:** Si las estadísticas no están habilitadas para el evento, el widget mostrará un mensaje informativo automáticamente.
 
 ## 📞 ¿Necesitas Ayuda?
 

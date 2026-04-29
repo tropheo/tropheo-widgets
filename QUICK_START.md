@@ -65,6 +65,60 @@ You have three options depending on your stack:
 
 ### Option 1: HTML + Vanilla JavaScript (Easiest)
 
+#### 1a. Local repo (no CDN, no npm — recommended for testing)
+
+Build the bundle once from the repository, then reference it directly. This is how the included `test-library` page works.
+
+```bash
+# 1. Clone the repo
+git clone <repo-url> tropheo_widgets
+cd tropheo_widgets
+
+# 2. Install dependencies
+npm install
+
+# 3. Build the embed bundle
+npm run build:embed
+# → Creates dist/tropheo-embed.bundle.js
+# → Auto-copies to ../test-library/tropheo-embed.bundle.js
+```
+
+Copy `dist/tropheo-embed.bundle.js` next to your HTML file, then:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Tournament</title>
+  </head>
+  <body>
+    <h1>Tournament Standings</h1>
+    <div id="standings"></div>
+
+    <!-- Load from local bundle (same folder as this HTML file) -->
+    <script src="tropheo-embed.bundle.js"></script>
+
+    <script>
+      const embed = new window.TropheoEmbed({
+        apiKey: 'your-api-key-here',
+        baseUrl: 'https://your-tropheo-instance.com',
+      });
+
+      embed.renderStandings({
+        eventId: 'your-event-id',
+        title: 'Tournament Standings',
+        container: '#standings',
+        lang: 'en',
+      });
+    </script>
+  </body>
+</html>
+```
+
+Open the HTML file directly in your browser — no server needed. Rebuild any time with `npm run build:embed`.
+
+#### 1b. CDN (no installation)
+
 **No installation required!** Just add this to your HTML:
 
 ```html
@@ -128,7 +182,7 @@ VITE_TROPHEO_BASE_URL=https://your-tropheo-instance.com
 
 ```tsx
 import { useState } from 'react';
-import { TropheoWidgets, StandingsTable } from '@tropheo/react';
+import { TropheoWidgets, StandingsTable, LeaderboardTable } from '@tropheo/react';
 
 function App() {
   const [widgets] = useState(() => {
@@ -143,8 +197,21 @@ function App() {
       <h1>Tournament Standings</h1>
       <StandingsTable
         client={widgets.getClient()}
-        eventId="your-event-id" // Replace with your event ID
-        title="Tournament Standings" // Optional custom title
+        eventId="your-event-id"
+        title="Tournament Standings"
+        lang="en"
+      />
+
+      <h1>Top Scorers</h1>
+      <LeaderboardTable
+        client={widgets.getClient()}
+        eventId="your-event-id"
+        scopeType="TOURNAMENT"
+        sport="basketball"
+        facet="basketball"
+        mode="athletes"
+        title="Top Scorers"
+        lang="en"
       />
     </div>
   );
@@ -153,7 +220,7 @@ function App() {
 export default App;
 ```
 
-**Note:** The widget automatically detects the event type (division, pool, bracket) and displays standings with appropriate grouping.
+**Note:** `StandingsTable` automatically detects the event type (division, pool, bracket, season, league) and displays standings with appropriate grouping.
 
 ### Option 3: Next.js Application
 
@@ -177,7 +244,7 @@ NEXT_PUBLIC_TROPHEO_BASE_URL=https://your-tropheo-instance.com
 'use client';
 
 import { useState } from 'react';
-import { TropheoWidgets, StandingsTable } from '@tropheo/react';
+import { TropheoWidgets, StandingsTable, LeaderboardTable } from '@tropheo/react';
 
 export default function Page() {
   const [widgets] = useState(() => {
@@ -192,8 +259,21 @@ export default function Page() {
       <h1>Tournament Standings</h1>
       <StandingsTable
         client={widgets.getClient()}
-        eventId="your-event-id" // Replace with your event ID
-        title="Tournament Standings" // Optional custom title
+        eventId={process.env.NEXT_PUBLIC_EVENT_ID || 'your-event-id'}
+        title="Tournament Standings"
+        lang="en"
+      />
+
+      <h1>Top Scorers</h1>
+      <LeaderboardTable
+        client={widgets.getClient()}
+        eventId={process.env.NEXT_PUBLIC_EVENT_ID || 'your-event-id'}
+        scopeType="TOURNAMENT"
+        sport="basketball"
+        facet="basketball"
+        mode="athletes"
+        title="Top Scorers"
+        lang="en"
       />
     </div>
   );
@@ -214,96 +294,91 @@ Visit `http://localhost:3000`
 
 ### Required Configuration
 
-Both the client library and API require these values:
-
 | Parameter | Description                     | Example                     |
 | --------- | ------------------------------- | --------------------------- |
 | `apiKey`  | Your API key from Tropheo admin | `a5f8b3c7d9e2f1a4...`       |
 | `baseUrl` | Your Tropheo instance URL       | `https://your-instance.com` |
 | `eventId` | The event to display            | `event-123`                 |
 
-### Optional Configuration
+### Standings Options
 
-| Parameter        | Description                                                | Options                       | Default       |
-| ---------------- | ---------------------------------------------------------- | ----------------------------- | ------------- |
-| `eventRole`      | Override event scope (optional - auto-detected from event) | `POOL`, `DIVISION`, `BRACKET` | Auto-detected |
-| `title`          | Custom title                                               | Any string                    | Event name    |
-| `showEmptyState` | Show message when no data                                  | `true`, `false`               | `false`       |
+| Parameter        | Description                                                | Options                                                                    | Default       |
+| ---------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------- | ------------- |
+| `eventRole`      | Override event scope (optional — auto-detected from event) | `POOL`, `BRACKET_STAGE`, `DIVISION`, `TOURNAMENT_ROOT`, `SEASON`, `LEAGUE` | Auto-detected |
+| `title`          | Custom title                                               | Any string                                                                 | Event name    |
+| `showEmptyState` | Show message when no data                                  | `true`, `false`                                                            | `false`       |
+| `lang`           | Display language                                           | `'en'`, `'es'`                                                             | `'en'`        |
 
-**Note:** The `eventRole` parameter is now optional. The widget automatically detects the event type and displays the appropriate standings. You only need to specify `eventRole` if you want to override the default behavior.
+### Leaderboard / Stats Options
 
----
+| Parameter                | Description                                                       | Options                                                                  | Default      |
+| ------------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------ |
+| `scopeType`              | Scope of the leaderboard                                          | `TOURNAMENT`, `DIVISION`, `STAGE`, `GAMEDAY`                             | —            |
+| `sport`                  | Sport type                                                        | `basketball`, `baseball`, `softball`, `soccer`                           | —            |
+| `facet`                  | Which stats to show                                               | `basketball`, `batting`, `pitching`, `fielding`, `soccer`, `goalkeeping` | —            |
+| `mode`                   | Athlete or team leaderboard                                       | `'athletes'`, `'teams'`                                                  | `'athletes'` |
+| `sort`                   | Default sort column                                               | Column key (e.g. `'pts'`, `'era'`)                                       | First col    |
+| `limit`                  | Max number of rows                                                | Number                                                                   | `25`         |
+| `lang`                   | Display language                                                  | `'en'`, `'es'`                                                           | `'en'`       |
+| `filterByOrganizationId` | Filter to one team's athletes (client-side). Hides the Teams tab. | Organization ID string                                                   | —            |
+| `theme`                  | Custom visual theme (colors). See [Theming](#theming).            | `LeaderboardTheme` object                                                | —            |
+
+### Theming
+
+All theme keys are optional — omit to keep the default style.
+
+| Key                 | Default                                             | Description                                    |
+| ------------------- | --------------------------------------------------- | ---------------------------------------------- |
+| `headerBackground`  | `linear-gradient(135deg, #667eea 0%, #764ba2 100%)` | Header background (any CSS `background` value) |
+| `headerTextColor`   | `#ffffff`                                           | Header text color                              |
+| `activeTabColor`    | `#3b82f6`                                           | Active tab text & bottom border                |
+| `inactiveTabColor`  | `#6b7280`                                           | Inactive tab text                              |
+| `tableBackground`   | `#ffffff`                                           | Card / table background                        |
+| `columnHeaderColor` | `#374151`                                           | Column header text                             |
+| `rowTextColor`      | `#374151`                                           | Row cell text                                  |
+| `rowBorderColor`    | `#f3f4f6`                                           | Row divider color                              |
+| `borderColor`       | `#e5e7eb`                                           | Outer card border                              |
+| `footerBackground`  | `#f9fafb`                                           | Footer background                              |
+| `buttonBackground`  | `#3b82f6`                                           | Button background                              |
+| `buttonTextColor`   | `#ffffff`                                           | Button text                                    |
+| `avatarBackground`  | `#e5e7eb`                                           | Avatar placeholder background                  |
+
+### Stats facet columns
+
+| Sport / Facet | Columns shown                   |
+| ------------- | ------------------------------- |
+| `basketball`  | PTS, REB, AST, STL, BLK, 3P, TO |
+| `batting`     | AVG, H, HR, RBI, BB, SO, OPS    |
+| `pitching`    | ERA, IP, SO, BB, WHIP, W, L     |
+| `fielding`    | TC, PO, A, E, FPCT, DP          |
+| `soccer`      | G, A, SH, SOT, SH%, YC, RC      |
+| `goalkeeping` | SV, GA, SV%, MIN                |
 
 ## Event Roles Explained
 
-The widget automatically uses the correct scope based on your event type. However, you can optionally specify `eventRole` to override this behavior:
+The widget automatically uses the correct scope based on your event type. You can optionally pass `eventRole` to override.
 
 ### POOL
 
-Shows standings grouped by pool (round-robin groups).
+Shows standings for a single round-robin pool.
 
-```javascript
-eventRole: 'POOL';
-```
+### BRACKET_STAGE
 
-Example output:
-
-```
-Pool A
-  1. Team Alpha - 5-1-0
-  2. Team Beta  - 4-2-0
-
-Pool B
-  1. Team Gamma - 6-0-0
-  2. Team Delta - 3-3-0
-```
+Shows bracket-stage standings.
 
 ### DIVISION
 
-Shows standings grouped by division (competitive tiers).
+Shows standings per division. Sub-events are loaded in parallel and rendered under each division header.
+
+### TOURNAMENT_ROOT / SEASON / LEAGUE
+
+Shows full hierarchical standings: loads all child divisions/stages and their pools in parallel.
+
+### Auto-detection (recommended)
+
+Omit `eventRole` — the widget reads the role from the API response:
 
 ```javascript
-eventRole: 'DIVISION';
-```
-
-Example output:
-
-```
-Division 1
-  1. Team Alpha - 8-0-0
-  2. Team Beta  - 6-2-0
-
-Division 2
-  1. Team Gamma - 7-1-0
-  2. Team Delta - 5-3-0
-```
-
-### BRACKET
-
-Shows standings grouped by bracket (elimination rounds).
-
-```javascript
-eventRole: 'BRACKET';
-```
-
-Example output:
-
-```
-Championship Bracket
-  1. Team Alpha - Winner
-  2. Team Beta  - Finalist
-
-Consolation Bracket
-  1. Team Gamma - 3rd Place
-  2. Team Delta - 4th Place
-```
-
-### No Role (All Standings)
-
-Omit `eventRole` to see all standings:
-
-```javascript
-// No eventRole specified
 embed.renderStandings({
   eventId: 'event-123',
   container: '#standings',

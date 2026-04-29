@@ -10,10 +10,38 @@
             "default": "./dist/index.js"
         }
     },
+    "files": [
+        "dist",
+        "README.md"
+    ],
     "scripts": {
         "build": "tsc",
         "dev": "tsc --watch",
         "clean": "rm -rf dist"
+    },
+    "keywords": [
+        "tropheo",
+        "widgets",
+        "typescript",
+        "types",
+        "standings",
+        "leaderboard",
+        "tournament",
+        "sports"
+    ],
+    "author": "Tropheo",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/your-username/tropheo_widgets.git",
+        "directory": "packages/types"
+    },
+    "homepage": "https://github.com/your-username/tropheo_widgets#readme",
+    "bugs": {
+        "url": "https://github.com/your-username/tropheo_widgets/issues"
+    },
+    "publishConfig": {
+        "access": "public"
     },
     "devDependencies": {
         "typescript": "^5.3.3"

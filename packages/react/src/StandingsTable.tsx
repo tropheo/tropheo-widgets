@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import type { ApiClient } from '@tropheo/core';
-import type { StandingRow, EventRole } from '@tropheo/types';
+import type { StandingRow, EventRole, StageStandingsData } from '@tropheo/types';
 
 /**
  * Translations for standings table
@@ -13,6 +13,7 @@ const translations = {
     poweredBy: 'Powered by',
     viewOn: 'View on Tropheo',
     team: 'Team',
+    divisionStandings: 'Division Standings',
     gp: 'GP',
     w: 'W',
     l: 'L',
@@ -31,6 +32,7 @@ const translations = {
     poweredBy: 'Desarrollado por',
     viewOn: 'Ver en Tropheo',
     team: 'Equipo',
+    divisionStandings: 'Posiciones de División',
     gp: 'PJ',
     w: 'G',
     l: 'P',
@@ -58,11 +60,6 @@ interface StandingsTableProps {
   eventUrl?: string;
   baseUrl?: string;
   lang?: 'en' | 'es';
-}
-
-interface StageStandingsData {
-  stage: any;
-  rows: StandingRow[];
 }
 
 const computeGamesBehind = (standings: StandingRow[]): Map<number, number | null> => {
@@ -98,7 +95,8 @@ const getRosterDisplayName = (row: StandingRow): string => {
   return shortenName(row.participantName) || (typeof row.roster === 'string' ? row.roster : 'Team');
 };
 
-const isDivisionOrRoot = (r?: EventRole) => r === 'DIVISION' || r === 'TOURNAMENT_ROOT';
+const isDivisionOrRoot = (r?: EventRole) =>
+  r === 'DIVISION' || r === 'TOURNAMENT_ROOT' || r === 'SEASON' || r === 'LEAGUE';
 
 /**
  * StandingsTable Component
@@ -133,36 +131,66 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
 
     try {
       if (isMobileMode) {
-        // Load stages first
+        // Load direct sub-events
         const subEventsRes = await client.getSubEvents(eventId);
-        if (subEventsRes.success && subEventsRes.data) {
-          const stageEvents = subEventsRes.data.filter(
-            (e: any) => !e.isCategory && ['POOL', 'BRACKET_STAGE'].includes(e.eventRole || '')
+        const subEventsData = subEventsRes.success && subEventsRes.data ? subEventsRes.data : [];
+        const regularSubEvents = subEventsData.filter((e: any) => !e.isCategory);
+
+        let stageEvents = regularSubEvents.filter((e: any) =>
+          ['POOL', 'BRACKET_STAGE'].includes(e.eventRole || '')
+        );
+
+        // For root-like roles, pools may be nested under division children
+        if (
+          (eventRole === 'TOURNAMENT_ROOT' || eventRole === 'SEASON' || eventRole === 'LEAGUE') &&
+          stageEvents.length === 0
+        ) {
+          const divisions = regularSubEvents.filter((e: any) => e.eventRole === 'DIVISION');
+          const divisionChildren = await Promise.all(
+            divisions.map(async (div: any) => {
+              const divId = div.id || div._id;
+              if (!divId) return [];
+              const res = await client.getSubEvents(divId);
+              return res.success && res.data ? res.data : [];
+            })
           );
+          stageEvents = divisionChildren
+            .flat()
+            .filter(
+              (e: any) => !e.isCategory && ['POOL', 'BRACKET_STAGE'].includes(e.eventRole || '')
+            );
+        }
 
-          setStages(stageEvents);
+        setStages(stageEvents);
 
-          // Load standings for each stage
-          const stageStandingsData: Record<string, StageStandingsData> = {};
-          for (const stage of stageEvents) {
+        // Load standings for each stage in parallel
+        const stageStandingsEntries = await Promise.all(
+          stageEvents.map(async (stage: any) => {
             const stageId = stage.id || stage._id;
-            if (!stageId) continue;
-
+            if (!stageId) return null;
             const scope = stage.eventRole === 'POOL' ? 'POOL' : 'BRACKET';
             const res = await client.getStandings(stageId, scope);
             if (res.success && res.data) {
-              stageStandingsData[stageId] = {
-                stage,
-                rows: res.data.standings || res.data, // Handle both old and new response format
-              };
+              return [stageId, { stage, rows: res.data.standings || res.data }] as [
+                string,
+                StageStandingsData,
+              ];
             }
-          }
-          setStageStandings(stageStandingsData);
-        }
+            return null;
+          })
+        );
 
-        // Load division/overall standings
-        const divRes = await client.getStandings(eventId, 'DIVISION');
-        const overallRes = await client.getStandings(eventId, 'OVERALL');
+        const stageStandingsData: Record<string, StageStandingsData> = {};
+        for (const entry of stageStandingsEntries) {
+          if (entry) stageStandingsData[entry[0]] = entry[1];
+        }
+        setStageStandings(stageStandingsData);
+
+        // Load division + overall standings in parallel
+        const [divRes, overallRes] = await Promise.all([
+          client.getStandings(eventId, 'DIVISION'),
+          client.getStandings(eventId, 'OVERALL'),
+        ]);
 
         const divRows = divRes.success && divRes.data ? divRes.data.standings || divRes.data : [];
         const overallRows =
@@ -301,7 +329,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
                     color: (row.pointDifferential ?? 0) >= 0 ? '#10b981' : '#ef4444',
                   }}
                 >
-                  {(row.pointDifferential ?? 0 >= 0) ? '+' : ''}
+                  {(row.pointDifferential ?? 0) >= 0 ? '+' : ''}
                   {row.pointDifferential ?? 0}
                 </td>
               </tr>
@@ -451,7 +479,7 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
                 })}
                 {standings.length > 0 && (
                   <div>
-                    <h4 style={{ fontWeight: 600, marginBottom: '12px' }}>Division Standings</h4>
+                    <h4 style={{ fontWeight: 600, marginBottom: '12px' }}>{t.divisionStandings}</h4>
                     {renderGroupedTables(standings)}
                   </div>
                 )}
