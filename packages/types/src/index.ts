@@ -170,7 +170,7 @@ export interface StandingsWidgetConfig {
   eventUrl?: string;
 
   /**
-   * Base URL for constructing event link (default: https://app.tropheo.mx)
+   * Base URL for constructing event link (default: https://www.tropheo.com)
    */
   baseUrl?: string;
 
@@ -569,7 +569,7 @@ export interface LeaderboardWidgetConfig {
   eventUrl?: string;
 
   /**
-   * Base URL for constructing event link (default: https://app.tropheo.mx)
+   * Base URL for constructing event link (default: https://www.tropheo.com)
    */
   baseUrl?: string;
 

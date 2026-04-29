@@ -11,6 +11,7 @@ import type {
   ScopeType,
   LeaderboardMode,
   EventRole,
+  StandingsTheme,
 } from '@tropheo/types';
 
 /**
@@ -121,6 +122,20 @@ export class TropheoEmbed {
     const lang: Language = config.lang || 'en';
     const t = translations[lang];
 
+    // ── Resolved theme (defaults preserved when not overridden) ────────────────
+    const th = {
+      tableBackground: config.theme?.tableBackground ?? '#ffffff',
+      columnHeaderColor: config.theme?.columnHeaderColor ?? '#374151',
+      rowTextColor: config.theme?.rowTextColor ?? '#374151',
+      rowBorderColor: config.theme?.rowBorderColor ?? '#f3f4f6',
+      borderColor: config.theme?.borderColor ?? '#e5e7eb',
+      footerBackground: config.theme?.footerBackground ?? '#f9fafb',
+      buttonBackground: config.theme?.buttonBackground ?? '#3b82f6',
+      buttonTextColor: config.theme?.buttonTextColor ?? '#ffffff',
+      positiveColor: config.theme?.positiveColor ?? '#10b981',
+      negativeColor: config.theme?.negativeColor ?? '#ef4444',
+    };
+
     // Show loading state
     container.innerHTML = `<div style="padding: 20px; text-align: center;">${t.loadingStandings}</div>`;
 
@@ -145,9 +160,9 @@ export class TropheoEmbed {
         eventRole === 'LEAGUE';
 
       if (isDivisionOrRoot) {
-        await this.loadAndRenderHierarchical(container, event, eventRole, title, config, lang);
+        await this.loadAndRenderHierarchical(container, event, eventRole, title, config, lang, th);
       } else {
-        this.renderStandingsTable(container, standings, title, config, lang);
+        this.renderStandingsTable(container, standings, title, config, lang, th);
       }
     } catch (error) {
       container.innerHTML = `<div style="padding: 20px; color: #ef4444;">${t.error}: ${
@@ -166,7 +181,8 @@ export class TropheoEmbed {
     eventRole: string | null,
     title: string,
     config: StandingsWidgetConfig,
-    lang: Language
+    lang: Language,
+    th: Required<Omit<StandingsTheme, never>>
   ): Promise<void> {
     const t = translations[lang];
 
@@ -225,7 +241,8 @@ export class TropheoEmbed {
 
     // 5. Render hierarchical HTML
     const className = config.className || '';
-    const finalEventUrl = `${config.eventUrl || config.baseUrl || 'https://app.tropheo.mx'}/events/${config.eventId}`;
+    const finalEventUrl =
+      config.eventUrl || `${config.baseUrl || 'https://www.tropheo.com'}/events/${config.eventId}`;
 
     const hasContent = validStages.some((e) => e.rows.length > 0) || summaryRows.length > 0;
     if (!hasContent) {
@@ -243,12 +260,12 @@ export class TropheoEmbed {
         <details open style="margin-bottom: 16px;">
           <summary style="
             display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 16px; border: 1px solid #e5e7eb; border-radius: 8px;
-            background: #f9fafb; cursor: pointer; font-weight: 500; list-style: none;
-            user-select: none;
+            padding: 12px 16px; border: 1px solid ${th.borderColor}; border-radius: 8px;
+            background: ${th.footerBackground}; cursor: pointer; font-weight: 500; list-style: none;
+            user-select: none; color: ${th.rowTextColor};
           ">${stageName}</summary>
           <div style="overflow-x: auto; margin-top: 8px;">
-            ${this.renderSingleTable(entry.rows as any, 1, lang)}
+            ${this.renderSingleTable(entry.rows as any, 1, lang, th)}
           </div>
         </details>
       `;
@@ -257,32 +274,32 @@ export class TropheoEmbed {
     if (summaryRows.length > 0) {
       stagesHtml += `
         <div style="margin-top: ${validStages.length > 0 ? '24px' : '0'};">
-          <h4 style="font-weight: 600; margin-bottom: 12px; font-size: 14px; color: #374151;">
+          <h4 style="font-weight: 600; margin-bottom: 12px; font-size: 14px; color: ${th.columnHeaderColor};">
             ${t.divisionStandings}
           </h4>
           <div style="overflow-x: auto;">
-            ${this.renderSingleTable(summaryRows as any, 1, lang)}
+            ${this.renderSingleTable(summaryRows as any, 1, lang, th)}
           </div>
         </div>
       `;
     }
 
     container.innerHTML = `
-      <div class="${className}" style="border: 1px solid #e5e7eb; border-radius: 8px; background-color: #ffffff; overflow: hidden;">
-        <div style="padding: 16px 24px; border-bottom: 1px solid #e5e7eb;">
-          <h3 style="font-size: 18px; font-weight: 600; margin: 0;">${title}</h3>
+      <div class="${className}" style="border: 1px solid ${th.borderColor}; border-radius: 8px; background-color: ${th.tableBackground}; overflow: hidden;">
+        <div style="padding: 16px 24px; border-bottom: 1px solid ${th.borderColor};">
+          <h3 style="font-size: 18px; font-weight: 600; margin: 0; color: ${th.rowTextColor};">${title}</h3>
         </div>
         <div style="padding: 16px 24px;">
           ${stagesHtml}
         </div>
-        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-top: 1px solid #e5e7eb; background-color: #f9fafb;">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-top: 1px solid ${th.borderColor}; background-color: ${th.footerBackground};">
           <span style="font-size: 11px; color: #6b7280;">
-            ${t.poweredBy} <span style="font-weight: 600; color: #374151;">Tropheo</span>
+            ${t.poweredBy} <span style="font-weight: 600; color: ${th.rowTextColor};">Tropheo</span>
           </span>
           <a href="${finalEventUrl}" target="_blank" rel="noopener noreferrer"
-             style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; font-size: 12px; font-weight: 500; color: #ffffff; background-color: #3b82f6; border: none; border-radius: 6px; text-decoration: none; cursor: pointer;"
-             onmouseover="this.style.backgroundColor='#2563eb'"
-             onmouseout="this.style.backgroundColor='#3b82f6'">
+             style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; font-size: 12px; font-weight: 500; color: ${th.buttonTextColor}; background-color: ${th.buttonBackground}; border: none; border-radius: 6px; text-decoration: none; cursor: pointer;"
+             onmouseover="this.style.opacity='0.85'"
+             onmouseout="this.style.opacity='1'">
             ${t.viewOn}
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;">
               <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -369,7 +386,7 @@ export class TropheoEmbed {
     const lang: Language = config.lang || 'en';
     const t = translations[lang];
     const className = config.className || '';
-    const baseUrl = config.baseUrl || 'https://app.tropheo.mx';
+    const baseUrl = config.baseUrl || 'https://www.tropheo.com';
     const eventUrl = config.eventUrl || `${baseUrl}/events/${config.eventId}`;
 
     // ── Resolved theme (defaults preserved when not overridden) ─────────────
@@ -619,7 +636,8 @@ export class TropheoEmbed {
   private renderSingleTable(
     rows: StandingRow[],
     startRank: number = 1,
-    lang: Language = 'en'
+    lang: Language = 'en',
+    th: Required<Omit<StandingsTheme, never>>
   ): string {
     const gbMap = this.computeGamesBehind(rows);
     const t = translations[lang];
@@ -627,19 +645,19 @@ export class TropheoEmbed {
     let html = `
       <table style="width: 100%; min-width: 800px; border-collapse: collapse; font-size: 14px;">
         <thead>
-          <tr style="border-bottom: 1px solid #e5e7eb;">
-            <th style="text-align: left; padding: 12px 12px 12px 0; font-weight: 600;">#</th>
-            <th style="text-align: left; padding: 12px; font-weight: 600;">${t.team}</th>
-            <th style="text-align: right; padding: 12px; font-weight: 600;">${t.gp}</th>
-            <th style="text-align: right; padding: 12px; font-weight: 600;">${t.w}</th>
-            <th style="text-align: right; padding: 12px; font-weight: 600;">${t.l}</th>
-            <th style="text-align: right; padding: 12px; font-weight: 600;">${t.t}</th>
-            <th style="text-align: right; padding: 12px; font-weight: 600;">${t.gb}</th>
-            <th style="text-align: right; padding: 12px; font-weight: 600;">${t.pts}</th>
-            <th style="text-align: right; padding: 12px; font-weight: 600;">${t.winPct}</th>
-            <th style="text-align: right; padding: 12px; font-weight: 600;">${t.pf}</th>
-            <th style="text-align: right; padding: 12px; font-weight: 600;">${t.pa}</th>
-            <th style="text-align: right; padding: 12px 0 12px 12px; font-weight: 600;">${t.diff}</th>
+          <tr style="border-bottom: 1px solid ${th.borderColor};">
+            <th style="text-align: left; padding: 12px 12px 12px 0; font-weight: 600; color: ${th.columnHeaderColor};">#</th>
+            <th style="text-align: left; padding: 12px; font-weight: 600; color: ${th.columnHeaderColor};">${t.team}</th>
+            <th style="text-align: right; padding: 12px; font-weight: 600; color: ${th.columnHeaderColor};">${t.gp}</th>
+            <th style="text-align: right; padding: 12px; font-weight: 600; color: ${th.columnHeaderColor};">${t.w}</th>
+            <th style="text-align: right; padding: 12px; font-weight: 600; color: ${th.columnHeaderColor};">${t.l}</th>
+            <th style="text-align: right; padding: 12px; font-weight: 600; color: ${th.columnHeaderColor};">${t.t}</th>
+            <th style="text-align: right; padding: 12px; font-weight: 600; color: ${th.columnHeaderColor};">${t.gb}</th>
+            <th style="text-align: right; padding: 12px; font-weight: 600; color: ${th.columnHeaderColor};">${t.pts}</th>
+            <th style="text-align: right; padding: 12px; font-weight: 600; color: ${th.columnHeaderColor};">${t.winPct}</th>
+            <th style="text-align: right; padding: 12px; font-weight: 600; color: ${th.columnHeaderColor};">${t.pf}</th>
+            <th style="text-align: right; padding: 12px; font-weight: 600; color: ${th.columnHeaderColor};">${t.pa}</th>
+            <th style="text-align: right; padding: 12px 0 12px 12px; font-weight: 600; color: ${th.columnHeaderColor};">${t.diff}</th>
           </tr>
         </thead>
         <tbody>
@@ -656,11 +674,11 @@ export class TropheoEmbed {
         .toUpperCase();
       const winPct = row.winPercentage ?? 0;
       const diff = row.pointDifferential ?? 0;
-      const diffColor = diff >= 0 ? '#10b981' : '#ef4444';
+      const diffColor = diff >= 0 ? th.positiveColor : th.negativeColor;
       const gb = gbMap.get(idx);
 
       html += `
-        <tr style="border-bottom: ${idx < rows.length - 1 ? '1px solid #f3f4f6' : 'none'};">
+        <tr style="border-bottom: ${idx < rows.length - 1 ? `1px solid ${th.rowBorderColor}` : 'none'};">
           <td style="padding: 12px 12px 12px 0; color: #6b7280; font-weight: 500;">${startRank + idx}</td>
           <td style="padding: 12px;">
             <div style="display: flex; align-items: center; gap: 8px;">
@@ -669,20 +687,20 @@ export class TropheoEmbed {
                   ? `<img src="${avatarUrl}" alt="${name}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" />`
                   : `<div style="width: 32px; height: 32px; border-radius: 50%; background-color: #e5e7eb; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #6b7280;">${initials}</div>`
               }
-              <span style="font-weight: 500;">${name}</span>
+              <span style="font-weight: 500; color: ${th.rowTextColor};">${name}</span>
             </div>
           </td>
-          <td style="padding: 12px; text-align: right;">${row.gamesPlayed ?? 0}</td>
-          <td style="padding: 12px; text-align: right; font-weight: 600;">${row.wins ?? 0}</td>
-          <td style="padding: 12px; text-align: right;">${row.losses ?? 0}</td>
-          <td style="padding: 12px; text-align: right;">${row.ties ?? 0}</td>
+          <td style="padding: 12px; text-align: right; color: ${th.rowTextColor};">${row.gamesPlayed ?? 0}</td>
+          <td style="padding: 12px; text-align: right; font-weight: 600; color: ${th.rowTextColor};">${row.wins ?? 0}</td>
+          <td style="padding: 12px; text-align: right; color: ${th.rowTextColor};">${row.losses ?? 0}</td>
+          <td style="padding: 12px; text-align: right; color: ${th.rowTextColor};">${row.ties ?? 0}</td>
           <td style="padding: 12px; text-align: right; color: #6b7280;">
             ${gb !== null && gb !== undefined ? gb.toFixed(1) : '—'}
           </td>
-          <td style="padding: 12px; text-align: right; font-weight: 600;">${row.points ?? 0}</td>
+          <td style="padding: 12px; text-align: right; font-weight: 600; color: ${th.rowTextColor};">${row.points ?? 0}</td>
           <td style="padding: 12px; text-align: right; color: #6b7280;">${winPct.toFixed(3)}</td>
-          <td style="padding: 12px; text-align: right;">${row.pointsFor ?? 0}</td>
-          <td style="padding: 12px; text-align: right;">${row.pointsAgainst ?? 0}</td>
+          <td style="padding: 12px; text-align: right; color: ${th.rowTextColor};">${row.pointsFor ?? 0}</td>
+          <td style="padding: 12px; text-align: right; color: ${th.rowTextColor};">${row.pointsAgainst ?? 0}</td>
           <td style="padding: 12px 0 12px 12px; text-align: right; color: ${diffColor};">
             ${diff >= 0 ? '+' : ''}${diff}
           </td>
@@ -706,10 +724,13 @@ export class TropheoEmbed {
     standings: StandingRow[],
     title: string,
     config: StandingsWidgetConfig,
-    lang: Language = 'en'
+    lang: Language = 'en',
+    th: Required<Omit<StandingsTheme, never>>
   ): void {
     const className = config.className || '';
     const t = translations[lang];
+    const finalEventUrl =
+      config.eventUrl || `${config.baseUrl || 'https://www.tropheo.com'}/events/${config.eventId}`;
 
     if (!standings.length) {
       if (config.showEmptyState) {
@@ -751,7 +772,7 @@ export class TropheoEmbed {
       if (groupLabel) {
         groupsHtml += `
           <div style="margin-bottom: 12px;">
-            <h4 style="font-weight: 600; font-size: 14px; color: #6b7280; margin: 0 0 12px 0;">
+            <h4 style="font-weight: 600; font-size: 14px; color: ${th.columnHeaderColor}; margin: 0 0 12px 0;">
               ${groupLabel}
             </h4>
           </div>
@@ -761,36 +782,36 @@ export class TropheoEmbed {
       // Add the table for this group
       groupsHtml += `
         <div style="overflow-x: auto; margin-bottom: ${groupLabel ? '32px' : '0'};">
-          ${this.renderSingleTable(groupRows, startRank, lang)}
+          ${this.renderSingleTable(groupRows, startRank, lang, th)}
         </div>
       `;
     });
 
     const html = `
-      <div class="${className}" style="border: 1px solid #e5e7eb; border-radius: 8px; background-color: #ffffff; overflow: hidden;">
-        <div style="padding: 16px 24px; border-bottom: 1px solid #e5e7eb;">
-          <h3 style="font-size: 18px; font-weight: 600; margin: 0;">${title}</h3>
+      <div class="${className}" style="border: 1px solid ${th.borderColor}; border-radius: 8px; background-color: ${th.tableBackground}; overflow: hidden;">
+        <div style="padding: 16px 24px; border-bottom: 1px solid ${th.borderColor};">
+          <h3 style="font-size: 18px; font-weight: 600; margin: 0; color: ${th.rowTextColor};">${title}</h3>
         </div>
         <div style="padding: 16px 24px;">
           ${groupsHtml}
         </div>
         
         <!-- Footer -->
-        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-top: 1px solid #e5e7eb; background-color: #f9fafb;">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-top: 1px solid ${th.borderColor}; background-color: ${th.footerBackground};">
           <!-- Powered by Tropheo -->
           <div style="display: flex; align-items: center; gap: 6px;">
             <span style="font-size: 11px; color: #6b7280;">
-              ${t.poweredBy} <span style="font-weight: 600; color: #374151;">Tropheo</span>
+              ${t.poweredBy} <span style="font-weight: 600; color: ${th.rowTextColor};">Tropheo</span>
             </span>
           </div>
           
           <!-- Ver en Tropheo button -->
-          <a href="${config.eventUrl || config.baseUrl || 'https://app.tropheo.mx'}/events/${config.eventId}" 
+          <a href="${finalEventUrl}" 
              target="_blank" 
              rel="noopener noreferrer"
-             style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; font-size: 12px; font-weight: 500; color: #ffffff; background-color: #3b82f6; border: none; border-radius: 6px; text-decoration: none; cursor: pointer; transition: background-color 0.2s;"
-             onmouseover="this.style.backgroundColor='#2563eb'"
-             onmouseout="this.style.backgroundColor='#3b82f6'">
+             style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; font-size: 12px; font-weight: 500; color: ${th.buttonTextColor}; background-color: ${th.buttonBackground}; border: none; border-radius: 6px; text-decoration: none; cursor: pointer;"
+             onmouseover="this.style.opacity='0.85'"
+             onmouseout="this.style.opacity='1'">
             ${t.viewOn}
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;">
               <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import type { ApiClient } from '@tropheo/core';
-import type { StandingRow, EventRole, StageStandingsData } from '@tropheo/types';
+import type { StandingRow, EventRole, StageStandingsData, StandingsTheme } from '@tropheo/types';
 
 /**
  * Translations for standings table
@@ -60,6 +60,8 @@ interface StandingsTableProps {
   eventUrl?: string;
   baseUrl?: string;
   lang?: 'en' | 'es';
+  /** Visual theme overrides for the standings widget. */
+  theme?: StandingsTheme;
 }
 
 const computeGamesBehind = (standings: StandingRow[]): Map<number, number | null> => {
@@ -112,8 +114,9 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
   refreshTrigger,
   className = '',
   eventUrl,
-  baseUrl = 'https://app.tropheo.mx',
+  baseUrl = 'https://www.tropheo.com',
   lang = 'en',
+  theme = {},
 }) => {
   const [standings, setStandings] = useState<StandingRow[]>([]);
   const [stageStandings, setStageStandings] = useState<Record<string, StageStandingsData>>({});
@@ -124,6 +127,20 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
 
   const t = translations[lang as Language];
   const isMobileMode = isDivisionOrRoot(eventRole);
+
+  // ── Resolved theme (defaults merged with overrides) ──────────────────────
+  const th = {
+    tableBackground: theme.tableBackground ?? '#ffffff',
+    columnHeaderColor: theme.columnHeaderColor ?? '#374151',
+    rowTextColor: theme.rowTextColor ?? '#374151',
+    rowBorderColor: theme.rowBorderColor ?? '#f3f4f6',
+    borderColor: theme.borderColor ?? '#e5e7eb',
+    footerBackground: theme.footerBackground ?? '#f9fafb',
+    buttonBackground: theme.buttonBackground ?? '#3b82f6',
+    buttonTextColor: theme.buttonTextColor ?? '#ffffff',
+    positiveColor: theme.positiveColor ?? '#10b981',
+    negativeColor: theme.negativeColor ?? '#ef4444',
+  };
 
   const loadStandings = useCallback(async () => {
     setLoading(true);
@@ -228,21 +245,126 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
     return (
       <table className="min-w-full text-xs sm:text-sm" style={{ width: '100%' }}>
         <thead>
-          <tr style={{ borderBottom: '1px solid #e5e7eb' }}>
-            <th style={{ textAlign: 'left', padding: '12px 12px 12px 0', fontWeight: 600 }}>#</th>
-            <th style={{ textAlign: 'left', padding: '12px', fontWeight: 600, minWidth: '160px' }}>
+          <tr style={{ borderBottom: `1px solid ${th.borderColor}` }}>
+            <th
+              style={{
+                textAlign: 'left',
+                padding: '12px 12px 12px 0',
+                fontWeight: 600,
+                color: th.columnHeaderColor,
+              }}
+            >
+              #
+            </th>
+            <th
+              style={{
+                textAlign: 'left',
+                padding: '12px',
+                fontWeight: 600,
+                minWidth: '160px',
+                color: th.columnHeaderColor,
+              }}
+            >
               {t.team}
             </th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.gp}</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.w}</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.l}</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.t}</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.gb}</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.pts}</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.winPct}</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.pf}</th>
-            <th style={{ textAlign: 'right', padding: '12px', fontWeight: 600 }}>{t.pa}</th>
-            <th style={{ textAlign: 'right', padding: '12px 0 12px 12px', fontWeight: 600 }}>
+            <th
+              style={{
+                textAlign: 'right',
+                padding: '12px',
+                fontWeight: 600,
+                color: th.columnHeaderColor,
+              }}
+            >
+              {t.gp}
+            </th>
+            <th
+              style={{
+                textAlign: 'right',
+                padding: '12px',
+                fontWeight: 600,
+                color: th.columnHeaderColor,
+              }}
+            >
+              {t.w}
+            </th>
+            <th
+              style={{
+                textAlign: 'right',
+                padding: '12px',
+                fontWeight: 600,
+                color: th.columnHeaderColor,
+              }}
+            >
+              {t.l}
+            </th>
+            <th
+              style={{
+                textAlign: 'right',
+                padding: '12px',
+                fontWeight: 600,
+                color: th.columnHeaderColor,
+              }}
+            >
+              {t.t}
+            </th>
+            <th
+              style={{
+                textAlign: 'right',
+                padding: '12px',
+                fontWeight: 600,
+                color: th.columnHeaderColor,
+              }}
+            >
+              {t.gb}
+            </th>
+            <th
+              style={{
+                textAlign: 'right',
+                padding: '12px',
+                fontWeight: 600,
+                color: th.columnHeaderColor,
+              }}
+            >
+              {t.pts}
+            </th>
+            <th
+              style={{
+                textAlign: 'right',
+                padding: '12px',
+                fontWeight: 600,
+                color: th.columnHeaderColor,
+              }}
+            >
+              {t.winPct}
+            </th>
+            <th
+              style={{
+                textAlign: 'right',
+                padding: '12px',
+                fontWeight: 600,
+                color: th.columnHeaderColor,
+              }}
+            >
+              {t.pf}
+            </th>
+            <th
+              style={{
+                textAlign: 'right',
+                padding: '12px',
+                fontWeight: 600,
+                color: th.columnHeaderColor,
+              }}
+            >
+              {t.pa}
+            </th>
+            <th
+              style={{
+                textAlign: 'right',
+                padding: '12px 0 12px 12px',
+                fontWeight: 600,
+                color: th.columnHeaderColor,
+              }}
+            >
               {t.diff}
             </th>
           </tr>
@@ -265,10 +387,17 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
               <tr
                 key={row.id || idx}
                 style={{
-                  borderBottom: idx < rows.length - 1 ? '1px solid #f3f4f6' : 'none',
+                  borderBottom: idx < rows.length - 1 ? `1px solid ${th.rowBorderColor}` : 'none',
                 }}
               >
-                <td style={{ padding: '12px 12px 12px 0', color: '#6b7280', fontWeight: 500 }}>
+                <td
+                  style={{
+                    padding: '12px 12px 12px 0',
+                    color: '#6b7280',
+                    fontWeight: 500,
+                    fontSize: 'inherit',
+                  }}
+                >
                   {startRank + idx}
                 </td>
                 <td style={{ padding: '12px' }}>
@@ -302,31 +431,55 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
                         {initials}
                       </div>
                     )}
-                    <span style={{ fontWeight: 500 }}>{rosterName}</span>
+                    <span style={{ fontWeight: 500, color: th.rowTextColor }}>{rosterName}</span>
                   </div>
                 </td>
-                <td style={{ padding: '12px', textAlign: 'right' }}>{row.gamesPlayed ?? 0}</td>
-                <td style={{ padding: '12px', textAlign: 'right', fontWeight: 600 }}>
+                <td style={{ padding: '12px', textAlign: 'right', color: th.rowTextColor }}>
+                  {row.gamesPlayed ?? 0}
+                </td>
+                <td
+                  style={{
+                    padding: '12px',
+                    textAlign: 'right',
+                    fontWeight: 600,
+                    color: th.rowTextColor,
+                  }}
+                >
                   {row.wins ?? 0}
                 </td>
-                <td style={{ padding: '12px', textAlign: 'right' }}>{row.losses ?? 0}</td>
-                <td style={{ padding: '12px', textAlign: 'right' }}>{row.ties ?? 0}</td>
+                <td style={{ padding: '12px', textAlign: 'right', color: th.rowTextColor }}>
+                  {row.losses ?? 0}
+                </td>
+                <td style={{ padding: '12px', textAlign: 'right', color: th.rowTextColor }}>
+                  {row.ties ?? 0}
+                </td>
                 <td style={{ padding: '12px', textAlign: 'right', color: '#6b7280' }}>
                   {gb !== null && gb !== undefined ? gb.toFixed(1) : '—'}
                 </td>
-                <td style={{ padding: '12px', textAlign: 'right', fontWeight: 600 }}>
+                <td
+                  style={{
+                    padding: '12px',
+                    textAlign: 'right',
+                    fontWeight: 600,
+                    color: th.rowTextColor,
+                  }}
+                >
                   {row.points ?? 0}
                 </td>
                 <td style={{ padding: '12px', textAlign: 'right', color: '#6b7280' }}>
                   {winPct.toFixed(3)}
                 </td>
-                <td style={{ padding: '12px', textAlign: 'right' }}>{row.pointsFor ?? 0}</td>
-                <td style={{ padding: '12px', textAlign: 'right' }}>{row.pointsAgainst ?? 0}</td>
+                <td style={{ padding: '12px', textAlign: 'right', color: th.rowTextColor }}>
+                  {row.pointsFor ?? 0}
+                </td>
+                <td style={{ padding: '12px', textAlign: 'right', color: th.rowTextColor }}>
+                  {row.pointsAgainst ?? 0}
+                </td>
                 <td
                   style={{
                     padding: '12px 0 12px 12px',
                     textAlign: 'right',
-                    color: (row.pointDifferential ?? 0) >= 0 ? '#10b981' : '#ef4444',
+                    color: (row.pointDifferential ?? 0) >= 0 ? th.positiveColor : th.negativeColor,
                   }}
                 >
                   {(row.pointDifferential ?? 0) >= 0 ? '+' : ''}
@@ -418,14 +571,16 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
     <div
       className={className}
       style={{
-        border: '1px solid #e5e7eb',
+        border: `1px solid ${th.borderColor}`,
         borderRadius: '8px',
-        backgroundColor: '#ffffff',
+        backgroundColor: th.tableBackground,
         overflow: 'hidden',
       }}
     >
-      <div style={{ padding: '16px 24px', borderBottom: '1px solid #e5e7eb' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 600, margin: 0 }}>{title}</h3>
+      <div style={{ padding: '16px 24px', borderBottom: `1px solid ${th.borderColor}` }}>
+        <h3 style={{ fontSize: '18px', fontWeight: 600, margin: 0, color: th.rowTextColor }}>
+          {title}
+        </h3>
       </div>
       <div style={{ padding: '16px 24px', overflowX: 'auto' }}>
         {hasStandings ? (
@@ -460,11 +615,12 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           padding: '12px 16px',
-                          border: '1px solid #e5e7eb',
+                          border: `1px solid ${th.borderColor}`,
                           borderRadius: '8px',
-                          backgroundColor: '#f9fafb',
+                          backgroundColor: th.footerBackground,
                           cursor: 'pointer',
                           fontWeight: 500,
+                          color: th.rowTextColor,
                           marginBottom: '8px',
                         }}
                       >
@@ -500,14 +656,14 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '12px 24px',
-          borderTop: '1px solid #e5e7eb',
-          backgroundColor: '#f9fafb',
+          borderTop: `1px solid ${th.borderColor}`,
+          backgroundColor: th.footerBackground,
         }}
       >
         {/* Powered by Tropheo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <span style={{ fontSize: '11px', color: '#6b7280' }}>
-            {t.poweredBy} <span style={{ fontWeight: 600, color: '#374151' }}>Tropheo</span>
+            {t.poweredBy} <span style={{ fontWeight: 600, color: th.rowTextColor }}>Tropheo</span>
           </span>
         </div>
 
@@ -523,19 +679,19 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
             padding: '6px 12px',
             fontSize: '12px',
             fontWeight: 500,
-            color: '#ffffff',
-            backgroundColor: '#3b82f6',
+            color: th.buttonTextColor,
+            backgroundColor: th.buttonBackground,
             border: 'none',
             borderRadius: '6px',
             textDecoration: 'none',
             cursor: 'pointer',
-            transition: 'background-color 0.2s',
+            transition: 'opacity 0.2s',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#2563eb';
+            e.currentTarget.style.opacity = '0.85';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#3b82f6';
+            e.currentTarget.style.opacity = '1';
           }}
         >
           {t.viewOn}

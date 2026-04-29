@@ -10,7 +10,7 @@ Organizations can now generate their own API keys through the self-service dashb
 
 1. **Log in** to your Tropheo organization dashboard
 2. **Go to** your **organization profile**
-3. **Click** **"Manage Organization"** (admin only)
+3. **Click** **"Manage profile"** (admin only)
 4. **Navigate to** the **"API Keys"** section
 5. **Click** the **"Create New API Key"** button
 6. **Enter** a descriptive name for your key (e.g., "Website Widget", "Mobile App", "Partner Integration")
@@ -30,7 +30,7 @@ If you're implementing widgets for an organization:
 
 ### Dashboard Features
 
-From the API Keys section (organization profile → Manage Organization → API Keys), you can:
+From the API Keys section (organization profile → Manage profile → API Keys), you can:
 
 - **View all keys**: See both active and inactive API keys
 - **Activate/Deactivate**: Toggle keys on/off without deleting them
@@ -162,7 +162,7 @@ You can keep both keys active during migration:
 
 If a key is compromised:
 
-1. Go to your organization profile → Manage Organization → API Keys immediately
+1. Go to your organization profile → Manage profile → API Keys immediately
 2. Find the compromised key
 3. Toggle it to **Inactive** (instant effect)
 4. Generate a new key
@@ -200,7 +200,7 @@ if (origin && allowedOrigins.includes(origin)) {
 **Solutions:**
 
 - Verify API key is correct (check for typos)
-- Go to your organization profile → Manage Organization → API Keys and verify the key is **Active** (not Inactive)
+- Go to your organization profile → Manage profile → API Keys and verify the key is **Active** (not Inactive)
 - Check environment variables are loaded correctly
 - Ensure no extra whitespace in the key
 - If key was recently deactivated, reactivate it or generate a new one
@@ -248,7 +248,7 @@ Complete authentication setup example:
 **1. Generate API Key (Organization Dashboard):**
 
 - Go to your organization profile
-- Click "Manage Organization" (admin only)
+- Click "Manage profile" (admin only)
 - Navigate to "API Keys" section
 - Click "Create New API Key"
 - Name it: "Production Website Widget"
@@ -275,6 +275,6 @@ const response = await widgets.getClient().getStandings('event-123');
 
 **4. Monitor Usage:**
 
-- Return to your organization profile → Manage Organization → API Keys
+- Return to your organization profile → Manage profile → API Keys
 - Check "Last Used" timestamp
 - Deactivate if suspicious activity detected

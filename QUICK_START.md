@@ -8,8 +8,8 @@ This guide will help you get started with Tropheo Widgets in 5 minutes.
 
 1. Log in to your Tropheo organization dashboard
 2. Go to your **organization profile**
-3. If you are an administrator of the organization, you will see the **"Manage Organization"** option
-4. Inside **"Manage Organization"**, you will find different sections, including **"API Keys"**
+3. If you are an administrator of the organization, you will see the **"Manage profile"** option
+4. Inside **"Manage profile"**, you will find different sections, including **"API Keys"**
 5. Click the **"Create New API Key"** button
 6. Give your key a descriptive name (e.g., "Website Widget", "External Portal")
 7. Copy the generated API key and store it securely
@@ -52,7 +52,7 @@ curl -H "Authorization: $API_KEY" \
 Provide your developers with:
 
 1. API key (keep it secure - don't share via email or chat!)
-2. Base URL of your Tropheo instance (e.g., `https://app.tropheo.mx`)
+2. Base URL of your Tropheo instance (e.g., `https://www.tropheo.com`)
 3. Link to integration documentation (this repository)
 
 **Important:** Treat API keys like passwords. Anyone with your key can access your organization's public event data.
@@ -156,8 +156,8 @@ Open the HTML file directly in your browser — no server needed. Rebuild any ti
 
 **How to get your values:**
 
-- **apiKey**: Generate one from your organization profile → **Manage Organization** → **API Keys**
-- **baseUrl**: The main URL where your Tropheo site is hosted (e.g., `https://app.tropheo.mx`)
+- **apiKey**: Generate one from your organization profile → **Manage profile** → **API Keys**
+- **baseUrl**: The main URL where your Tropheo site is hosted (e.g., `https://www.tropheo.com`)
 - **eventId**: Found in the event URL: `https://your-site.com/events/EVENT_ID_HERE`
 
 **That's it!** Open the HTML file in your browser.

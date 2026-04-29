@@ -221,6 +221,7 @@ tropheo_widgets/
 - Both components: `lang: 'en' | 'es'` prop
 - `<LeaderboardTable filterByOrganizationId="org-id">` — filters leaderboard to a single team's athletes (client-side); hides the Teams tab when active
 - `<LeaderboardTable theme={{ ... }}>` — fully customizable colors (see [Theming](#theming))
+- `<StandingsTable theme={{ ... }}>` — fully customizable colors (see [Theming](#theming))
 
 ### @tropheo/embed
 
@@ -229,7 +230,7 @@ tropheo_widgets/
 - `renderLeaderboard(config)` — stats table with client-side interactive sort
 - `renderStats(config)` — alias for `renderLeaderboard`
 - `config.filterByOrganizationId` — filter to a single team's athletes; hides the Teams tab
-- `config.theme` — fully customizable colors (see [Theming](#theming))
+- `config.theme` — fully customizable colors for both standings and leaderboard (see [Theming](#theming))
 - Translations: EN and ES for all labels
 - Zero external dependencies
 
@@ -248,7 +249,7 @@ All endpoints require `Authorization: <apiKey>` header and are hosted on your Tr
 
 API keys are generated per organization from the Tropheo dashboard:
 
-> Organization Profile → **Manage Organization** → **API Keys** → **Create New API Key**
+> Organization Profile → **Manage profile** → **API Keys** → **Create New API Key**
 
 Use your key in any widget:
 
@@ -278,7 +279,58 @@ See [Authentication Guide](./docs/authentication.md) for more details.
 
 ## Theming
 
-All `LeaderboardTable` colors can be overridden via a `theme` prop (React) or `config.theme` (embed). Omit any key to keep the default style.
+Both `StandingsTable` and `LeaderboardTable` support full color customization via a `theme` prop (React) or `config.theme` (embed). Omit any key to keep the default style.
+
+### StandingsTable / `renderStandings` theme
+
+| Key                 | Default   | Description                         |
+| ------------------- | --------- | ----------------------------------- |
+| `tableBackground`   | `#ffffff` | Card / table background             |
+| `columnHeaderColor` | `#374151` | Column header (`th`) text color     |
+| `rowTextColor`      | `#374151` | Table cell text color               |
+| `rowBorderColor`    | `#f3f4f6` | Row divider line color              |
+| `borderColor`       | `#e5e7eb` | Outer card border color             |
+| `footerBackground`  | `#f9fafb` | Footer strip background             |
+| `buttonBackground`  | `#3b82f6` | "View on Tropheo" button background |
+| `buttonTextColor`   | `#ffffff` | "View on Tropheo" button text       |
+| `positiveColor`     | `#10b981` | Positive point differential color   |
+| `negativeColor`     | `#ef4444` | Negative point differential color   |
+
+**React example:**
+
+```tsx
+<StandingsTable
+  client={client}
+  eventId="event-123"
+  theme={{
+    tableBackground: '#1e293b', // dark card
+    columnHeaderColor: '#94a3b8',
+    rowTextColor: '#e2e8f0',
+    borderColor: '#334155',
+    buttonBackground: '#f59e0b',
+    buttonTextColor: '#1e293b',
+  }}
+/>
+```
+
+**HTML / embed example:**
+
+```js
+embed.renderStandings({
+  eventId: 'your-event-id',
+  container: '#standings-container',
+  theme: {
+    tableBackground: '#1e293b',
+    columnHeaderColor: '#94a3b8',
+    rowTextColor: '#e2e8f0',
+    borderColor: '#334155',
+    buttonBackground: '#f59e0b',
+    buttonTextColor: '#1e293b',
+  },
+});
+```
+
+### LeaderboardTable / `renderStats` theme
 
 | Key                 | Default                                             | Description                                        |
 | ------------------- | --------------------------------------------------- | -------------------------------------------------- |
