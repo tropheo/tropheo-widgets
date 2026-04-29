@@ -93,13 +93,14 @@ Update the API key, base URL, and event ID in the example code (or `.env` file).
 
 All examples require:
 
-| Parameter | Description | Where to find |
-|---|---|---|
-| `apiKey` | API key from your Tropheo organization | Organization Profile → Manage Organization → API Keys |
-| `baseUrl` | Your Tropheo instance URL | e.g. `https://app.tropheo.mx` |
-| `eventId` | Event to display | From the event URL |
+| Parameter | Description                            | Where to find                                    |
+| --------- | -------------------------------------- | ------------------------------------------------ |
+| `apiKey`  | API key from your Tropheo organization | Organization Profile → Manage profile → API Keys |
+| `baseUrl` | Your Tropheo instance URL              | e.g. `https://www.tropheo.comm`                  |
+| `eventId` | Event to display                       | From the event URL                               |
 
 **HTML:**
+
 ```javascript
 const API_KEY = 'your-api-key';
 const BASE_URL = 'https://your-instance.com';
@@ -107,6 +108,7 @@ const EVENT_ID = 'event-123';
 ```
 
 **React/Next.js:**
+
 ```bash
 # .env or .env.local
 VITE_TROPHEO_API_KEY=your-api-key        # React (Vite)

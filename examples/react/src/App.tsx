@@ -35,6 +35,19 @@ function App() {
             title="Tournament Standings"
             showEmptyState={true}
             lang="en"
+            // Optional: custom theme — omit any key to keep the default
+            // theme={{
+            //   tableBackground: '#ffffff',
+            //   columnHeaderColor: '#374151',
+            //   rowTextColor: '#374151',
+            //   rowBorderColor: '#f3f4f6',
+            //   borderColor: '#e5e7eb',
+            //   footerBackground: '#f9fafb',
+            //   buttonBackground: '#3b82f6',
+            //   buttonTextColor: '#ffffff',
+            //   positiveColor: '#10b981',
+            //   negativeColor: '#ef4444',
+            // }}
           />
         </section>
 

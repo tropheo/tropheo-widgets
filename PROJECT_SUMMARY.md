@@ -70,7 +70,7 @@ Organizations have full control over their widget API keys through a self-servic
 
 ### Dashboard Location
 
-Go to your **organization profile** → **Manage Organization** → **API Keys**
+Go to your **organization profile** → **Manage profile** → **API Keys**
 
 (Note: You must be an administrator of the organization to access this section)
 
@@ -113,7 +113,7 @@ Go to your **organization profile** → **Manage Organization** → **API Keys**
 ```
 1. Organization Admin logs into dashboard
 2. Goes to organization profile
-3. Clicks "Manage Organization" (admin only)
+3. Clicks "Manage profile" (admin only)
 4. Navigates to "API Keys" section
 5. Clicks "Create New API Key"
 6. Enters descriptive name
@@ -383,7 +383,7 @@ GOOGLE_CLOUD_STORAGE_BUCKET=...
 # etc.
 ```
 
-**Note:** API keys are no longer manually configured via environment variables. Organizations generate and manage their own keys through their organization profile → Manage Organization → API Keys (admin only).
+**Note:** API keys are no longer manually configured via environment variables. Organizations generate and manage their own keys through their organization profile → Manage profile → API Keys (admin only).
 
 ### Client (Next.js)
 
@@ -620,7 +620,7 @@ Add unit tests for:
 
 1. ⚠️ Log in to organization dashboard
 2. ⚠️ Go to your organization profile
-3. ⚠️ Click "Manage Organization" (admin only)
+3. ⚠️ Click "Manage profile" (admin only)
 4. ⚠️ Navigate to "API Keys" section
 5. ⚠️ Generate new API key with descriptive name
 6. ⚠️ Copy and securely store the API key
@@ -638,7 +638,7 @@ Add unit tests for:
 ### For External Developers (Clients)
 
 1. ⚠️ Request access to organization dashboard or obtain API key from organization admin
-2. ⚠️ Generate API key from organization profile → Manage Organization → API Keys (if you have dashboard access and are admin)
+2. ⚠️ Generate API key from organization profile → Manage profile → API Keys (if you have dashboard access and are admin)
 3. ⚠️ Choose integration method (React or Vanilla JS)
 4. ⚠️ Install packages or include CDN script
 5. ⚠️ Configure with API key and base URL
@@ -658,15 +658,15 @@ Add unit tests for:
 
 ### Common Issues
 
-| Issue                | Solution                                                                        |
-| -------------------- | ------------------------------------------------------------------------------- |
-| 401 Unauthorized     | Check API key is correct and active in organization dashboard                   |
-| CORS errors          | Verify CORS headers in response                                                 |
-| Empty standings      | Verify event ID and database content                                            |
-| Widget not rendering | Check browser console for errors                                                |
-| Type errors          | Ensure latest @tropheo/types installed                                          |
-| Key not working      | Verify key is activated (organization profile → Manage Organization → API Keys) |
-| Lost API key         | Generate new key from dashboard (old keys cannot be recovered)                  |
+| Issue                | Solution                                                                   |
+| -------------------- | -------------------------------------------------------------------------- |
+| 401 Unauthorized     | Check API key is correct and active in organization dashboard              |
+| CORS errors          | Verify CORS headers in response                                            |
+| Empty standings      | Verify event ID and database content                                       |
+| Widget not rendering | Check browser console for errors                                           |
+| Type errors          | Ensure latest @tropheo/types installed                                     |
+| Key not working      | Verify key is activated (organization profile → Manage profile → API Keys) |
+| Lost API key         | Generate new key from dashboard (old keys cannot be recovered)             |
 
 ### Contact
 

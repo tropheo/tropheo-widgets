@@ -100,7 +100,7 @@ export default function Page() {
 All packages require the following configuration:
 
 - **apiKey** (required): Your Tropheo API key for authentication (generate from your organization's dashboard)
-- **baseUrl** (required): The base URL of your Tropheo instance (e.g., `https://app.tropheo.mx`)
+- **baseUrl** (required): The base URL of your Tropheo instance (e.g., `https://www.tropheo.comm`)
 - **eventId** (required): The ID of the event to display (found in the event URL)
 
 ## How to Get Your Configuration Values
@@ -111,7 +111,7 @@ Generate your own API key from your organization dashboard:
 
 1. Log in to Tropheo
 2. Go to your **organization profile**
-3. Click **"Manage Organization"** (admin only)
+3. Click **"Manage profile"** (admin only)
 4. Navigate to **"API Keys"** section
 5. Click **"Create New API Key"**
 6. Give it a descriptive name
@@ -123,14 +123,14 @@ Generate your own API key from your organization dashboard:
 
 This is the main URL where your Tropheo platform is hosted, for example:
 
-- `https://app.tropheo.mx`
+- `https://www.tropheo.comm`
 - `https://your-organization.tropheo.com`
 
 ### Event ID
 
 The event ID is found in the URL when viewing an event:
 
-- URL: `https://app.tropheo.mx/events/65abc123def456789`
+- URL: `https://www.tropheo.comm/events/65abc123def456789`
 - Event ID: `65abc123def456789`
 
 ## Automatic Features
@@ -150,6 +150,6 @@ The widget automatically:
 
 ## Support
 
-- **API Key Issues:** Check your organization profile → Manage Organization → API Keys
+- **API Key Issues:** Check your organization profile → Manage profile → API Keys
 - **Technical Questions:** Refer to the documentation in the `docs/` folder
 - **Feature Requests:** Contact Tropheo support

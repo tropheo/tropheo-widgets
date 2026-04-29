@@ -42,7 +42,7 @@ Confirm that the organization dashboard includes the API key management interfac
 
 #### Dashboard Access
 
-- **Navigation:** Organization profile → **Manage Organization** → **API Keys**
+- **Navigation:** Organization profile → **Manage profile** → **API Keys**
 - **Requirement:** Must be logged in as organization admin
 - Features:
   - Create new API keys
@@ -67,7 +67,7 @@ Test the complete flow:
 1. **Generate a test API key:**
    - Log in to an organization dashboard
    - Go to your organization profile
-   - Click "Manage Organization" (admin only)
+   - Click "Manage profile" (admin only)
    - Navigate to "API Keys" section
    - Create a new key
    - Copy the generated key
@@ -207,7 +207,7 @@ For the embed package, distribute via CDN:
 
 With the new self-service system, organizations generate their own API keys:
 
-1. **Self-Service (Recommended):** Organizations generate keys from their organization profile → Manage Organization → API Keys
+1. **Self-Service (Recommended):** Organizations generate keys from their organization profile → Manage profile → API Keys
 2. **Admin Assistance:** If needed, help organizations navigate to the API key management page
 3. **Documentation:** Provide links to guides on generating and using API keys
 
@@ -216,7 +216,7 @@ With the new self-service system, organizations generate their own API keys:
 When onboarding new organizations:
 
 1. Grant them access to the organization dashboard
-2. Show them how to navigate to their organization profile → Manage Organization → API Keys
+2. Show them how to navigate to their organization profile → Manage profile → API Keys
 3. Demonstrate creating their first API key
 4. Explain key management features (activate/deactivate, monitoring)
 5. Provide integration documentation

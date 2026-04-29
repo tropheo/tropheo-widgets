@@ -202,6 +202,7 @@ interface StandingsTableProps {
   eventUrl?: string;
   baseUrl?: string;
   lang?: 'en' | 'es';
+  theme?: StandingsTheme;
 }
 ```
 
@@ -240,8 +241,9 @@ function App() {
 - `refreshTrigger` (number, optional): Change this value to force refresh
 - `className` (string, optional): Additional CSS class names
 - `eventUrl` (string, optional): Custom event URL for the "View on Tropheo" button
-- `baseUrl` (string, optional): Base URL for constructing event links (default: 'https://app.tropheo.mx')
+- `baseUrl` (string, optional): Base URL for constructing event links (default: 'https://www.tropheo.com')
 - `lang` ('en' | 'es', optional): Language for UI text (default: 'en')
+- `theme` (StandingsTheme, optional): Visual theme overrides — see [StandingsTheme](#standingstheme)
 
 ---
 
@@ -320,6 +322,7 @@ interface StandingsWidgetConfig {
   eventUrl?: string;
   baseUrl?: string;
   lang?: 'en' | 'es';
+  theme?: StandingsTheme;
 }
 ```
 
@@ -329,10 +332,66 @@ interface StandingsWidgetConfig {
 - `showEmptyState` (boolean, optional): Show message when no data
 - `container` (string | HTMLElement, required): CSS selector or DOM element
 - `eventUrl` (string, optional): Custom event URL for the "View on Tropheo" button
-- `baseUrl` (string, optional): Base URL for constructing event links (default: 'https://app.tropheo.mx')
+- `baseUrl` (string, optional): Base URL for constructing event links (default: 'https://www.tropheo.com')
 - `lang` ('en' | 'es', optional): Language for UI text (default: 'en')
+- `theme` (StandingsTheme, optional): Visual theme overrides — see [StandingsTheme](#standingstheme)
 
 **Returns:** `Promise<void>`
+
+### StandingsTheme
+
+All color fields are optional. Omit any key to keep its default value.
+
+```typescript
+interface StandingsTheme {
+  tableBackground?: string; // default: '#ffffff'
+  columnHeaderColor?: string; // default: '#374151'
+  rowTextColor?: string; // default: '#374151'
+  rowBorderColor?: string; // default: '#f3f4f6'
+  borderColor?: string; // default: '#e5e7eb'
+  footerBackground?: string; // default: '#f9fafb'
+  buttonBackground?: string; // default: '#3b82f6'
+  buttonTextColor?: string; // default: '#ffffff'
+  positiveColor?: string; // default: '#10b981'  (positive point differential)
+  negativeColor?: string; // default: '#ef4444'  (negative point differential)
+}
+```
+
+**React example:**
+
+```tsx
+<StandingsTable
+  client={client}
+  eventId="event-123"
+  theme={{
+    tableBackground: '#1e293b', // dark card
+    columnHeaderColor: '#94a3b8',
+    rowTextColor: '#e2e8f0',
+    rowBorderColor: '#334155',
+    borderColor: '#334155',
+    footerBackground: '#0f172a',
+    buttonBackground: '#f59e0b',
+    buttonTextColor: '#1e293b',
+  }}
+/>
+```
+
+**HTML / embed example:**
+
+```js
+embed.renderStandings({
+  eventId: 'your-event-id',
+  container: '#standings-container',
+  theme: {
+    tableBackground: '#1e293b',
+    columnHeaderColor: '#94a3b8',
+    rowTextColor: '#e2e8f0',
+    borderColor: '#334155',
+    buttonBackground: '#f59e0b',
+    buttonTextColor: '#1e293b',
+  },
+});
+```
 
 ---
 

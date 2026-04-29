@@ -310,7 +310,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   refreshTrigger,
   className = '',
   eventUrl,
-  baseUrl = 'https://app.tropheo.mx',
+  baseUrl = 'https://www.tropheo.com',
   lang = 'en',
   filterByOrganizationId,
   theme = {},

@@ -84,7 +84,7 @@
     <script>
       (function () {
         // ─── CONFIGURE YOUR VALUES HERE ───────────────────────
-        var API_KEY = 'your-api-key-here'; // From: Org Profile → Manage Organization → API Keys
+        var API_KEY = 'your-api-key-here'; // From: Org Profile → Manage profile → API Keys
         var BASE_URL = 'https://your-tropheo-instance.com'; // Your Tropheo site URL
         var EVENT_ID = 'your-event-id-here'; // From the event URL
 
@@ -101,6 +101,19 @@
             showEmptyState: true,
             container: '#standings-container',
             lang: 'en', // 'en' or 'es'
+            // Optional: custom theme (all fields optional — omit to keep defaults)
+            // theme: {
+            //   tableBackground: '#ffffff',
+            //   columnHeaderColor: '#374151',
+            //   rowTextColor: '#374151',
+            //   rowBorderColor: '#f3f4f6',
+            //   borderColor: '#e5e7eb',
+            //   footerBackground: '#f9fafb',
+            //   buttonBackground: '#3b82f6',
+            //   buttonTextColor: '#ffffff',
+            //   positiveColor: '#10b981',
+            //   negativeColor: '#ef4444',
+            // },
           });
 
           // ── Stats leaderboard (renderStats is an alias for renderLeaderboard)

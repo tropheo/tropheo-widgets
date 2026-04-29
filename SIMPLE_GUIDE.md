@@ -7,15 +7,15 @@ Esta guía te explica paso a paso cómo mostrar las tablas de posiciones (standi
 Antes de empezar, necesitas 3 cosas:
 
 1. **API Key** - Una llave de acceso que puedes generar desde tu dashboard de organización
-2. **URL Base** - La dirección de tu sitio Tropheo (ejemplo: `https://app.tropheo.mx`)
+2. **URL Base** - La dirección de tu sitio Tropheo (ejemplo: `https://www.tropheo.com`)
 3. **Event ID** - El ID del evento que quieres mostrar (ejemplo: `65abc123def456789`)
 
 ### ¿Cómo obtener tu API Key?
 
 1. Inicia sesión en tu dashboard de Tropheo
 2. Ve al **perfil de tu organización**
-3. Si eres administrador de la organización, verás la opción **"Manage Organization"**
-4. Dentro de **"Manage Organization"**, encontrarás diferentes apartados, entre ellos **"API Keys"**
+3. Si eres administrador de la organización, verás la opción **"Manage profile"**
+4. Dentro de **"Manage profile"**, encontrarás diferentes apartados, entre ellos **"API Keys"**
 5. Haz clic en el botón **"Create New API Key"**
 6. Dale un nombre descriptivo a tu key (ejemplo: "Widget del Sitio Web")
 7. Copia la API key generada y guárdala en un lugar seguro
@@ -34,7 +34,7 @@ Desde el dashboard de API Keys puedes:
 Cuando estés viendo un evento en Tropheo, mira la barra de direcciones de tu navegador:
 
 ```
-https://app.tropheo.mx/events/65abc123def456789
+https://www.tropheo.com/events/65abc123def456789
                                   ↑
                         Este es tu Event ID
 ```
@@ -80,7 +80,7 @@ Copia `dist/tropheo-embed.bundle.js` junto a tu archivo HTML y cárgalo con un `
     <script>
       const embed = new window.TropheoEmbed({
         apiKey: 'TU-API-KEY-AQUI',
-        baseUrl: 'https://app.tropheo.mx',
+        baseUrl: 'https://www.tropheo.com',
       });
 
       embed.renderStandings({
@@ -136,7 +136,7 @@ Crea un nuevo archivo llamado `standings.html` y copia este código:
       // ⚙️ CONFIGURA TUS VALORES AQUÍ
       const embed = new window.TropheoEmbed({
         apiKey: 'TU-API-KEY-AQUI', // Reemplaza con tu API key
-        baseUrl: 'https://app.tropheo.mx', // Reemplaza con tu URL
+        baseUrl: 'https://www.tropheo.com', // Reemplaza con tu URL
       });
 
       // Muestra los standings
@@ -157,7 +157,7 @@ Crea un nuevo archivo llamado `standings.html` y copia este código:
 En el código anterior, reemplaza:
 
 - `TU-API-KEY-AQUI` con tu API Key
-- `https://app.tropheo.mx` con tu URL de Tropheo (si es diferente)
+- `https://www.tropheo.com` con tu URL de Tropheo (si es diferente)
 - `TU-EVENT-ID-AQUI` con tu Event ID
 
 ### Paso 3: Abre el archivo
@@ -185,7 +185,7 @@ Si ya tienes una página web y quieres agregar los standings:
 <script>
   const embed = new window.TropheoEmbed({
     apiKey: 'TU-API-KEY-AQUI',
-    baseUrl: 'https://app.tropheo.mx',
+    baseUrl: 'https://www.tropheo.com',
   });
 
   embed.renderStandings({
@@ -254,7 +254,7 @@ Puedes tener varios widgets en la misma página:
 <script>
   const embed = new window.TropheoEmbed({
     apiKey: 'TU-API-KEY',
-    baseUrl: 'https://app.tropheo.mx',
+    baseUrl: 'https://www.tropheo.com',
   });
 
   // División A
@@ -281,7 +281,7 @@ Puedes tener varios widgets en la misma página:
 
 ### Aparece "Error: Authentication failed"
 
-- Tu API Key es incorrecto o está desactivado. Ve al perfil de tu organización → **Manage Organization** → **API Keys** para verificar que tu key esté activa.
+- Tu API Key es incorrecto o está desactivado. Ve al perfil de tu organización → **Manage profile** → **API Keys** para verificar que tu key esté activa.
 
 ### Aparece "Error: Event not found"
 
@@ -314,7 +314,7 @@ Los leaderboards muestran las estadísticas de jugadores o equipos en un evento.
     <script>
       const embed = new window.TropheoEmbed({
         apiKey: 'TU-API-KEY-AQUI',
-        baseUrl: 'https://app.tropheo.mx',
+        baseUrl: 'https://www.tropheo.com',
       });
 
       // renderStats es un alias de renderLeaderboard — usa cualquiera
@@ -466,7 +466,7 @@ embed.renderStats({
 
 Si tienes problemas:
 
-1. **API Keys:** Ve al perfil de tu organización → **Manage Organization** → **API Keys** para:
+1. **API Keys:** Ve al perfil de tu organización → **Manage profile** → **API Keys** para:
    - Generar nuevas API keys
    - Ver cuáles keys están activas
    - Activar o desactivar keys
