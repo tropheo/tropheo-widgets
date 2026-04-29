@@ -38,6 +38,89 @@ export interface ThemeConfig {
 }
 
 /**
+ * Visual theme for the Leaderboard widget.
+ * All values are CSS color strings (hex, rgb, hsl, etc.) or valid CSS values.
+ * Omitting a key keeps the default style.
+ */
+export interface LeaderboardTheme {
+  /** Background of the top gradient header. Accepts any CSS background value.
+   *  @default 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' */
+  headerBackground?: string;
+  /** Text colour inside the header (title + subtitle).
+   *  @default '#ffffff' */
+  headerTextColor?: string;
+  /** Colour of the active tab indicator and its text.
+   *  @default '#3b82f6' */
+  activeTabColor?: string;
+  /** Colour of inactive tab text.
+   *  @default '#6b7280' */
+  inactiveTabColor?: string;
+  /** Background colour of the card / table container.
+   *  @default '#ffffff' */
+  tableBackground?: string;
+  /** Colour of the column header text (th elements).
+   *  @default '#374151' */
+  columnHeaderColor?: string;
+  /** Colour of data cells / row text.
+   *  @default '#374151' */
+  rowTextColor?: string;
+  /** Colour of the row divider lines.
+   *  @default '#f3f4f6' */
+  rowBorderColor?: string;
+  /** Outer border / card border colour.
+   *  @default '#e5e7eb' */
+  borderColor?: string;
+  /** Background colour of the footer strip.
+   *  @default '#f9fafb' */
+  footerBackground?: string;
+  /** Background colour of the "View on Tropheo" button.
+   *  @default '#3b82f6' */
+  buttonBackground?: string;
+  /** Text colour of the "View on Tropheo" button.
+   *  @default '#ffffff' */
+  buttonTextColor?: string;
+  /** Background colour of the avatar placeholder circle.
+   *  @default '#e5e7eb' */
+  avatarBackground?: string;
+}
+
+/**
+ * Visual theme for the Standings widget.
+ */
+export interface StandingsTheme {
+  /** Background colour of the card.
+   *  @default '#ffffff' */
+  tableBackground?: string;
+  /** Colour of the column header text.
+   *  @default '#374151' */
+  columnHeaderColor?: string;
+  /** Colour of data cells / row text.
+   *  @default '#374151' */
+  rowTextColor?: string;
+  /** Colour of the row divider lines.
+   *  @default '#f3f4f6' */
+  rowBorderColor?: string;
+  /** Outer border / card border colour.
+   *  @default '#e5e7eb' */
+  borderColor?: string;
+  /** Background colour of the footer strip.
+   *  @default '#f9fafb' */
+  footerBackground?: string;
+  /** Background colour of the "View on Tropheo" button.
+   *  @default '#3b82f6' */
+  buttonBackground?: string;
+  /** Text colour of the "View on Tropheo" button.
+   *  @default '#ffffff' */
+  buttonTextColor?: string;
+  /** Colour used for positive point differential.
+   *  @default '#16a34a' */
+  positiveColor?: string;
+  /** Colour used for negative point differential.
+   *  @default '#dc2626' */
+  negativeColor?: string;
+}
+
+/**
  * Configuration for standings widget
  */
 export interface StandingsWidgetConfig {
@@ -95,6 +178,11 @@ export interface StandingsWidgetConfig {
    * Language for text labels (default: 'en')
    */
   lang?: 'en' | 'es';
+
+  /**
+   * Visual theme overrides for the standings widget.
+   */
+  theme?: StandingsTheme;
 }
 
 /**
@@ -138,6 +226,7 @@ export interface EventData {
   name: string;
   eventRole: EventRole;
   type?: string;
+  sport?: Sport;
   startDate?: string;
   endDate?: string;
 }
@@ -176,6 +265,8 @@ export type EventRole =
   | 'BRACKET_STAGE'
   | 'DIVISION'
   | 'TOURNAMENT_ROOT'
+  | 'SEASON'
+  | 'LEAGUE'
   | 'GAME'
   | 'GAMEDAY'
   | null;
@@ -422,19 +513,20 @@ export interface LeaderboardWidgetConfig {
   eventId: string;
 
   /**
-   * Scope type (TOURNAMENT, DIVISION, STAGE, GAMEDAY)
+   * Scope type (TOURNAMENT, DIVISION, STAGE, GAMEDAY).
+   * Auto-detected from the event if not provided.
    */
-  scopeType: ScopeType;
+  scopeType?: ScopeType;
 
   /**
-   * Sport type
+   * Sport type. Auto-detected from the event if not provided.
    */
-  sport: Sport;
+  sport?: Sport;
 
   /**
-   * Stats facet
+   * Stats facet. Auto-selected from sport if not provided.
    */
-  facet: Facet;
+  facet?: Facet;
 
   /**
    * Leaderboard mode (athletes or teams)
@@ -485,4 +577,18 @@ export interface LeaderboardWidgetConfig {
    * Language for text labels (default: 'en')
    */
   lang?: 'en' | 'es';
+
+  /**
+   * Filter leaderboard to only show athletes from a specific organization.
+   * Filtering is applied client-side after fetching the full leaderboard.
+   * When set, the "Teams" mode tab is hidden (it doesn't make sense to view
+   * team rankings when scoped to a single team's athletes).
+   * Pass the organization ID string.
+   */
+  filterByOrganizationId?: string;
+
+  /**
+   * Visual theme overrides for the leaderboard widget.
+   */
+  theme?: LeaderboardTheme;
 }

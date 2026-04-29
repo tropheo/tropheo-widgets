@@ -16,7 +16,12 @@
 
       h1 {
         color: #111827;
-        margin-bottom: 10px;
+        margin-bottom: 4px;
+      }
+
+      h2 {
+        color: #374151;
+        margin-top: 40px;
       }
 
       .description {
@@ -24,8 +29,21 @@
         margin-bottom: 30px;
       }
 
-      #standings-container {
-        margin-top: 20px;
+      .setup-note {
+        background: #fef3c7;
+        border: 1px solid #d97706;
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 24px;
+        font-size: 14px;
+        color: #92400e;
+      }
+
+      .setup-note code {
+        background: rgba(0, 0, 0, 0.08);
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-family: monospace;
       }
 
       .error {
@@ -38,43 +56,87 @@
     </style>
   </head>
   <body>
-    <h1>Tropheo Widgets - Vanilla HTML Example</h1>
+    <h1>Tropheo Widgets — Vanilla HTML Example</h1>
     <p class="description">
-      This example demonstrates how to embed Tropheo standings widget using plain HTML and
-      JavaScript.
+      Demonstrates standings and stats leaderboard using the local embed bundle. No CDN, no npm.
     </p>
 
+    <div class="setup-note">
+      <strong>Setup:</strong> Build the bundle first — run <code>npm run build:embed</code> from the
+      repo root, then copy <code>dist/tropheo-embed.bundle.js</code> next to this file.
+    </div>
+
+    <!-- ─── STANDINGS ─────────────────────────────────────── -->
+    <h2>Standings</h2>
     <div id="standings-container"></div>
 
-    <!-- Load the widget library -->
-    <script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
+    <!-- ─── STATS LEADERBOARD ─────────────────────────────── -->
+    <h2>Top Scorers (Basketball)</h2>
+    <div id="leaderboard-container"></div>
+
+    <!--
+      Load the bundle:
+        - Local file:  <script src="tropheo-embed.bundle.js"></script>
+        - CDN:         <script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
+    -->
+    <script src="tropheo-embed.bundle.js"></script>
 
     <script>
       (function () {
-        // Configuration
-        const API_KEY = 'your-api-key-here'; // Get this from your Tropheo admin
-        const BASE_URL = 'https://your-tropheo-instance.com'; // Your Tropheo site URL
-        const EVENT_ID = 'your-event-id-here'; // Get this from the event URL
+        // ─── CONFIGURE YOUR VALUES HERE ───────────────────────
+        var API_KEY = 'your-api-key-here'; // From: Org Profile → Manage Organization → API Keys
+        var BASE_URL = 'https://your-tropheo-instance.com'; // Your Tropheo site URL
+        var EVENT_ID = 'your-event-id-here'; // From the event URL
 
         try {
-          // Initialize Tropheo Embed
-          const embed = new window.TropheoEmbed({
+          var embed = new window.TropheoEmbed({
             apiKey: API_KEY,
             baseUrl: BASE_URL,
           });
 
-          // Render standings widget
-          // The widget automatically detects event type and shows appropriate grouping
+          // ── Standings: auto-detects POOL / DIVISION / BRACKET / SEASON / LEAGUE
           embed.renderStandings({
             eventId: EVENT_ID,
             title: 'Tournament Standings',
             showEmptyState: true,
             container: '#standings-container',
-            lang: 'en', // Language: 'en' or 'es'
+            lang: 'en', // 'en' or 'es'
+          });
+
+          // ── Stats leaderboard (renderStats is an alias for renderLeaderboard)
+          // Column headers are clickable to re-sort without a new network request.
+          embed.renderStats({
+            eventId: EVENT_ID,
+            scopeType: 'TOURNAMENT', // 'TOURNAMENT' | 'DIVISION' | 'STAGE' | 'GAMEDAY'
+            sport: 'basketball', // 'basketball' | 'baseball' | 'softball' | 'soccer'
+            facet: 'basketball', // basketball | batting | pitching | fielding | soccer | goalkeeping
+            mode: 'athletes', // 'athletes' | 'teams'
+            title: 'Top Scorers',
+            container: '#leaderboard-container',
+            lang: 'en',
+            // Optional: filter to a single team's athletes (hides Teams tab)
+            // filterByOrganizationId: 'your-org-id-here',
+            // Optional: custom theme (all fields optional — omit to keep defaults)
+            // theme: {
+            //   headerBackground: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            //   headerTextColor: '#ffffff',
+            //   activeTabColor: '#3b82f6',
+            //   inactiveTabColor: '#6b7280',
+            //   tableBackground: '#ffffff',
+            //   columnHeaderColor: '#374151',
+            //   rowTextColor: '#374151',
+            //   rowBorderColor: '#f3f4f6',
+            //   borderColor: '#e5e7eb',
+            //   footerBackground: '#f9fafb',
+            //   buttonBackground: '#3b82f6',
+            //   buttonTextColor: '#ffffff',
+            //   avatarBackground: '#e5e7eb',
+            // },
           });
         } catch (error) {
-          document.getElementById('standings-container').innerHTML =
-            '<div class="error">Error: ' + error.message + '</div>';
+          var errHtml = '<div class="error">Error: ' + error.message + '</div>';
+          document.getElementById('standings-container').innerHTML = errHtml;
+          document.getElementById('leaderboard-container').innerHTML = errHtml;
         }
       })();
     </script>

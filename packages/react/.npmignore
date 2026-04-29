@@ -1,0 +1,28 @@
+# Source files (solo publicamos el dist/)
+src/
+*.ts
+*.tsx
+!*.d.ts
+
+# Config files
+tsconfig.json
+.eslintrc*
+.prettierrc*
+
+# Test files
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Development
+.DS_Store
+*.log
+npm-debug.log*
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore

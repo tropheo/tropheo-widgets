@@ -1,6 +1,6 @@
 # Tropheo Widgets
 
-A library for embedding Tropheo tournament widgets into your website or application.
+A library for embedding Tropheo tournament standings and stats widgets into any website or application.
 
 ## 🚀 New to Tropheo Widgets?
 
@@ -16,14 +16,14 @@ A library for embedding Tropheo tournament widgets into your website or applicat
 
 ## Features
 
-- 📊 Display tournament standings and stats
-- 🏆 Show player and team leaderboards
+- 📊 **Standings** — Tournament, division, pool, bracket, season, and league standings with automatic hierarchical loading
+- 🏆 **Leaderboards / Stats** — Player and team stat tables for basketball, baseball, softball, and soccer with interactive column sorting
 - ⚛️ React components for React/Next.js apps
-- 🌐 Vanilla JavaScript support for any website
-- 🔒 Secure API key authentication
+- 🌐 Vanilla JavaScript support for any website (zero dependencies)
+- 🔒 Secure API key authentication per organization
 - 📱 Responsive design
-- 🎨 Customizable styling
-- 🚀 Zero dependencies (embed package)
+- 🎨 Customizable styling and titles
+- 🌍 EN / ES internationalization built-in
 
 ## Quick Start
 
@@ -40,12 +40,15 @@ const widgets = new TropheoWidgets({
 function App() {
   return (
     <>
+      {/* Standings — auto-detects event role and loads hierarchy */}
       <StandingsTable
         client={widgets.getClient()}
         eventId="event-123"
         title="Tournament Standings"
+        lang="en"
       />
 
+      {/* Stats leaderboard */}
       <LeaderboardTable
         client={widgets.getClient()}
         eventId="event-123"
@@ -54,6 +57,7 @@ function App() {
         facet="basketball"
         mode="athletes"
         title="Top Scorers"
+        lang="en"
       />
     </>
   );
@@ -66,21 +70,22 @@ function App() {
 <div id="standings"></div>
 <div id="leaderboard"></div>
 
-<script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
+<script src="tropheo-embed.bundle.js"></script>
 <script>
   const embed = new window.TropheoEmbed({
     apiKey: 'your-api-key',
     baseUrl: 'https://your-tropheo-instance.com',
   });
 
-  // Render standings
+  // Render standings (auto-detects event role)
   embed.renderStandings({
     eventId: 'event-123',
     container: '#standings',
+    lang: 'en',
   });
 
-  // Render leaderboard
-  embed.renderLeaderboard({
+  // Render stats leaderboard (columns are clickable to sort)
+  embed.renderStats({
     eventId: 'event-123',
     scopeType: 'TOURNAMENT',
     sport: 'basketball',
@@ -88,36 +93,60 @@ function App() {
     mode: 'athletes',
     title: 'Top Scorers',
     container: '#leaderboard',
+    lang: 'en',
   });
 </script>
 ```
 
 ## Installation
 
-### For React/Next.js Projects
+### Option 1: From the repository (local bundle — no npm, no CDN)
+
+This is how the `test-library` demo works. Build the bundle once and reference it as a local file.
 
 ```bash
-npm install @tropheo/react @tropheo/core @tropheo/types
+# 1. Clone or copy this repo
+git clone <repo-url> tropheo_widgets
+cd tropheo_widgets
+
+# 2. Install dependencies
+npm install
+
+# 3. Build the embed bundle
+npm run build:embed
+# → Outputs dist/tropheo-embed.bundle.js
+# → Also auto-copies to ../test-library/tropheo-embed.bundle.js if that folder exists
 ```
 
-### For Vanilla JavaScript Projects
+Then copy `dist/tropheo-embed.bundle.js` next to your HTML file and load it with a `<script>` tag:
+
+```html
+<!-- Same folder as your HTML -->
+<script src="tropheo-embed.bundle.js"></script>
+<script>
+  const embed = new window.TropheoEmbed({ apiKey: '...', baseUrl: '...' });
+  embed.renderStandings({ eventId: '...', container: '#standings' });
+</script>
+```
+
+No server, no npm install in the consuming project, no CDN needed. Refresh the bundle any time by running `npm run build:embed` again inside `tropheo_widgets/`.
+
+### Option 2: CDN (no installation)
+
+```html
+<script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
+```
+
+### Option 3: npm — Vanilla JavaScript
 
 ```bash
 npm install @tropheo/embed
 ```
 
-Or use a CDN (no installation needed):
+### Option 4: npm — React / Next.js
 
-```html
-<script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
-```
-
-### No Framework (just plain HTML)
-
-No installation needed! Just add the CDN script to your HTML:
-
-```html
-<script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
+```bash
+npm install @tropheo/react @tropheo/core @tropheo/types
 ```
 
 ## Documentation
@@ -131,9 +160,9 @@ No installation needed! Just add the CDN script to your HTML:
 
 Check out the [examples](./examples) directory for complete implementations:
 
-- [HTML Example](./examples/html) - Vanilla JavaScript with CDN
-- [React Example](./examples/react) - React with Vite
-- [Next.js Example](./examples/nextjs) - Next.js 14 with App Router
+- [HTML Example](./examples/html) - Vanilla JavaScript with local bundle (standings + leaderboard)
+- [React Example](./examples/react) - React with Vite (standings + leaderboard)
+- [Next.js Example](./examples/nextjs) - Next.js 14 with App Router (standings + leaderboard)
 
 ## Development
 
@@ -146,67 +175,82 @@ npm install
 # Build all packages
 npm run build
 
+# Build embed bundle only (also copies to test-library)
+npm run build:embed
+
 # Development mode (watch)
 npm run dev
 ```
 
-### Project Structureleaderboards, events, and recomputation
+### Project Structure
 
-### @tropheo/react
-
-- `<StandingsTable>` component with loading/error states
-- `<LeaderboardTable>` component for player/team stat
-  │ ├── types/ # TypeScript type definitions
-  │ ├── core/ # Core API client
-  │ ├── react/ # React components
-  │ └── embed/ # Vanilla JS loader
+```
+tropheo_widgets/
+  ├── packages/
+  │   ├── types/   # Shared TypeScript type definitions
+  │   ├── core/    # API client (authentication, fetch helpers)
+  │   ├── react/   # React components (StandingsTable, LeaderboardTable)
+  │   └── embed/   # Vanilla JS bundle (TropheoEmbed)
   ├── examples/
-  │ ├── html/ # HTML example
-  │ ├── react/ # React example
-  │ └── nextjs/ # Next.js example
-  └── docs/ # Documentation
-
-````
+  │   ├── html/    # Vanilla JS example (standings + leaderboard)
+  │   ├── react/   # React + Vite example
+  │   └── nextjs/  # Next.js 14 App Router example
+  ├── dist/        # Built embed bundle (tropheo-embed.bundle.js)
+  └── docs/        # Documentation
+```
 
 ## Packages
 
 - **@tropheo/types** - Shared TypeScript type definitions
-- **@tropheo/core** - Core API client with authentication
-- **@tropheo/react** - React components (StandingsTable)
-- **@tropheo/embed** - Vanilla JavaScript loader for non-React environments
+- **@tropheo/core** - Type-safe API client with authentication
+- **@tropheo/react** - React components (`StandingsTable`, `LeaderboardTable`)
+- **@tropheo/embed** - Vanilla JavaScript loader — zero dependencies
 
 ## Features by Package
 
 ### @tropheo/core
 
-- API key authentication via Authorization header
-- Type-safe API client
-- Methods for standings, events, and recomputation
+- API key authentication via `Authorization` header
+- Type-safe fetch methods
+- Methods: `getStandings`, `getSubEvents`, `getLeaderboard`, `getAthleteLeaderboard`, `getTeamLeaderboard`, `recomputeStandings`
 
 ### @tropheo/react
 
-- `<StandingsTable>` component with loading/error states
-- Collapsible stage sections
-- Responsive design
-- Admin features (recompute button)
+- `<StandingsTable>` — standings with full hierarchy support (POOL, BRACKET_STAGE, DIVISION, TOURNAMENT_ROOT, SEASON, LEAGUE). Parallel sub-event loading.
+- `<LeaderboardTable>` — player/team stats table with clickable sort headers, avatar, GP column, and footer. Handles `statsEnabled: false` with localized message.
+- Both components: `lang: 'en' | 'es'` prop
+- `<LeaderboardTable filterByOrganizationId="org-id">` — filters leaderboard to a single team's athletes (client-side); hides the Teams tab when active
+- `<LeaderboardTable theme={{ ... }}>` — fully customizable colors (see [Theming](#theming))
 
 ### @tropheo/embed
 
-- Zero dependencies
-- Vanilla JavaScript API
-- Auto-initialization on script load
-- DOM manipulation with inline styles
+- `TropheoEmbed` class for vanilla JS
+- `renderStandings(config)` — hierarchical standings, auto-detects event role
+- `renderLeaderboard(config)` — stats table with client-side interactive sort
+- `renderStats(config)` — alias for `renderLeaderboard`
+- `config.filterByOrganizationId` — filter to a single team's athletes; hides the Teams tab
+- `config.theme` — fully customizable colors (see [Theming](#theming))
+- Translations: EN and ES for all labels
+- Zero external dependencies
+
+## Widget API Endpoints
+
+All endpoints require `Authorization: <apiKey>` header and are hosted on your Tropheo instance:
+
+| Endpoint                                                                                    | Description            |
+| ------------------------------------------------------------------------------------------- | ---------------------- |
+| `GET /api/widgets/standings/:eventId?scope=`                                                | Standings for an event |
+| `GET /api/widgets/events?parentEventId=`                                                    | Sub-events of a parent |
+| `GET /api/widgets/leaderboard/athletes?scopeEventId=&scopeType=&sport=&facet=&sort=&limit=` | Athlete stats          |
+| `GET /api/widgets/leaderboard/teams?scopeEventId=&scopeType=&sport=&facet=&sort=&limit=`    | Team stats             |
 
 ## Authentication
 
-Set up API keys on your Tropheo server:
+API keys are generated per organization from the Tropheo dashboard:
 
-```bash
-# Environment variable
-WIDGET_API_KEYS=key1,key2,key3
-````
+> Organization Profile → **Manage Organization** → **API Keys** → **Create New API Key**
 
-Use API keys in your client:
+Use your key in any widget:
 
 ```typescript
 const widgets = new TropheoWidgets({
@@ -231,6 +275,54 @@ See [Authentication Guide](./docs/authentication.md) for more details.
 3. Make your changes
 4. Run tests and build
 5. Submit a pull request
+
+## Theming
+
+All `LeaderboardTable` colors can be overridden via a `theme` prop (React) or `config.theme` (embed). Omit any key to keep the default style.
+
+| Key                 | Default                                             | Description                                        |
+| ------------------- | --------------------------------------------------- | -------------------------------------------------- |
+| `headerBackground`  | `linear-gradient(135deg, #667eea 0%, #764ba2 100%)` | Top header background (any CSS `background` value) |
+| `headerTextColor`   | `#ffffff`                                           | Header title & subtitle color                      |
+| `activeTabColor`    | `#3b82f6`                                           | Active tab text and bottom border                  |
+| `inactiveTabColor`  | `#6b7280`                                           | Inactive tab text                                  |
+| `tableBackground`   | `#ffffff`                                           | Card / table background                            |
+| `columnHeaderColor` | `#374151`                                           | Column header (`th`) text color                    |
+| `rowTextColor`      | `#374151`                                           | Table cell text color                              |
+| `rowBorderColor`    | `#f3f4f6`                                           | Row divider line color                             |
+| `borderColor`       | `#e5e7eb`                                           | Outer card border color                            |
+| `footerBackground`  | `#f9fafb`                                           | Footer strip background                            |
+| `buttonBackground`  | `#3b82f6`                                           | "View on Tropheo" button background                |
+| `buttonTextColor`   | `#ffffff`                                           | "View on Tropheo" button text                      |
+| `avatarBackground`  | `#e5e7eb`                                           | Avatar placeholder circle background               |
+
+**React example:**
+
+```tsx
+<LeaderboardTable
+  theme={{
+    headerBackground: '#1e293b', // solid dark header
+    activeTabColor: '#f59e0b', // amber tabs
+    buttonBackground: '#f59e0b',
+    buttonTextColor: '#1e293b',
+  }}
+/>
+```
+
+**HTML / embed example:**
+
+```js
+embed.renderStats({
+  eventId: 'your-event-id',
+  container: '#leaderboard-container',
+  theme: {
+    headerBackground: '#1e293b',
+    activeTabColor: '#f59e0b',
+    buttonBackground: '#f59e0b',
+    buttonTextColor: '#1e293b',
+  },
+});
+```
 
 ## License
 
