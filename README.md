@@ -27,6 +27,8 @@ Displays team standings tables for any event structure — from a single pool or
 
 On mobile it renders a hierarchical drill-down (season → division → pool). On desktop it shows all groups side-by-side.
 
+![Standings Widget](docs/images/standings-1.png)
+
 ### 🏆 Leaderboard / Stats Widget
 
 Shows a sortable statistics table for players or teams. Columns depend on the sport and the statistical facet you configure:
@@ -39,8 +41,8 @@ Shows a sortable statistics table for players or teams. Columns depend on the sp
 
 Any column header is clickable to re-sort the table descending. Supports both `athletes` (individual player stats) and `teams` modes.
 
-![Standings Widget](docs/images/leaderboard-1.png)
-![Standings Widget](docs/images/leaderboard-2.png)
+![Leaderboard Widget](docs/images/leaderboard-1.png)
+![Leaderboard Widget](docs/images/leaderboard-2.png)
 
 ### Other highlights
 

@@ -247,7 +247,16 @@ export class TropheoEmbed {
     const divRows = divRes.success && divRes.data ? divRes.data.standings || [] : [];
     const overallRows =
       overallRes.success && overallRes.data ? overallRes.data.standings || [] : [];
-    const summaryRows = divRows.length > 0 ? divRows : overallRows;
+    let summaryRows = divRows.length > 0 ? divRows : overallRows;
+
+    // Fallback: if both DIVISION and OVERALL return empty AND no stages were found,
+    // call without scope so the backend auto-expands SEASON/LEAGUE to child POOL standings.
+    if (summaryRows.length === 0 && validStages.length === 0) {
+      const fallbackRes = await this.client.getStandings(event.id);
+      if (fallbackRes.success && fallbackRes.data) {
+        summaryRows = fallbackRes.data.standings || [];
+      }
+    }
 
     // 5. Render hierarchical HTML
     const className = config.className || '';
