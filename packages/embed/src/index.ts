@@ -160,7 +160,16 @@ export class TropheoEmbed {
         eventRole === 'LEAGUE';
 
       if (isDivisionOrRoot) {
-        await this.loadAndRenderHierarchical(container, event, eventRole, title, config, lang, th);
+        await this.loadAndRenderHierarchical(
+          container,
+          event,
+          eventRole,
+          title,
+          config,
+          lang,
+          th,
+          standings
+        );
       } else {
         this.renderStandingsTable(container, standings, title, config, lang, th);
       }
@@ -182,7 +191,8 @@ export class TropheoEmbed {
     title: string,
     config: StandingsWidgetConfig,
     lang: Language,
-    th: Required<Omit<StandingsTheme, never>>
+    th: Required<Omit<StandingsTheme, never>>,
+    fallbackStandings: any[] = []
   ): Promise<void> {
     const t = translations[lang];
 
@@ -246,6 +256,11 @@ export class TropheoEmbed {
 
     const hasContent = validStages.some((e) => e.rows.length > 0) || summaryRows.length > 0;
     if (!hasContent) {
+      // Fallback: use the standings returned by the initial getStandings call (no scope param)
+      if (fallbackStandings && fallbackStandings.length > 0) {
+        this.renderStandingsTable(container, fallbackStandings, title, config, lang, th);
+        return;
+      }
       container.innerHTML = config.showEmptyState
         ? `<div class="${className}" style="padding: 20px; text-align: center; color: #6b7280;">${t.noStandings}</div>`
         : '';

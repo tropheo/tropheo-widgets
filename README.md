@@ -16,13 +16,43 @@ A library for embedding Tropheo tournament standings and stats widgets into any 
 
 ## Features
 
-- 📊 **Standings** — Tournament, division, pool, bracket, season, and league standings with automatic hierarchical loading
-- 🏆 **Leaderboards / Stats** — Player and team stat tables for basketball, baseball, softball, and soccer with interactive column sorting
-- ⚛️ React components for React/Next.js apps
-- 🌐 Vanilla JavaScript support for any website (zero dependencies)
+### 📊 Standings Widget
+
+Displays team standings tables for any event structure — from a single pool or bracket all the way up to full seasons and leagues. The widget automatically detects the event type and loads the right data:
+
+- **Pool / Bracket stage** — shows wins, losses, ties, runs/points scored, and standings position for the teams in that group.
+- **Division** — loads all pools inside the division and shows a consolidated view.
+- **Tournament** — renders a summary across all divisions and pools.
+- **Season / League** — aggregates standings across every stage of the season, grouped by phase (e.g. "Primera Vuelta", "Segunda Vuelta").
+
+On mobile it renders a hierarchical drill-down (season → division → pool). On desktop it shows all groups side-by-side.
+
+<!-- Add a screenshot here once you have one:
+![Leaderboard Widget](docs/images/leaderboard-screenshot.png)
+-->
+
+### 🏆 Leaderboard / Stats Widget
+
+Shows a sortable statistics table for players or teams. Columns depend on the sport and the statistical facet you configure:
+
+| Sport               | Available facets       | Example columns                         |
+| ------------------- | ---------------------- | --------------------------------------- |
+| Baseball / Softball | `baseball`, `pitching` | AVG, HR, RBI, OBP, ERA, WHIP, K, BB     |
+| Basketball          | `basketball`           | PTS, REB, AST, STL, BLK, FG%            |
+| Soccer              | `soccer`               | Goals, Assists, Yellow Cards, Red Cards |
+
+Any column header is clickable to re-sort the table descending. Supports both `athletes` (individual player stats) and `teams` modes.
+
+![Standings Widget](docs/images/leaderboard-1.png)
+![Standings Widget](docs/images/leaderboard-2.png)
+
+### Other highlights
+
+- ⚛️ React components for React / Next.js apps
+- 🌐 Vanilla JavaScript bundle for any website (zero runtime dependencies)
 - 🔒 Secure API key authentication per organization
-- 📱 Responsive design
-- 🎨 Customizable styling and titles
+- 📱 Responsive — adapts layout for mobile and desktop automatically
+- 🎨 Customizable title and container styling
 - 🌍 EN / ES internationalization built-in
 
 ## Quick Start
