@@ -213,7 +213,18 @@ export const StandingsTable: React.FC<StandingsTableProps> = ({
         const overallRows =
           overallRes.success && overallRes.data ? overallRes.data.standings || overallRes.data : [];
 
-        setStandings(divRows.length > 0 ? divRows : overallRows);
+        let summaryRows = divRows.length > 0 ? divRows : overallRows;
+
+        // Fallback: if both DIVISION and OVERALL return empty AND no stages were found,
+        // call without scope so the backend auto-expands SEASON/LEAGUE to child POOL standings.
+        if (summaryRows.length === 0 && Object.keys(stageStandingsData).length === 0) {
+          const fallbackRes = await client.getStandings(eventId);
+          if (fallbackRes.success && fallbackRes.data) {
+            summaryRows = fallbackRes.data.standings || fallbackRes.data || [];
+          }
+        }
+
+        setStandings(summaryRows);
       } else {
         // Single event mode - no need for scope, API will determine it from event
         const res = await client.getStandings(eventId);
