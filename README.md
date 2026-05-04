@@ -58,7 +58,13 @@ Any column header is clickable to re-sort the table descending. Supports both `a
 ### React
 
 ```tsx
-import { TropheoWidgets, StandingsTable, LeaderboardTable } from '@tropheo/react';
+import {
+  TropheoWidgets,
+  StandingsTable,
+  LeaderboardTable,
+  UpcomingGamesWidget,
+  ScheduleWidget,
+} from '@tropheo/react';
 
 const widgets = new TropheoWidgets({
   apiKey: 'your-api-key',
@@ -85,6 +91,23 @@ function App() {
         facet="basketball"
         mode="athletes"
         title="Top Scorers"
+        lang="en"
+      />
+
+      {/* Upcoming & live games */}
+      <UpcomingGamesWidget
+        client={widgets.getClient()}
+        eventId="event-123"
+        limit={8}
+        windowDays={7}
+        lang="en"
+      />
+
+      {/* Full schedule with calendar + list views */}
+      <ScheduleWidget
+        client={widgets.getClient()}
+        eventId="event-123"
+        defaultView="calendar"
         lang="en"
       />
     </>
@@ -121,6 +144,23 @@ function App() {
     mode: 'athletes',
     title: 'Top Scorers',
     container: '#leaderboard',
+    lang: 'en',
+  });
+
+  // Render upcoming & live games
+  embed.renderUpcomingGames({
+    eventId: 'event-123',
+    container: '#upcoming',
+    limit: 8,
+    windowDays: 7,
+    lang: 'en',
+  });
+
+  // Render full schedule (calendar + list views)
+  embed.renderSchedule({
+    eventId: 'event-123',
+    container: '#schedule',
+    defaultView: 'calendar',
     lang: 'en',
   });
 </script>
@@ -217,7 +257,7 @@ tropheo_widgets/
   ├── packages/
   │   ├── types/   # Shared TypeScript type definitions
   │   ├── core/    # API client (authentication, fetch helpers)
-  │   ├── react/   # React components (StandingsTable, LeaderboardTable)
+  │   ├── react/   # React components (StandingsTable, LeaderboardTable, UpcomingGamesWidget, ScheduleWidget)
   │   └── embed/   # Vanilla JS bundle (TropheoEmbed)
   ├── examples/
   │   ├── html/    # Vanilla JS example (standings + leaderboard)
@@ -231,7 +271,7 @@ tropheo_widgets/
 
 - **@tropheo/types** - Shared TypeScript type definitions
 - **@tropheo/core** - Type-safe API client with authentication
-- **@tropheo/react** - React components (`StandingsTable`, `LeaderboardTable`)
+- **@tropheo/react** - React components (`StandingsTable`, `LeaderboardTable`, `UpcomingGamesWidget`, `ScheduleWidget`)
 - **@tropheo/embed** - Vanilla JavaScript loader — zero dependencies
 
 ## Features by Package
@@ -400,6 +440,98 @@ embed.renderStats({
     activeTabColor: '#f59e0b',
     buttonBackground: '#f59e0b',
     buttonTextColor: '#1e293b',
+  },
+});
+```
+
+### UpcomingGamesWidget / `renderUpcomingGames` theme
+
+| Key                | Default   | Description                          |
+| ------------------ | --------- | ------------------------------------ |
+| `cardBackground`   | `#ffffff` | Game card background                 |
+| `headerBackground` | `#ffffff` | Widget header background             |
+| `titleTextColor`   | `#111827` | Widget title text color              |
+| `textColor`        | `#374151` | Team names and scores                |
+| `mutedTextColor`   | `#6b7280` | Date, venue, secondary text          |
+| `borderColor`      | `#fed7aa` | Card border color                    |
+| `liveColor`        | `#ef4444` | "LIVE" badge color                   |
+| `upcomingColor`    | `#f97316` | "UPCOMING" badge color               |
+| `footerBackground` | `#f9fafb` | Footer strip background              |
+| `buttonBackground` | `#3b82f6` | "View on Tropheo" button background  |
+| `buttonTextColor`  | `#ffffff` | "View on Tropheo" button text        |
+| `avatarBackground` | `#e5e7eb` | Avatar placeholder circle background |
+| `winnerColor`      | `#15803d` | Score color for winning team         |
+
+**React example:**
+
+```tsx
+<UpcomingGamesWidget
+  client={client}
+  eventId="event-123"
+  theme={{
+    cardBackground: '#1e293b',
+    textColor: '#e2e8f0',
+    borderColor: '#334155',
+    liveColor: '#f59e0b',
+  }}
+/>
+```
+
+**HTML / embed example:**
+
+```js
+embed.renderUpcomingGames({
+  eventId: 'your-event-id',
+  container: '#upcoming',
+  theme: {
+    cardBackground: '#1e293b',
+    textColor: '#e2e8f0',
+    borderColor: '#334155',
+  },
+});
+```
+
+### ScheduleWidget / `renderSchedule` theme
+
+| Key                      | Default   | Description                                   |
+| ------------------------ | --------- | --------------------------------------------- |
+| `cardBackground`         | `#ffffff` | Card / panel background                       |
+| `borderColor`            | `#fed7aa` | Outer border color                            |
+| `textColor`              | `#111827` | Primary text                                  |
+| `mutedTextColor`         | `#6b7280` | Date, venue, secondary text                   |
+| `primaryColor`           | `#3b82f6` | Calendar selected day highlight and game dots |
+| `liveColor`              | `#ef4444` | "LIVE" badge color                            |
+| `toggleActiveBackground` | `#111827` | Active view toggle button background          |
+| `toggleActiveText`       | `#ffffff` | Active view toggle button text                |
+| `footerBackground`       | `#f9fafb` | Footer strip background                       |
+| `buttonBackground`       | `#3b82f6` | "View on Tropheo" button background           |
+| `buttonTextColor`        | `#ffffff` | "View on Tropheo" button text                 |
+| `avatarBackground`       | `#e5e7eb` | Avatar placeholder circle background          |
+| `winnerColor`            | `#15803d` | Score color for winning team                  |
+
+**React example:**
+
+```tsx
+<ScheduleWidget
+  client={client}
+  eventId="event-123"
+  theme={{
+    primaryColor: '#f59e0b',
+    toggleActiveBackground: '#f59e0b',
+    toggleActiveText: '#1e293b',
+  }}
+/>
+```
+
+**HTML / embed example:**
+
+```js
+embed.renderSchedule({
+  eventId: 'your-event-id',
+  container: '#schedule',
+  theme: {
+    primaryColor: '#f59e0b',
+    toggleActiveBackground: '#f59e0b',
   },
 });
 ```

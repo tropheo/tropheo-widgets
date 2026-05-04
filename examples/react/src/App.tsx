@@ -1,11 +1,19 @@
 import { useState } from 'react';
-import { TropheoWidgets, StandingsTable, LeaderboardTable } from '@tropheo/react';
+import {
+  TropheoWidgets,
+  StandingsTable,
+  LeaderboardTable,
+  UpcomingGamesWidget,
+  ScheduleWidget,
+} from '@tropheo/react';
 import './App.css';
 
 // ─── CONFIGURE YOUR VALUES HERE ──────────────────────────────
 const API_KEY = 'your-api-key-here';
 const BASE_URL = 'https://your-tropheo-instance.com';
 const EVENT_ID = 'your-event-id-here';
+// Optional: filter widgets to show only games/stats for a specific org
+const ORGANIZATION_ID = ''; // e.g. 'your-org-id-here'
 // ─────────────────────────────────────────────────────────────
 
 function App() {
@@ -80,6 +88,51 @@ function App() {
             //   buttonBackground: '#3b82f6',
             //   buttonTextColor: '#ffffff',
             //   avatarBackground: '#e5e7eb',
+            // }}
+          />
+        </section>
+
+        {/* Upcoming & Live Games — shows ongoing + next 7 days by default */}
+        <section style={{ marginTop: '40px' }}>
+          <UpcomingGamesWidget
+            client={widgets.getClient()}
+            eventId={EVENT_ID}
+            // organizationId={ORGANIZATION_ID} // optional: filter to one org's games
+            limit={8}
+            windowDays={7}
+            lang="en"
+            baseUrl={BASE_URL}
+            // Optional: theme overrides
+            // theme={{
+            //   cardBackground: '#ffffff',
+            //   borderColor: '#fed7aa',
+            //   liveColor: '#ef4444',
+            //   upcomingColor: '#f97316',
+            //   buttonBackground: '#3b82f6',
+            //   buttonTextColor: '#ffffff',
+            // }}
+          />
+        </section>
+
+        {/* Full Schedule — calendar + list toggle */}
+        <section style={{ marginTop: '40px' }}>
+          <ScheduleWidget
+            client={widgets.getClient()}
+            eventId={EVENT_ID}
+            // organizationId={ORGANIZATION_ID} // optional: server-side org filter
+            defaultView="calendar" // 'calendar' | 'list'
+            lang="en"
+            baseUrl={BASE_URL}
+            // Optional: theme overrides
+            // theme={{
+            //   cardBackground: '#ffffff',
+            //   borderColor: '#fed7aa',
+            //   primaryColor: '#3b82f6',
+            //   liveColor: '#ef4444',
+            //   toggleActiveBackground: '#111827',
+            //   toggleActiveText: '#ffffff',
+            //   buttonBackground: '#3b82f6',
+            //   buttonTextColor: '#ffffff',
             // }}
           />
         </section>

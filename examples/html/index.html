@@ -74,6 +74,14 @@
     <h2>Top Scorers (Basketball)</h2>
     <div id="leaderboard-container"></div>
 
+    <!-- ─── UPCOMING & LIVE GAMES ─────────────────────────── -->
+    <h2>Upcoming &amp; Live Games</h2>
+    <div id="upcoming-container"></div>
+
+    <!-- ─── FULL SCHEDULE ─────────────────────────────────── -->
+    <h2>Schedule</h2>
+    <div id="schedule-container"></div>
+
     <!--
       Load the bundle:
         - Local file:  <script src="tropheo-embed.bundle.js"></script>
@@ -87,6 +95,8 @@
         var API_KEY = 'your-api-key-here'; // From: Org Profile → Manage profile → API Keys
         var BASE_URL = 'https://your-tropheo-instance.com'; // Your Tropheo site URL
         var EVENT_ID = 'your-event-id-here'; // From the event URL
+        // Optional: show only games/stats for a specific organization
+        var ORGANIZATION_ID = ''; // e.g. 'your-org-id-here' or leave empty
 
         try {
           var embed = new window.TropheoEmbed({
@@ -146,10 +156,53 @@
             //   avatarBackground: '#e5e7eb',
             // },
           });
+
+          // ── Upcoming & Live Games
+          embed.renderUpcomingGames({
+            eventId: EVENT_ID,
+            // organizationId: ORGANIZATION_ID, // optional: filter to one org
+            limit: 8, // max games shown (default 8)
+            windowDays: 7, // days ahead to include (default 7)
+            container: '#upcoming-container',
+            lang: 'en',
+            baseUrl: BASE_URL,
+            // Optional: custom theme (all fields optional)
+            // theme: {
+            //   cardBackground: '#ffffff',
+            //   borderColor: '#fed7aa',
+            //   liveColor: '#ef4444',
+            //   upcomingColor: '#f97316',
+            //   buttonBackground: '#3b82f6',
+            //   buttonTextColor: '#ffffff',
+            // },
+          });
+
+          // ── Full Schedule (calendar + list toggle)
+          embed.renderSchedule({
+            eventId: EVENT_ID,
+            // organizationId: ORGANIZATION_ID, // optional: server-side org filter
+            defaultView: 'calendar', // 'calendar' | 'list'
+            container: '#schedule-container',
+            lang: 'en',
+            baseUrl: BASE_URL,
+            // Optional: custom theme (all fields optional)
+            // theme: {
+            //   cardBackground: '#ffffff',
+            //   borderColor: '#fed7aa',
+            //   primaryColor: '#3b82f6',
+            //   liveColor: '#ef4444',
+            //   toggleActiveBackground: '#111827',
+            //   toggleActiveText: '#ffffff',
+            //   buttonBackground: '#3b82f6',
+            //   buttonTextColor: '#ffffff',
+            // },
+          });
         } catch (error) {
           var errHtml = '<div class="error">Error: ' + error.message + '</div>';
           document.getElementById('standings-container').innerHTML = errHtml;
           document.getElementById('leaderboard-container').innerHTML = errHtml;
+          document.getElementById('upcoming-container').innerHTML = errHtml;
+          document.getElementById('schedule-container').innerHTML = errHtml;
         }
       })();
     </script>
