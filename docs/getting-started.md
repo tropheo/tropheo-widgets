@@ -148,6 +148,71 @@ The widget automatically:
 - [Authentication](./authentication.md) - How to configure API keys
 - [Examples](../examples) - Full example projects
 
+## Quick Start: Upcoming & Live Games
+
+Show upcoming and live games for any event with a single call:
+
+**React:**
+
+```tsx
+import { UpcomingGamesWidget, TropheoWidgets } from '@tropheo/react';
+const widgets = new TropheoWidgets({
+  apiKey: 'YOUR_API_KEY',
+  baseUrl: 'https://your-instance.com',
+});
+
+<UpcomingGamesWidget
+  client={widgets.getClient()}
+  eventId="your-event-id"
+  limit={6}
+  windowDays={7}
+  lang="en"
+/>;
+```
+
+**HTML (embed):**
+
+```html
+<div id="upcoming"></div>
+<script src="tropheo-embed.bundle.js"></script>
+<script>
+  const embed = new TropheoEmbed({ apiKey: 'YOUR_API_KEY', baseUrl: 'https://your-instance.com' });
+  embed.renderUpcomingGames({ eventId: 'your-event-id', container: '#upcoming' });
+</script>
+```
+
+## Quick Start: Full Schedule
+
+Show the complete event schedule with calendar and list views:
+
+**React:**
+
+```tsx
+import { ScheduleWidget, TropheoWidgets } from '@tropheo/react';
+const widgets = new TropheoWidgets({
+  apiKey: 'YOUR_API_KEY',
+  baseUrl: 'https://your-instance.com',
+});
+
+<ScheduleWidget
+  client={widgets.getClient()}
+  eventId="your-event-id"
+  defaultView="calendar"
+  lang="en"
+/>;
+```
+
+**HTML (embed):**
+
+```html
+<div id="schedule"></div>
+<script src="tropheo-embed.bundle.js"></script>
+<script>
+  const embed = new TropheoEmbed({ apiKey: 'YOUR_API_KEY', baseUrl: 'https://your-instance.com' });
+  embed.renderSchedule({ eventId: 'your-event-id', container: '#schedule', defaultView: 'list' });
+</script>
+```
+
 ## Support
 
 - **API Key Issues:** Check your organization profile → Manage profile → API Keys

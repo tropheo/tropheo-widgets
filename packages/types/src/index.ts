@@ -592,3 +592,189 @@ export interface LeaderboardWidgetConfig {
    */
   theme?: LeaderboardTheme;
 }
+
+// ============ Schedule / Upcoming Games Types ============
+
+/**
+ * Participant info inside a widget game.
+ */
+export interface WidgetGameParticipant {
+  name: string;
+  image?: string;
+  orgId?: string;
+  score: number | null;
+}
+
+/**
+ * A single game/match returned by the schedule endpoint.
+ */
+export interface WidgetGame {
+  id: string;
+  name: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  /** Derived status based on current time and EventGame.status. */
+  status: 'upcoming' | 'ongoing' | 'completed';
+  /** Parent stage ID (POOL / BRACKET_STAGE / GAMEDAY), null if direct child of root. */
+  parentStageId: string | null;
+  venueName: string | null;
+  fieldName: string | null;
+  address: string | null;
+  /** Full participant/score info. Null when no participants are registered yet. */
+  gameInfo: {
+    homeName: string;
+    awayName: string;
+    homeImage?: string;
+    awayImage?: string;
+    homeScore: number | null;
+    awayScore: number | null;
+    isCompleted: boolean;
+    homeOrgId?: string;
+    awayOrgId?: string;
+  } | null;
+}
+
+/**
+ * A stage (pool, bracket, gameday) returned by the schedule endpoint.
+ */
+export interface WidgetStage {
+  id: string;
+  name: string | null;
+  eventRole: string | null;
+  startDate: string | null;
+  endDate: string | null;
+}
+
+/**
+ * Response from GET /api/widgets/schedule/[eventId]
+ */
+export interface ScheduleResponse {
+  success: boolean;
+  event: {
+    id: string;
+    name: string | null;
+    sport: string | null;
+    eventRole: string | null;
+    startDate: string | null;
+    endDate: string | null;
+    description: string | null;
+  };
+  stages: WidgetStage[];
+  games: WidgetGame[];
+}
+
+/**
+ * Visual theme for the Upcoming Games widget.
+ */
+export interface UpcomingGamesTheme {
+  /** Card background colour.  @default '#ffffff' */
+  cardBackground?: string;
+  /** Background of the header strip (title row).  @default '#ffffff' */
+  headerBackground?: string;
+  /** Title text colour.  @default '#111827' */
+  titleTextColor?: string;
+  /** Body text / team-name colour.  @default '#374151' */
+  textColor?: string;
+  /** Muted / secondary text colour (date, time).  @default '#6b7280' */
+  mutedTextColor?: string;
+  /** Card border colour.  @default '#fed7aa' (orange-200) */
+  borderColor?: string;
+  /** "Live" badge / indicator colour.  @default '#ef4444' */
+  liveColor?: string;
+  /** "Upcoming" badge colour.  @default '#f97316' */
+  upcomingColor?: string;
+  /** Footer background.  @default '#f9fafb' */
+  footerBackground?: string;
+  /** "View on Tropheo" button background.  @default '#3b82f6' */
+  buttonBackground?: string;
+  /** "View on Tropheo" button text colour.  @default '#ffffff' */
+  buttonTextColor?: string;
+  /** Avatar placeholder background.  @default '#e5e7eb' */
+  avatarBackground?: string;
+  /** Winning team score text colour.  @default '#15803d' */
+  winnerColor?: string;
+}
+
+/**
+ * Visual theme for the Schedule widget.
+ */
+export interface ScheduleTheme {
+  /** Overall card / container background.  @default '#ffffff' */
+  cardBackground?: string;
+  /** Game card border colour.  @default '#fed7aa' */
+  borderColor?: string;
+  /** Primary text colour (team names, headings).  @default '#111827' */
+  textColor?: string;
+  /** Muted text (date, stage name).  @default '#6b7280' */
+  mutedTextColor?: string;
+  /** Active calendar day / selected day highlight.  @default '#3b82f6' */
+  primaryColor?: string;
+  /** "Live" indicator colour.  @default '#ef4444' */
+  liveColor?: string;
+  /** View toggle button active background.  @default '#111827' */
+  toggleActiveBackground?: string;
+  /** View toggle button active text.  @default '#ffffff' */
+  toggleActiveText?: string;
+  /** Footer background.  @default '#f9fafb' */
+  footerBackground?: string;
+  /** "View on Tropheo" button background.  @default '#3b82f6' */
+  buttonBackground?: string;
+  /** "View on Tropheo" button text colour.  @default '#ffffff' */
+  buttonTextColor?: string;
+  /** Avatar placeholder background.  @default '#e5e7eb' */
+  avatarBackground?: string;
+  /** Winning team score text colour.  @default '#15803d' */
+  winnerColor?: string;
+}
+
+/**
+ * Configuration for the UpcomingGamesWidget embed.
+ */
+export interface UpcomingGamesWidgetConfig {
+  /** Event ID to load upcoming & live games for. */
+  eventId: string;
+  /**
+   * Filter to only show games where this organization is a participant.
+   * Leave empty to show all upcoming/live games.
+   */
+  organizationId?: string;
+  /** Max number of games to display. @default 8 */
+  limit?: number;
+  /** Days ahead to include as "upcoming". @default 7 */
+  windowDays?: number;
+  /** Custom CSS class applied to the root element. */
+  className?: string;
+  /** Container element or CSS selector for embed rendering. */
+  container?: HTMLElement | string;
+  /** Base URL for event deep links. @default 'https://www.tropheo.com' */
+  baseUrl?: string;
+  /** Language. @default 'en' */
+  lang?: 'en' | 'es';
+  /** Visual theme overrides. */
+  theme?: UpcomingGamesTheme;
+}
+
+/**
+ * Configuration for the ScheduleWidget embed.
+ */
+export interface ScheduleWidgetConfig {
+  /** Event ID to load the full schedule for. */
+  eventId: string;
+  /**
+   * Filter to only show games where this organization is a participant.
+   * Filtering is performed server-side; stages with no matching games are hidden.
+   */
+  organizationId?: string;
+  /** Initial view mode. @default 'calendar' */
+  defaultView?: 'calendar' | 'list';
+  /** Custom CSS class applied to the root element. */
+  className?: string;
+  /** Container element or CSS selector for embed rendering. */
+  container?: HTMLElement | string;
+  /** Base URL for event deep links. @default 'https://www.tropheo.com' */
+  baseUrl?: string;
+  /** Language. @default 'en' */
+  lang?: 'en' | 'es';
+  /** Visual theme overrides. */
+  theme?: ScheduleTheme;
+}

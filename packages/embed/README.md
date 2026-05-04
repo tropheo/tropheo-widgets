@@ -16,69 +16,26 @@ npm install @tropheo/embed
 <script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
 ```
 
-## Usage
-
-### Standings Widget
+## Quick Start
 
 ```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Tournament Standings</title>
-  </head>
-  <body>
-    <div id="standings"></div>
+<div id="schedule"></div>
+<script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
+<script>
+  const embed = new window.TropheoEmbed({
+    apiKey: 'your-api-key',
+    baseUrl: 'https://your-tropheo-instance.com',
+  });
 
-    <script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
-    <script>
-      const embed = new window.TropheoEmbed({
-        apiKey: 'your-api-key',
-        baseUrl: 'https://your-tropheo-instance.com',
-      });
-
-      embed.renderStandings({
-        eventId: 'your-event-id',
-        title: 'Tournament Standings',
-        container: '#standings',
-        lang: 'en', // 'en' or 'es'
-      });
-    </script>
-  </body>
-</html>
+  embed.renderSchedule({
+    eventId: 'your-event-id',
+    container: '#schedule',
+    lang: 'es',
+  });
+</script>
 ```
 
-### Leaderboard Widget
-
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Leaderboard</title>
-  </head>
-  <body>
-    <div id="leaderboard"></div>
-
-    <script src="https://unpkg.com/@tropheo/embed@latest/dist/index.js"></script>
-    <script>
-      const embed = new window.TropheoEmbed({
-        apiKey: 'your-api-key',
-        baseUrl: 'https://your-tropheo-instance.com',
-      });
-
-      embed.renderLeaderboard({
-        eventId: 'your-event-id',
-        scopeType: 'TOURNAMENT',
-        sport: 'basketball',
-        facet: 'basketball',
-        mode: 'athletes',
-        title: 'Top Scorers',
-        container: '#leaderboard',
-        lang: 'en', // 'en' or 'es'
-      });
-    </script>
-  </body>
-</html>
-```
+````
 
 ## Features
 
@@ -91,28 +48,101 @@ npm install @tropheo/embed
 - ✅ Multiple widgets per page
 - ✅ Standings tables
 - ✅ Leaderboard tables
+- ✅ Upcoming games widget
+- ✅ Full schedule widget (calendar + list views)
 
-## Configuration Options
+## Widgets
 
 ### Standings
 
-- `eventId` - Event ID to display
-- `title` - Custom title (optional)
-- `container` - CSS selector for container element
-- `lang` - Language: 'en' or 'es' (optional, default: 'en')
-- `showEmptyState` - Show message when no data (optional)
+```html
+<div id="standings"></div>
+<script>
+  embed.renderStandings({
+    eventId: 'your-event-id',
+    container: '#standings',
+    lang: 'es',
+  });
+</script>
+````
 
 ### Leaderboard
 
-- `eventId` - Event ID
-- `scopeType` - Scope: 'TOURNAMENT', 'DIVISION', 'STAGE', or 'GAMEDAY'
-- `sport` - Sport: 'basketball', 'baseball', 'softball', 'soccer'
-- `facet` - Stat type: 'basketball', 'batting', 'pitching', 'soccer', etc.
-- `mode` - 'athletes' or 'teams'
-- `title` - Custom title (optional)
-- `container` - CSS selector
-- `lang` - Language (optional)
-- `limit` - Max entries (optional)
+```html
+<div id="leaderboard"></div>
+<script>
+  embed.renderLeaderboard({
+    eventId: 'your-event-id',
+    scopeType: 'TOURNAMENT',
+    sport: 'baseball',
+    facet: 'batting',
+    mode: 'teams',
+    container: '#leaderboard',
+    lang: 'es',
+  });
+</script>
+```
+
+### Upcoming Games
+
+```html
+<div id="upcoming"></div>
+<script>
+  embed.renderUpcomingGames({
+    eventId: 'your-event-id',
+    container: '#upcoming',
+    limit: 5, // optional, default 5
+    lang: 'es',
+  });
+</script>
+```
+
+### Schedule (full agenda)
+
+```html
+<div id="schedule"></div>
+<script>
+  embed.renderSchedule({
+    eventId: 'your-event-id',
+    organizationId: 'your-org-id', // optional
+    container: '#schedule',
+    lang: 'es',
+  });
+</script>
+```
+
+## Configuration Options
+
+### Common
+
+| Option      | Type             | Description                       |
+| ----------- | ---------------- | --------------------------------- |
+| `eventId`   | string           | Root event ID                     |
+| `container` | string           | CSS selector for mount element    |
+| `lang`      | `'en'` \| `'es'` | Display language (default `'es'`) |
+| `title`     | string           | Custom widget title (optional)    |
+
+### Leaderboard extras
+
+| Option      | Type   | Description                                                         |
+| ----------- | ------ | ------------------------------------------------------------------- |
+| `scopeType` | string | `'TOURNAMENT'`, `'DIVISION'`, `'STAGE'`, `'GAMEDAY'`                |
+| `sport`     | string | `'basketball'`, `'baseball'`, `'softball'`, `'soccer'`              |
+| `facet`     | string | `'batting'`, `'pitching'`, `'fielding'`, `'basketball'`, `'soccer'` |
+| `mode`      | string | `'athletes'` or `'teams'`                                           |
+| `limit`     | number | Max rows (optional)                                                 |
+
+### Upcoming Games extras
+
+| Option  | Type   | Description                                  |
+| ------- | ------ | -------------------------------------------- |
+| `limit` | number | Number of upcoming games to show (default 5) |
+
+### Schedule extras
+
+| Option           | Type   | Description                             |
+| ---------------- | ------ | --------------------------------------- |
+| `organizationId` | string | Filter games by organization (optional) |
 
 ## Documentation
 

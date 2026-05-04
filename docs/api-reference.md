@@ -524,3 +524,242 @@ embed.renderLeaderboard({
   lang: 'es',
 });
 ```
+
+---
+
+## UpcomingGamesWidget
+
+Displays upcoming and live games for an event, filtered to a configurable time window.
+
+### UpcomingGamesWidgetProps (React)
+
+```typescript
+interface UpcomingGamesWidgetProps {
+  client: ApiClient; // Authenticated API client
+  eventId: string; // Root event ID
+  organizationId?: string; // Optional: show only games where this org participates
+  limit?: number; // Max games to display (default: 8)
+  windowDays?: number; // Days ahead to include as "upcoming" (default: 7)
+  className?: string;
+  baseUrl?: string; // default: 'https://www.tropheo.com'
+  lang?: 'en' | 'es'; // default: 'en'
+  theme?: UpcomingGamesTheme;
+  onLoad?: (count: number) => void;
+}
+```
+
+### UpcomingGamesTheme
+
+```typescript
+interface UpcomingGamesTheme {
+  cardBackground?: string; // default: '#ffffff'
+  headerBackground?: string; // default: '#ffffff'
+  titleTextColor?: string; // default: '#111827'
+  textColor?: string; // default: '#374151'
+  mutedTextColor?: string; // default: '#6b7280'
+  borderColor?: string; // default: '#fed7aa'
+  liveColor?: string; // default: '#ef4444'
+  upcomingColor?: string; // default: '#f97316'
+  footerBackground?: string; // default: '#f9fafb'
+  buttonBackground?: string; // default: '#3b82f6'
+  buttonTextColor?: string; // default: '#ffffff'
+  avatarBackground?: string; // default: '#e5e7eb'
+  winnerColor?: string; // default: '#15803d'
+}
+```
+
+### UpcomingGamesWidgetConfig (Embed)
+
+```typescript
+interface UpcomingGamesWidgetConfig {
+  eventId: string;
+  organizationId?: string;
+  limit?: number; // default: 8
+  windowDays?: number; // default: 7
+  className?: string;
+  container?: HTMLElement | string;
+  baseUrl?: string; // default: 'https://www.tropheo.com'
+  lang?: 'en' | 'es'; // default: 'en'
+  theme?: UpcomingGamesTheme;
+}
+```
+
+### React Usage
+
+```tsx
+import { UpcomingGamesWidget, TropheoWidgets } from '@tropheo/react';
+
+const widgets = new TropheoWidgets({ apiKey: '...', baseUrl: '...' });
+
+<UpcomingGamesWidget
+  client={widgets.getClient()}
+  eventId="your-event-id"
+  organizationId="your-org-id" // optional
+  limit={6}
+  windowDays={7}
+  lang="en"
+/>;
+```
+
+### Embed Usage
+
+```javascript
+const embed = new TropheoEmbed({ apiKey: '...', baseUrl: '...' });
+
+embed.renderUpcomingGames({
+  eventId: 'your-event-id',
+  // organizationId: 'your-org-id',  // optional
+  limit: 6,
+  windowDays: 7,
+  container: '#upcoming-container',
+  lang: 'en',
+});
+```
+
+---
+
+## ScheduleWidget
+
+Full event schedule with **Calendar view** (mini monthly calendar + day games panel) and **List view** (games grouped by stage).
+
+### ScheduleWidgetProps (React)
+
+```typescript
+interface ScheduleWidgetProps {
+  client: ApiClient;
+  eventId: string;
+  organizationId?: string; // Server-side org filter (only matching games returned)
+  defaultView?: 'calendar' | 'list'; // default: 'calendar'
+  className?: string;
+  baseUrl?: string; // default: 'https://www.tropheo.com'
+  lang?: 'en' | 'es'; // default: 'en'
+  theme?: ScheduleTheme;
+  onLoad?: (gameCount: number) => void;
+}
+```
+
+### ScheduleTheme
+
+```typescript
+interface ScheduleTheme {
+  cardBackground?: string; // default: '#ffffff'
+  borderColor?: string; // default: '#fed7aa'
+  textColor?: string; // default: '#111827'
+  mutedTextColor?: string; // default: '#6b7280'
+  primaryColor?: string; // Calendar selected day / dots. default: '#3b82f6'
+  liveColor?: string; // default: '#ef4444'
+  toggleActiveBackground?: string; // View toggle active bg. default: '#111827'
+  toggleActiveText?: string; // View toggle active text. default: '#ffffff'
+  footerBackground?: string; // default: '#f9fafb'
+  buttonBackground?: string; // default: '#3b82f6'
+  buttonTextColor?: string; // default: '#ffffff'
+  avatarBackground?: string; // default: '#e5e7eb'
+  winnerColor?: string; // default: '#15803d'
+}
+```
+
+### ScheduleWidgetConfig (Embed)
+
+```typescript
+interface ScheduleWidgetConfig {
+  eventId: string;
+  organizationId?: string;
+  defaultView?: 'calendar' | 'list'; // default: 'calendar'
+  className?: string;
+  container?: HTMLElement | string;
+  baseUrl?: string;
+  lang?: 'en' | 'es';
+  theme?: ScheduleTheme;
+}
+```
+
+### React Usage
+
+```tsx
+import { ScheduleWidget, TropheoWidgets } from '@tropheo/react';
+
+const widgets = new TropheoWidgets({ apiKey: '...', baseUrl: '...' });
+
+<ScheduleWidget
+  client={widgets.getClient()}
+  eventId="your-event-id"
+  defaultView="calendar"
+  lang="es"
+/>;
+```
+
+### Embed Usage
+
+```javascript
+const embed = new TropheoEmbed({ apiKey: '...', baseUrl: '...' });
+
+embed.renderSchedule({
+  eventId: 'your-event-id',
+  // organizationId: 'your-org-id',  // optional server-side filter
+  defaultView: 'list',
+  container: '#schedule-container',
+  lang: 'en',
+});
+```
+
+---
+
+## API Endpoint: GET /api/widgets/schedule/[eventId]
+
+Returns the full schedule for an event.
+
+**Authentication:** `x-widget-api-key` header or `apiKey` query param.
+
+**Query params:**
+
+- `organizationId` (optional) — when provided, only games where this org participates are returned.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "event": {
+    "id": "...",
+    "name": "Tournament Name",
+    "sport": "basketball",
+    "eventRole": "TOURNAMENT_ROOT",
+    "startDate": "2025-01-10T00:00:00.000Z",
+    "endDate": "2025-01-20T00:00:00.000Z",
+    "description": null
+  },
+  "stages": [
+    {
+      "id": "...",
+      "name": "Pool A",
+      "eventRole": "POOL",
+      "startDate": "2025-01-10T00:00:00.000Z",
+      "endDate": "2025-01-15T00:00:00.000Z"
+    }
+  ],
+  "games": [
+    {
+      "id": "...",
+      "name": null,
+      "startDate": "2025-01-10T14:00:00.000Z",
+      "endDate": "2025-01-10T16:00:00.000Z",
+      "status": "upcoming",
+      "parentStageId": "...",
+      "venueName": "Sports Complex",
+      "fieldName": "Court 1",
+      "address": null,
+      "gameInfo": {
+        "homeName": "Team A",
+        "awayName": "Team B",
+        "homeImage": "https://...",
+        "awayImage": null,
+        "homeScore": null,
+        "awayScore": null,
+        "isCompleted": false,
+        "homeOrgId": "...",
+        "awayOrgId": "..."
+      }
+    }
+  ]
+}
+```

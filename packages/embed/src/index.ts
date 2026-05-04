@@ -12,6 +12,10 @@ import type {
   LeaderboardMode,
   EventRole,
   StandingsTheme,
+  UpcomingGamesWidgetConfig,
+  ScheduleWidgetConfig,
+  WidgetGame,
+  WidgetStage,
 } from '@tropheo/types';
 
 /**
@@ -1173,6 +1177,539 @@ export class TropheoEmbed {
       return document.querySelector(container);
     }
     return container;
+  }
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // Upcoming Games Widget
+  // ──────────────────────────────────────────────────────────────────────────
+
+  /**
+   * Render upcoming & live games widget into a DOM container.
+   *
+   * @example
+   * embed.renderUpcomingGames({
+   *   container: '#upcoming-games',
+   *   eventId: 'abc123',
+   *   organizationId: 'orgXYZ',  // optional
+   *   limit: 6,
+   *   lang: 'en',
+   * });
+   */
+  async renderUpcomingGames(config: UpcomingGamesWidgetConfig): Promise<void> {
+    const container = this.getContainer(config.container);
+    if (!container) throw new Error('Container element not found');
+
+    const lang = (config.lang || 'en') as 'en' | 'es';
+    const baseUrl = config.baseUrl || 'https://www.tropheo.com';
+    const limit = config.limit ?? 8;
+    const windowDays = config.windowDays ?? 7;
+
+    const th = {
+      cardBackground: config.theme?.cardBackground ?? '#ffffff',
+      headerBackground: config.theme?.headerBackground ?? '#ffffff',
+      titleTextColor: config.theme?.titleTextColor ?? '#111827',
+      textColor: config.theme?.textColor ?? '#374151',
+      mutedTextColor: config.theme?.mutedTextColor ?? '#6b7280',
+      borderColor: config.theme?.borderColor ?? '#fed7aa',
+      liveColor: config.theme?.liveColor ?? '#ef4444',
+      upcomingColor: config.theme?.upcomingColor ?? '#f97316',
+      footerBackground: config.theme?.footerBackground ?? '#f9fafb',
+      buttonBackground: config.theme?.buttonBackground ?? '#3b82f6',
+      buttonTextColor: config.theme?.buttonTextColor ?? '#ffffff',
+      avatarBackground: config.theme?.avatarBackground ?? '#e5e7eb',
+      winnerColor: config.theme?.winnerColor ?? '#15803d',
+    };
+
+    const t = {
+      en: {
+        loading: 'Loading upcoming games…',
+        error: 'Error',
+        noGames: 'No upcoming or live games at the moment.',
+        live: 'LIVE',
+        upcoming: 'Upcoming',
+        completed: 'Completed',
+        vs: 'vs',
+        poweredBy: 'Powered by',
+        viewOn: 'View on Tropheo',
+        upcomingAndLiveGames: 'Upcoming & Live Games',
+      },
+      es: {
+        loading: 'Cargando partidos próximos…',
+        error: 'Error',
+        noGames: 'No hay partidos próximos o en vivo en este momento.',
+        live: 'EN VIVO',
+        upcoming: 'Próximo',
+        completed: 'Finalizado',
+        vs: 'vs',
+        poweredBy: 'Desarrollado por',
+        viewOn: 'Ver en Tropheo',
+        upcomingAndLiveGames: 'Partidos Próximos y En Vivo',
+      },
+    }[lang];
+
+    this._injectPulseKeyframe();
+
+    container.innerHTML = `
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;border:1px solid ${th.borderColor};border-radius:12px;overflow:hidden;background:${th.cardBackground};">
+        <div style="padding:14px 16px;background:${th.headerBackground};border-bottom:1px solid ${th.borderColor};">
+          <h3 style="margin:0;font-size:16px;font-weight:700;color:${th.titleTextColor};">${t.upcomingAndLiveGames}</h3>
+        </div>
+        <div id="tropheo-ug-body" style="padding:12px;"><div style="padding:20px 0;text-align:center;color:${th.mutedTextColor};">${t.loading}</div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:${th.footerBackground};border-top:1px solid ${th.borderColor};">
+          <span style="font-size:11px;color:${th.mutedTextColor};">${t.poweredBy} <a href="https://www.tropheo.com" target="_blank" rel="noopener noreferrer" style="color:${th.mutedTextColor};font-weight:700;text-decoration:none;">Tropheo</a></span>
+          <a href="${baseUrl}/events/${config.eventId}" target="_blank" rel="noopener noreferrer" style="font-size:12px;font-weight:600;padding:5px 12px;border-radius:6px;background:${th.buttonBackground};color:${th.buttonTextColor};text-decoration:none;">${t.viewOn} ↗</a>
+        </div>
+      </div>`;
+
+    const body = container.querySelector<HTMLElement>('#tropheo-ug-body');
+    if (!body) return;
+
+    try {
+      const res = await this.client.getSchedule(config.eventId, config.organizationId);
+      if (!res.success || !res.data) throw new Error(res.error || 'Failed to load');
+
+      const now = new Date();
+      const windowEnd = new Date(now);
+      windowEnd.setDate(windowEnd.getDate() + windowDays);
+
+      const filtered = res.data.games.filter((g: WidgetGame) => {
+        if (g.status === 'completed') return false;
+        if (g.status === 'ongoing') return true;
+        if (!g.startDate) return false;
+        return new Date(g.startDate) <= windowEnd;
+      });
+
+      filtered.sort((a: WidgetGame, b: WidgetGame) => {
+        if (a.status === 'ongoing' && b.status !== 'ongoing') return -1;
+        if (a.status !== 'ongoing' && b.status === 'ongoing') return 1;
+        return new Date(a.startDate || 0).getTime() - new Date(b.startDate || 0).getTime();
+      });
+
+      const sliced = filtered.slice(0, limit);
+
+      if (sliced.length === 0) {
+        body.innerHTML = `<div style="padding:16px 0;color:${th.mutedTextColor};font-size:13px;">${t.noGames}</div>`;
+        return;
+      }
+
+      body.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;">${sliced
+        .map((g: WidgetGame) => this._renderGameCard(g, t, th, baseUrl, lang))
+        .join('')}</div>`;
+    } catch (err) {
+      body.innerHTML = `<div style="padding:16px 0;color:#ef4444;font-size:13px;">${t.error}: ${
+        err instanceof Error ? err.message : 'Unknown error'
+      }</div>`;
+    }
+  }
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // Schedule Widget
+  // ──────────────────────────────────────────────────────────────────────────
+
+  /**
+   * Render the full schedule widget (list or calendar view) into a DOM container.
+   *
+   * @example
+   * embed.renderSchedule({
+   *   container: '#schedule',
+   *   eventId: 'abc123',
+   *   defaultView: 'list',
+   *   lang: 'es',
+   * });
+   */
+  async renderSchedule(config: ScheduleWidgetConfig): Promise<void> {
+    const container = this.getContainer(config.container);
+    if (!container) throw new Error('Container element not found');
+
+    const lang = (config.lang || 'en') as 'en' | 'es';
+    const baseUrl = config.baseUrl || 'https://www.tropheo.com';
+    const defaultView = config.defaultView ?? 'list';
+
+    const th = {
+      cardBackground: config.theme?.cardBackground ?? '#ffffff',
+      borderColor: config.theme?.borderColor ?? '#fed7aa',
+      textColor: config.theme?.textColor ?? '#111827',
+      mutedTextColor: config.theme?.mutedTextColor ?? '#6b7280',
+      primaryColor: config.theme?.primaryColor ?? '#3b82f6',
+      liveColor: config.theme?.liveColor ?? '#ef4444',
+      toggleActiveBackground: config.theme?.toggleActiveBackground ?? '#111827',
+      toggleActiveText: config.theme?.toggleActiveText ?? '#ffffff',
+      footerBackground: config.theme?.footerBackground ?? '#f9fafb',
+      buttonBackground: config.theme?.buttonBackground ?? '#3b82f6',
+      buttonTextColor: config.theme?.buttonTextColor ?? '#ffffff',
+      avatarBackground: config.theme?.avatarBackground ?? '#e5e7eb',
+      winnerColor: config.theme?.winnerColor ?? '#15803d',
+    };
+
+    const t = {
+      en: {
+        loading: 'Loading schedule…',
+        error: 'Error',
+        noGames: 'No games in this event yet.',
+        noGamesDay: 'No games scheduled for this day.',
+        live: 'LIVE',
+        upcoming: 'Upcoming',
+        completed: 'Completed',
+        vs: 'vs',
+        poweredBy: 'Powered by',
+        viewOn: 'View on Tropheo',
+        schedule: 'Schedule',
+        calendarView: 'Calendar',
+        listView: 'List',
+        directGames: 'Direct Games',
+        games: 'Games',
+        gamesOn: 'Games on',
+        months: [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December',
+        ],
+        daysShort: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+      },
+      es: {
+        loading: 'Cargando agenda…',
+        error: 'Error',
+        noGames: 'Aún no hay partidos en este evento.',
+        noGamesDay: 'No hay partidos programados para este día.',
+        live: 'EN VIVO',
+        upcoming: 'Próximo',
+        completed: 'Finalizado',
+        vs: 'vs',
+        poweredBy: 'Desarrollado por',
+        viewOn: 'Ver en Tropheo',
+        schedule: 'Agenda',
+        calendarView: 'Calendario',
+        listView: 'Lista',
+        directGames: 'Partidos Directos',
+        games: 'Partidos',
+        gamesOn: 'Partidos del',
+        months: [
+          'Enero',
+          'Febrero',
+          'Marzo',
+          'Abril',
+          'Mayo',
+          'Junio',
+          'Julio',
+          'Agosto',
+          'Septiembre',
+          'Octubre',
+          'Noviembre',
+          'Diciembre',
+        ],
+        daysShort: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+      },
+    }[lang];
+
+    this._injectPulseKeyframe();
+
+    container.innerHTML = `
+      <div id="tropheo-sched-root" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;border:1px solid ${th.borderColor};border-radius:12px;overflow:hidden;background:${th.cardBackground};">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid ${th.borderColor};">
+          <h3 style="margin:0;font-size:16px;font-weight:700;color:${th.textColor};">${t.schedule}</h3>
+          <div style="display:flex;border:1px solid ${th.borderColor};border-radius:6px;overflow:hidden;">
+            <button id="tropheo-toggle-cal" style="padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:${defaultView === 'calendar' ? th.toggleActiveBackground : 'transparent'};color:${defaultView === 'calendar' ? th.toggleActiveText : th.mutedTextColor};">${t.calendarView}</button>
+            <button id="tropheo-toggle-list" style="padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:${defaultView === 'list' ? th.toggleActiveBackground : 'transparent'};color:${defaultView === 'list' ? th.toggleActiveText : th.mutedTextColor};">${t.listView}</button>
+          </div>
+        </div>
+        <div id="tropheo-sched-body" style="padding:12px;min-height:80px;"><div style="text-align:center;color:${th.mutedTextColor};padding:20px 0;">${t.loading}</div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:${th.footerBackground};border-top:1px solid ${th.borderColor};">
+          <span style="font-size:11px;color:${th.mutedTextColor};">${t.poweredBy} <a href="https://www.tropheo.com" target="_blank" rel="noopener noreferrer" style="color:${th.mutedTextColor};font-weight:700;text-decoration:none;">Tropheo</a></span>
+          <a href="${baseUrl}/events/${config.eventId}" target="_blank" rel="noopener noreferrer" style="font-size:12px;font-weight:600;padding:5px 12px;border-radius:6px;background:${th.buttonBackground};color:${th.buttonTextColor};text-decoration:none;">${t.viewOn} ↗</a>
+        </div>
+      </div>`;
+
+    const body = container.querySelector<HTMLElement>('#tropheo-sched-body');
+    const calBtn = container.querySelector<HTMLButtonElement>('#tropheo-toggle-cal');
+    const listBtn = container.querySelector<HTMLButtonElement>('#tropheo-toggle-list');
+    if (!body) return;
+
+    let currentView = defaultView;
+    let allGames: WidgetGame[] = [];
+    let allStages: WidgetStage[] = [];
+    let selectedDateKey: string | null = null;
+
+    const toDateKey = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+    const switchView = (v: 'calendar' | 'list') => {
+      currentView = v;
+      if (calBtn) {
+        calBtn.style.background = v === 'calendar' ? th.toggleActiveBackground : 'transparent';
+        calBtn.style.color = v === 'calendar' ? th.toggleActiveText : th.mutedTextColor;
+      }
+      if (listBtn) {
+        listBtn.style.background = v === 'list' ? th.toggleActiveBackground : 'transparent';
+        listBtn.style.color = v === 'list' ? th.toggleActiveText : th.mutedTextColor;
+      }
+      renderBody();
+    };
+
+    calBtn?.addEventListener('click', () => switchView('calendar'));
+    listBtn?.addEventListener('click', () => switchView('list'));
+
+    const renderCalendar = (year: number, month: number) => {
+      const gameDays = new Set(
+        allGames.filter((g) => g.startDate).map((g) => toDateKey(new Date(g.startDate!)))
+      );
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const cells: number[] = [];
+      for (let i = 0; i < firstDay; i++) cells.push(0);
+      for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+
+      const today = new Date();
+      const todayKey = toDateKey(today);
+
+      const dayBtns = cells
+        .map((d) => {
+          if (d === 0) return '<div></div>';
+          const key = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          const hasG = gameDays.has(key);
+          const isSel = key === selectedDateKey;
+          const isToday = key === todayKey;
+          const bg = isSel ? th.primaryColor : 'transparent';
+          const color = isSel ? '#fff' : isToday ? th.primaryColor : th.textColor;
+          const fw = isSel || isToday ? 700 : 400;
+          const dot = hasG
+            ? `<span style="display:block;width:4px;height:4px;border-radius:50%;background:${isSel ? '#fff' : th.primaryColor};margin:1px auto 0;"></span>`
+            : '';
+          return `<button data-date="${key}" style="border:none;border-radius:6px;padding:4px 0;cursor:pointer;background:${bg};color:${color};font-weight:${fw};font-size:12px;display:flex;flex-direction:column;align-items:center;gap:1px;">${d}${dot}</button>`;
+        })
+        .join('');
+
+      const gamesForDay = selectedDateKey
+        ? allGames.filter(
+            (g) => g.startDate && toDateKey(new Date(g.startDate)) === selectedDateKey
+          )
+        : [];
+
+      const dayLabel = selectedDateKey
+        ? new Date(selectedDateKey + 'T12:00:00').toLocaleDateString(undefined, {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric',
+          })
+        : '';
+
+      return `
+        <div style="display:flex;flex-wrap:wrap;">
+          <div style="width:240px;min-width:200px;border-right:1px solid ${th.borderColor};flex-shrink:0;padding:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <button id="tropheo-cal-prev" style="background:none;border:none;cursor:pointer;font-size:16px;color:${th.textColor};padding:2px 6px;">‹</button>
+              <span style="font-size:13px;font-weight:600;color:${th.textColor};">${t.months[month]} ${year}</span>
+              <button id="tropheo-cal-next" style="background:none;border:none;cursor:pointer;font-size:16px;color:${th.textColor};padding:2px 6px;">›</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;">
+              ${t.daysShort.map((d) => `<div style="text-align:center;font-size:10px;font-weight:600;color:${th.mutedTextColor};padding:2px 0;">${d}</div>`).join('')}
+            </div>
+            <div id="tropheo-cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;">${dayBtns}</div>
+          </div>
+          <div style="flex:1;min-width:200px;padding:12px;overflow-y:auto;max-height:440px;">
+            ${selectedDateKey ? `<p style="margin:0 0 8px;font-size:13px;font-weight:600;color:${th.textColor};">${t.gamesOn} ${dayLabel}</p>` : ''}
+            ${
+              gamesForDay.length === 0
+                ? `<p style="font-size:13px;color:${th.mutedTextColor};">${selectedDateKey ? t.noGamesDay : ''}</p>`
+                : `<div style="display:flex;flex-direction:column;gap:8px;">${gamesForDay.map((g) => this._renderGameCard(g, { live: t.live, upcoming: t.upcoming, completed: t.completed, vs: t.vs }, th, baseUrl, lang)).join('')}</div>`
+            }
+          </div>
+        </div>`;
+    };
+
+    let calYear = new Date().getFullYear();
+    let calMonth = new Date().getMonth();
+
+    const renderBody = () => {
+      if (currentView === 'list') {
+        const stageMap = new Map<string, WidgetGame[]>();
+        for (const g of allGames) {
+          const sid = g.parentStageId || '__direct__';
+          if (!stageMap.has(sid)) stageMap.set(sid, []);
+          stageMap.get(sid)!.push(g);
+        }
+        for (const arr of stageMap.values()) {
+          arr.sort(
+            (a, b) => new Date(a.startDate || 0).getTime() - new Date(b.startDate || 0).getTime()
+          );
+        }
+        const sections = Array.from(stageMap.entries())
+          .map(([sid, gs]) => {
+            const stage = allStages.find((s) => s.id === sid);
+            const isRootGroup = sid === '__direct__' || sid === config.eventId;
+            const title = isRootGroup ? t.games : stage?.name || sid;
+            const firstDate = gs[0]?.startDate || null;
+            return { sid, gs, title, isRootGroup, firstDate };
+          })
+          .sort((a, b) => {
+            // Named stages first (by first game date), root group last
+            if (a.isRootGroup && !b.isRootGroup) return 1;
+            if (!a.isRootGroup && b.isRootGroup) return -1;
+            return new Date(a.firstDate || 0).getTime() - new Date(b.firstDate || 0).getTime();
+          })
+          .map(
+            ({ sid, gs, title }) =>
+              `<div style="margin-bottom:16px;"><h4 style="margin:0 0 6px;font-size:12px;font-weight:700;color:${th.mutedTextColor};text-transform:uppercase;letter-spacing:0.06em;">${title}</h4><div style="display:flex;flex-direction:column;gap:6px;">${gs.map((g) => this._renderGameCard(g, { live: t.live, upcoming: t.upcoming, completed: t.completed, vs: t.vs }, th, baseUrl, lang)).join('')}</div></div>`
+          )
+          .join('');
+        body!.innerHTML = `<div style="overflow-y:auto;max-height:540px;">${sections || `<p style="color:${th.mutedTextColor};font-size:13px;">${t.noGames}</p>`}</div>`;
+      } else {
+        body!.innerHTML = renderCalendar(calYear, calMonth);
+
+        body!.querySelector('#tropheo-cal-prev')?.addEventListener('click', () => {
+          calMonth--;
+          if (calMonth < 0) {
+            calMonth = 11;
+            calYear--;
+          }
+          renderBody();
+        });
+        body!.querySelector('#tropheo-cal-next')?.addEventListener('click', () => {
+          calMonth++;
+          if (calMonth > 11) {
+            calMonth = 0;
+            calYear++;
+          }
+          renderBody();
+        });
+        body!
+          .querySelector('#tropheo-cal-grid')
+          ?.querySelectorAll<HTMLButtonElement>('[data-date]')
+          .forEach((btn) => {
+            btn.addEventListener('click', () => {
+              selectedDateKey = btn.dataset.date || null;
+              renderBody();
+            });
+          });
+      }
+    };
+
+    try {
+      const res = await this.client.getSchedule(config.eventId, config.organizationId);
+      if (!res.success || !res.data) throw new Error(res.error || 'Failed to load');
+
+      allGames = res.data.games;
+      allStages = res.data.stages;
+
+      // Auto-select today or first game date
+      const sorted = [...allGames]
+        .filter((g) => g.startDate)
+        .sort((a, b) => new Date(a.startDate!).getTime() - new Date(b.startDate!).getTime());
+
+      if (sorted.length > 0) {
+        const firstDate = new Date(sorted[0].startDate!);
+        calYear = firstDate.getFullYear();
+        calMonth = firstDate.getMonth();
+        const todayKey = toDateKey(new Date());
+        const gameDayKeys = new Set(sorted.map((g) => toDateKey(new Date(g.startDate!))));
+        selectedDateKey = gameDayKeys.has(todayKey) ? todayKey : toDateKey(firstDate);
+      }
+
+      if (allGames.length === 0) {
+        body.innerHTML = `<p style="padding:16px;font-size:13px;color:${th.mutedTextColor};">${t.noGames}</p>`;
+        return;
+      }
+
+      renderBody();
+    } catch (err) {
+      body.innerHTML = `<div style="padding:16px;color:#ef4444;font-size:13px;">${t.error}: ${
+        err instanceof Error ? err.message : 'Unknown error'
+      }</div>`;
+    }
+  }
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // Private rendering helpers
+  // ──────────────────────────────────────────────────────────────────────────
+
+  private _renderGameCard(
+    game: WidgetGame,
+    t: { live: string; upcoming: string; completed: string; vs: string },
+    th: {
+      borderColor: string;
+      cardBackground: string;
+      liveColor: string;
+      mutedTextColor: string;
+      textColor: string;
+      winnerColor: string;
+      avatarBackground: string;
+    },
+    baseUrl: string,
+    _lang: 'en' | 'es'
+  ): string {
+    const { gameInfo, status } = game;
+    const isLive = status === 'ongoing';
+    const isCompleted = status === 'completed';
+    const hasScores = gameInfo != null && gameInfo.homeScore != null && gameInfo.awayScore != null;
+    const homeWon = hasScores && Number(gameInfo!.homeScore) > Number(gameInfo!.awayScore);
+    const awayWon = hasScores && Number(gameInfo!.awayScore) > Number(gameInfo!.homeScore);
+
+    const statusHtml = isLive
+      ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:${th.liveColor};text-transform:uppercase;"><span style="width:6px;height:6px;border-radius:50%;background:${th.liveColor};animation:tropheo-pulse 1.5s infinite;display:inline-block;"></span>${t.live}</span>`
+      : `<span style="font-size:10px;font-weight:600;color:${isCompleted ? th.mutedTextColor : '#f97316'};text-transform:uppercase;">${isCompleted ? t.completed : t.upcoming}</span>`;
+
+    const timeHtml = game.startDate
+      ? `<span style="font-size:11px;color:${th.mutedTextColor};margin-left:auto;">${new Date(game.startDate).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</span>`
+      : '';
+
+    const avatarHtml = (name: string, imageUrl?: string | null) => {
+      const initial = (name || '?').charAt(0).toUpperCase();
+      if (imageUrl) {
+        return `<img src="${imageUrl}" alt="${initial}" width="24" height="24" style="width:24px;height:24px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none';this.nextSibling.style.display='flex';" /><div style="display:none;width:24px;height:24px;border-radius:50%;background:${th.avatarBackground};align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#6b7280;flex-shrink:0;">${initial}</div>`;
+      }
+      return `<div style="width:24px;height:24px;border-radius:50%;background:${th.avatarBackground};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#6b7280;flex-shrink:0;">${initial}</div>`;
+    };
+
+    const participantsHtml =
+      gameInfo && (gameInfo.homeName || gameInfo.awayName)
+        ? `<div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:3px;">
+            <div style="display:flex;align-items:center;gap:6px;min-width:0;">
+              ${avatarHtml(gameInfo.awayName || 'A', gameInfo.awayImage)}
+              <span style="font-size:12px;font-weight:500;color:${awayWon ? th.winnerColor : th.textColor};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px;">${gameInfo.awayName}</span>
+            </div>
+            ${hasScores ? `<span style="font-size:13px;font-weight:700;color:${awayWon ? th.winnerColor : th.textColor};">${gameInfo.awayScore}</span>` : ''}
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+            <div style="display:flex;align-items:center;gap:6px;min-width:0;">
+              ${avatarHtml(gameInfo.homeName || 'H', gameInfo.homeImage)}
+              <span style="font-size:12px;font-weight:500;color:${homeWon ? th.winnerColor : th.textColor};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px;">${gameInfo.homeName}</span>
+            </div>
+            ${hasScores ? `<span style="font-size:13px;font-weight:700;color:${homeWon ? th.winnerColor : th.textColor};">${gameInfo.homeScore}</span>` : ''}
+          </div>
+        </div>`
+        : `<span style="font-size:12px;color:${th.mutedTextColor};">${game.name || 'Game'}</span>`;
+
+    const locationHtml =
+      game.venueName || game.fieldName
+        ? `<p style="margin:5px 0 0;font-size:10px;color:${th.mutedTextColor};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">📍 ${[game.fieldName, game.venueName].filter(Boolean).join(' · ')}</p>`
+        : '';
+
+    return `<a href="${baseUrl}/events/${game.id}" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;">
+      <div style="border:1px solid ${th.borderColor};border-radius:8px;background:${th.cardBackground};overflow:hidden;cursor:pointer;">
+        <div style="display:flex;align-items:center;gap:8px;padding:5px 10px;border-bottom:1px solid ${th.borderColor};">
+          ${statusHtml}${timeHtml}
+        </div>
+        <div style="padding:8px 10px;">${participantsHtml}${locationHtml}</div>
+      </div>
+    </a>`;
+  }
+
+  private _injectPulseKeyframe(): void {
+    if (typeof document === 'undefined') return;
+    if (document.getElementById('tropheo-pulse-style')) return;
+    const style = document.createElement('style');
+    style.id = 'tropheo-pulse-style';
+    style.textContent = `@keyframes tropheo-pulse { 0%,100% { opacity:1 } 50% { opacity:0.35 } }`;
+    document.head.appendChild(style);
   }
 }
 

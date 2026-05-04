@@ -10,6 +10,7 @@ import type {
   Sport,
   Facet,
   SortKey,
+  ScheduleResponse,
 } from '@tropheo/types';
 
 /**
@@ -179,6 +180,22 @@ export class ApiClient {
     return mode === 'athletes'
       ? this.getAthleteLeaderboard(scopeEventId, scopeType, sport, facet, sort, limit)
       : this.getTeamLeaderboard(scopeEventId, scopeType, sport, facet, sort, limit);
+  }
+
+  /**
+   * Fetch the full event schedule — stages, games, participants, and scores.
+   * Corresponds to GET /api/widgets/schedule/[eventId]
+   *
+   * @param eventId   Root event ID whose schedule to load.
+   * @param organizationId  Optional — when provided, the server returns only
+   *                        games in which this organization participates.
+   */
+  async getSchedule(
+    eventId: string,
+    organizationId?: string
+  ): Promise<ApiResponse<ScheduleResponse>> {
+    const params = organizationId ? `?organizationId=${encodeURIComponent(organizationId)}` : '';
+    return this.request<ScheduleResponse>(`/api/widgets/schedule/${eventId}${params}`);
   }
 }
 
