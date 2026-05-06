@@ -44,6 +44,27 @@ Any column header is clickable to re-sort the table descending. Supports both `a
 ![Leaderboard Widget](docs/images/leaderboard-1.png)
 ![Leaderboard Widget](docs/images/leaderboard-2.png)
 
+### 📅 Upcoming Games Widget
+
+Shows the next upcoming and currently live games for an event. Displays team matchups, scores for live/finished games, date, time, and venue. Configurable number of games and look-ahead window.
+
+- **Live games** — highlighted with a live badge and real-time scores.
+- **Upcoming games** — shows scheduled date, time, and location.
+- Supports `limit` and `windowDays` to control how many games and how far ahead to look.
+
+![Upcoming Games Widget](docs/images/upcoming-events-1.png)
+
+### 🗓️ Schedule Widget
+
+Full schedule browser with two views: a **calendar view** (month grid with game-day dots) and a **list view** (chronological game list). Users can toggle between views and click calendar days to jump to games on that date.
+
+- **Calendar view** — month grid with highlighted days that have games; clicking a day filters the list.
+- **List view** — all games grouped chronologically with scores, venues, and live/finished badges.
+- `defaultView` prop controls which view opens first (`"calendar"` or `"list"`).
+
+![Schedule Widget](docs/images/schedule-1.png)
+![Schedule Widget](docs/images/schedule-2.png)
+
 ### Other highlights
 
 - ⚛️ React components for React / Next.js apps
