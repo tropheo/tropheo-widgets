@@ -1,0 +1,101 @@
+name: PR Review (automated)
+
+# Thin, trusted caller for the automated advisory PR-review pilot. The
+# base-context trigger means the trusted workflow runs even when a PR edits
+# this workflow file; the PR head is only ever read as data, never executed.
+#
+# The reusable workflow (and its bundled helper) live in tropheo/dev-tools and
+# are pinned to an immutable SHA. The OPENCODE_API_KEY is a repository Actions
+# secret consumed only by the reusable workflow's model job — never an ordinary
+# input, never `secrets: inherit`. Any user with repository write access can
+# read repository secrets via a workflow on any branch; the owner accepts this
+# residual risk for the pilot (GitHub Free has no protected-branch secret
+# isolation).
+
+on:
+  pull_request_target:
+    branches: [master]
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pr-number:
+        description: "PR number to review (manual rerun)."
+        required: true
+        type: number
+
+# New pushes to the same PR supersede older runs, and a manual rerun cancels
+# an in-progress run for the same PR (and vice versa). Both the event and
+# manual paths key on the same PR number, so they share one cancellation
+# group. Publishers inside the reusable workflow are serialized separately.
+concurrency:
+  group: pr-review-${{ github.event.pull_request.number || inputs.pr-number }}
+  cancel-in-progress: true
+
+jobs:
+  resolve-manual:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      base: ${{ steps.resolve.outputs.base }}
+      head: ${{ steps.resolve.outputs.head }}
+      title: ${{ steps.resolve.outputs.title }}
+    steps:
+      - name: Resolve PR and enforce pilot eligibility
+        id: resolve
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          data="$(gh pr view "${{ inputs.pr-number }}" --repo "${{ github.repository }}" \
+            --json baseRefName,baseRefOid,headRefOid,title,isDraft,isCrossRepository)"
+          baseRefName="$(echo "$data" | jq -r .baseRefName)"
+          [ "$baseRefName" = "master" ] \
+            || { echo "::error::manual review requires a PR targeting master"; exit 1; }
+          isDraft="$(echo "$data" | jq -r .isDraft)"
+          [ "$isDraft" = "false" ] \
+            || { echo "::error::draft PRs are skipped"; exit 1; }
+          crossRepo="$(echo "$data" | jq -r .isCrossRepository)"
+          [ "$crossRepo" = "false" ] \
+            || { echo "::error::fork PRs are skipped"; exit 1; }
+          echo "base=$(echo "$data" | jq -r .baseRefOid)" >> "$GITHUB_OUTPUT"
+          echo "head=$(echo "$data" | jq -r .headRefOid)" >> "$GITHUB_OUTPUT"
+          echo "title=$(echo "$data" | jq -r .title)" >> "$GITHUB_OUTPUT"
+
+  # Drafts and forks are ignored before any PR data is checked out or the
+  # model secret is supplied. Same-repository PRs only for the pilot.
+  review-pr:
+    if: ${{ github.event_name == 'pull_request_target' && !github.event.pull_request.draft && github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name }}
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: read
+      statuses: read
+    uses: tropheo/dev-tools/.github/workflows/pr-review.yml@996888e160e614ae7bee6d40434de84ad59f3b51
+    secrets:
+      OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+    with:
+      repo-id: ${{ github.repository }}
+      pr-number: ${{ github.event.pull_request.number }}
+      base: ${{ github.event.pull_request.base.sha }}
+      head: ${{ github.event.pull_request.head.sha }}
+      title: ${{ github.event.pull_request.title }}
+
+  review-manual:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    needs: resolve-manual
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: read
+      statuses: read
+    uses: tropheo/dev-tools/.github/workflows/pr-review.yml@996888e160e614ae7bee6d40434de84ad59f3b51
+    secrets:
+      OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+    with:
+      repo-id: ${{ github.repository }}
+      pr-number: ${{ inputs.pr-number }}
+      base: ${{ needs.resolve-manual.outputs.base }}
+      head: ${{ needs.resolve-manual.outputs.head }}
+      title: ${{ needs.resolve-manual.outputs.title }}
